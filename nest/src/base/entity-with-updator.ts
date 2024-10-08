@@ -1,0 +1,20 @@
+import { ALLOWED_TYPES } from 'src/lib/utils';
+import { User } from 'src/users/entities/user.entity';
+import { JoinColumn, ManyToOne } from 'typeorm';
+import { EntityWithDate, EntityWithDateFields } from './entity-with-date';
+
+export class EntityWithUpdator extends EntityWithDate {
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'updater_id' })
+  updater: User;
+
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'creator_id' })
+  creator: User;
+}
+
+export const EntityWithUpdateByFields = [
+  { value: 'updaterId', type: ALLOWED_TYPES.NUMBER },
+  { value: 'creatorId', type: ALLOWED_TYPES.NUMBER },
+  ...EntityWithDateFields,
+];

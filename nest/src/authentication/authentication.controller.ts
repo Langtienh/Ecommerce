@@ -1,31 +1,29 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Public, ReponseMessage } from 'src/decorator/customize';
-import { UsersService } from 'src/users/users.service';
+import { AccessToken, Public, ReponseMessage } from 'src/decorator/customize';
 import { AuthenticationService } from './authentication.service';
 import { loginDto } from './dto/login.dto';
 import {
   ChangePasswordDto,
   ResetPasswordDto,
+  SendEmailDto,
   VerifyFogotPasswordDto,
 } from './dto/password.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { RegisterDto } from './dto/register.dto';
 import { VerifyEmailDto } from './dto/verify-email.dto';
+import { AccessTokenData } from './types/token-payload';
 
 @ApiTags('authentication')
 @Controller('authentication')
 export class AuthenticationController {
-  constructor(
-    private readonly authenticationService: AuthenticationService,
-    private userService: UsersService,
-  ) {}
+  constructor(private readonly authenticationService: AuthenticationService) {}
 
   @Public()
   @ReponseMessage('User created successfully')
   @Post('register')
   register(@Body() registerDto: RegisterDto) {
-    return this.userService.create(registerDto);
+    return this.authenticationService.register(registerDto);
   }
 
   @Public()
@@ -33,6 +31,15 @@ export class AuthenticationController {
   @Post('login')
   login(@Body() loginDto: loginDto) {
     return this.authenticationService.login(loginDto);
+  }
+
+  @ReponseMessage('Logout successfully')
+  @Post('logout')
+  logout(
+    @Body() body: RefreshTokenDto,
+    @AccessToken() payload: AccessTokenData,
+  ) {
+    return this.authenticationService.logout(body, payload.id);
   }
 
   @Public()
@@ -49,23 +56,44 @@ export class AuthenticationController {
     return this.authenticationService.verifyEmail(verifyEmailDto);
   }
 
+  @ReponseMessage('Resend verify email successfully')
+  @Get('resend-verify-email')
+  resendVerifyEmail(@AccessToken() payload: AccessTokenData) {
+    return this.authenticationService.reSendVerifyEmail(payload);
+  }
+
+  @ReponseMessage('Send forgot password email successfully')
+  @Post('password/send')
+  forgotPassword(@Body() body: SendEmailDto) {
+    return this.authenticationService.sendMailForgotPassword(body.email);
+  }
+
+  @ReponseMessage('Resend verify email successfully')
+  @Post('password/resend')
+  resendForgotPassword(@Body() body: SendEmailDto) {
+    return this.authenticationService.reSendMailForgotPassword(body.email);
+  }
+
   @Public()
   @ReponseMessage('Verify forgot password token successfully')
-  @Post('verify-forgot-password-token')
+  @Post('password/verify')
   verifyFogotPassworToken(@Body() body: VerifyFogotPasswordDto) {
     return this.authenticationService.verifyFogotPassworToken(body);
   }
 
   @Public()
   @ReponseMessage('Reset password successfully')
-  @Post('reset-password')
+  @Post('password/reset')
   resetPassword(@Body() body: ResetPasswordDto) {
     return this.authenticationService.resetPassword(body);
   }
 
   @ReponseMessage('Change password successfully')
-  @Post('change-password')
-  changePassword(@Body() body: ChangePasswordDto) {
-    return this.authenticationService.changePassword(body);
+  @Post('password/change')
+  changePassword(
+    @Body() body: ChangePasswordDto,
+    @AccessToken() payload: AccessTokenData,
+  ) {
+    return this.authenticationService.changePassword(payload.id, body);
   }
 }

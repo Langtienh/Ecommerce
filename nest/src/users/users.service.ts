@@ -8,19 +8,19 @@ import { compare, genSalt, hash } from 'bcrypt';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './entities/user.entity';
+import { User, UserStatus } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
   constructor(@InjectRepository(User) private userRepo: Repository<User>) {}
 
-  private async hashPassword(password: string): Promise<string> {
+  async hashPassword(password: string): Promise<string> {
     const saltRounds = 10;
     const salt = await genSalt(saltRounds);
     return hash(password, salt);
   }
 
-  private comparePassword(password: string, hashedPassword: string) {
+  comparePassword(password: string, hashedPassword: string) {
     return compare(password, hashedPassword);
   }
 
@@ -51,10 +51,7 @@ export class UsersService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
-    const user = await this.userRepo.findOne({ where: { id } });
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
+    const user = await this.findOne(id);
     const updatedUser = this.userRepo.create(updateUserDto);
     Object.assign(user, updatedUser);
     return this.userRepo.save(user);
@@ -62,5 +59,49 @@ export class UsersService {
 
   remove(id: number) {
     return this.userRepo.softDelete(id);
+  }
+
+  async updatePassword(userId: number, password: string) {
+    const hashedPassword = await this.hashPassword(password);
+    const user = await this.findOne(userId);
+    const isPasswordMatch = await this.comparePassword(password, user.password);
+    if (isPasswordMatch) {
+      throw new ConflictException(
+        'New password must be different from old password',
+      );
+    }
+    return this.userRepo.save({ ...user, password: hashedPassword });
+  }
+
+  async changePassword(
+    userId: number,
+    oldPassword: string,
+    newPassword: string,
+  ) {
+    if (oldPassword === newPassword) {
+      throw new ConflictException(
+        'New password must be different from old password',
+      );
+    }
+    const user = await this.findOne(userId);
+    const isPasswordMatch = await this.comparePassword(
+      oldPassword,
+      user.password,
+    );
+    if (!isPasswordMatch) {
+      throw new ConflictException('Old password is incorrect');
+    }
+
+    user.password = await this.hashPassword(newPassword);
+    return this.userRepo.save(user);
+  }
+
+  async findByEmail(email: string) {
+    return this.userRepo.findOne({ where: { email } });
+  }
+
+  async verifyAccount(userId: number) {
+    const user = await this.findOne(userId);
+    return this.userRepo.save({ ...user, status: UserStatus.VERIFY });
   }
 }

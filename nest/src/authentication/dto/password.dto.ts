@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { PasswordDto } from 'src/users/dto/create-user.dto';
 
 export class VerifyFogotPasswordDto {
   @IsString()
@@ -6,22 +7,20 @@ export class VerifyFogotPasswordDto {
   forgotPasswordToken: string;
 }
 
-export class ResetPasswordDto {
-  @IsString()
-  @IsNotEmpty()
-  password: string;
-
+export class ResetPasswordDto extends PasswordDto {
   @IsString()
   @IsNotEmpty()
   forgotPasswordToken: string;
 }
 
-export class ChangePasswordDto {
+export class ChangePasswordDto extends PasswordDto {
   @IsString()
   @IsNotEmpty()
   oldPassword: string;
+}
 
-  @IsString()
+export class SendEmailDto {
+  @IsEmail()
   @IsNotEmpty()
-  newPassword: string;
+  email: string;
 }

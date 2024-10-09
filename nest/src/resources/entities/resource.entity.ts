@@ -2,8 +2,9 @@ import {
   EntityWithUpdateByFields,
   EntityWithUpdator,
 } from 'src/base/entity-with-updator';
+import { Group } from 'src/groups/entities/group.entity';
 import { ALLOWED_TYPES } from 'src/lib/utils';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 
 @Entity()
 export class Resource extends EntityWithUpdator {
@@ -12,6 +13,9 @@ export class Resource extends EntityWithUpdator {
 
   @Column()
   description: string;
+
+  @OneToMany(() => Group, (group) => group.resource)
+  groups: Group[];
 }
 
 export const ResourceFields = [

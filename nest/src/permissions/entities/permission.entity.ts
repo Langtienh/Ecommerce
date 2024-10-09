@@ -25,8 +25,11 @@ export class Permission extends EntityWithSoftDelete {
   @Column({ name: 'is_active', default: true })
   isActive: boolean;
 
+  @Column({ name: 'group_id' })
+  groupId: number;
+
   @ManyToOne(() => Group)
-  @JoinColumn()
+  @JoinColumn({ name: 'group_id' })
   group: Group;
 
   @ManyToMany(() => Role, (role) => role.permissions)

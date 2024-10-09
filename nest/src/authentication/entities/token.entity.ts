@@ -11,7 +11,7 @@ export enum TOKEN_TYPE {
   ACCESS = 'access',
   REFRESH = 'refresh',
   VERIFY_EMAIL = 'verify_email',
-  RESET_PASSWORD = 'reset_password',
+  FORGOT_PASSWORD = 'reset_password',
 }
 
 @Entity('tokens')
@@ -24,6 +24,9 @@ export class Token {
 
   @Column({ name: 'token_type', type: 'enum', enum: TOKEN_TYPE })
   tokenType: TOKEN_TYPE;
+
+  @Column({ name: 'user_id' })
+  userId: number;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'user_id' })

@@ -14,6 +14,10 @@ export class Role extends EntityWithDate {
     cascade: true,
     onDelete: 'CASCADE',
   })
-  @JoinTable()
+  @JoinTable({
+    name: 'role_permissions',
+    joinColumn: { name: 'role_id' },
+    inverseJoinColumn: { name: 'permission_id' },
+  })
   permissions: Permission[];
 }

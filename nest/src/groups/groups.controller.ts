@@ -8,7 +8,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { ReponseMessage } from 'src/decorator/customize';
+import { Public, ReponseMessage } from 'src/decorator/customize';
 import { ParamIdDto } from 'src/lib/utils';
 import { CreateGroupDto } from './dto/create-group.dto';
 import { UpdateGroupDto } from './dto/update-group.dto';
@@ -25,12 +25,14 @@ export class GroupsController {
     return this.groupsService.create(createGroupDto);
   }
 
+  @Public()
   @ReponseMessage('Get all groups successfully')
   @Get()
   findAll() {
     return this.groupsService.findAll();
   }
 
+  @Public()
   @ReponseMessage('Get group by id successfully')
   @Get(':id')
   findOne(@Param() { id }: ParamIdDto) {

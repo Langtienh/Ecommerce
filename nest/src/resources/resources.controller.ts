@@ -8,7 +8,8 @@ import {
   Post,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { ReponseMessage } from 'src/decorator/customize';
+import { AccessTokenData } from 'src/authentication/types/token-payload';
+import { AccessToken, Public, ReponseMessage } from 'src/decorator/customize';
 import { ParamIdDto } from 'src/lib/utils';
 import { CreateResourceDto } from './dto/create-resource.dto';
 import { UpdateResourceDto } from './dto/update-resource.dto';
@@ -21,16 +22,21 @@ export class ResourcesController {
 
   @ReponseMessage('Resource created successfully')
   @Post()
-  create(@Body() createResourceDto: CreateResourceDto) {
-    return this.resourcesService.create(createResourceDto, 2);
+  create(
+    @Body() createResourceDto: CreateResourceDto,
+    @AccessToken() data: AccessTokenData,
+  ) {
+    return this.resourcesService.create(createResourceDto, data.id);
   }
 
+  @Public()
   @ReponseMessage('Get all resources successfully')
   @Get()
   findAll() {
     return this.resourcesService.findAll();
   }
 
+  @Public()
   @ReponseMessage('Get resource by id successfully')
   @Get(':id')
   findOne(@Param() { id }: ParamIdDto) {
@@ -42,8 +48,9 @@ export class ResourcesController {
   update(
     @Param() { id }: ParamIdDto,
     @Body() updateResourceDto: UpdateResourceDto,
+    @AccessToken() data: AccessTokenData,
   ) {
-    return this.resourcesService.update(id, updateResourceDto, 2);
+    return this.resourcesService.update(id, updateResourceDto, data.id);
   }
 
   @ReponseMessage('Delete resource successfully')

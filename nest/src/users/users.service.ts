@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { compare, genSalt, hash } from 'bcrypt';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -12,6 +13,16 @@ import { User } from './entities/user.entity';
 @Injectable()
 export class UsersService {
   constructor(@InjectRepository(User) private userRepo: Repository<User>) {}
+
+  private async hashPassword(password: string): Promise<string> {
+    const saltRounds = 10;
+    const salt = await genSalt(saltRounds);
+    return hash(password, salt);
+  }
+
+  private comparePassword(password: string, hashedPassword: string) {
+    return compare(password, hashedPassword);
+  }
 
   async isEmailExist(email: string) {
     const user = await this.userRepo.findOne({ where: { email } });
@@ -23,7 +34,8 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto) {
     await this.isEmailExist(createUserDto.email);
-    return this.userRepo.save(createUserDto);
+    const password = await this.hashPassword(createUserDto.password);
+    return this.userRepo.save({ ...createUserDto, password });
   }
 
   findAll() {
@@ -39,12 +51,10 @@ export class UsersService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
-    const { email } = updateUserDto;
     const user = await this.userRepo.findOne({ where: { id } });
     if (!user) {
       throw new NotFoundException('User not found');
     }
-    if (email && email !== user.email) await this.isEmailExist(email);
     const updatedUser = this.userRepo.create(updateUserDto);
     Object.assign(user, updatedUser);
     return this.userRepo.save(user);

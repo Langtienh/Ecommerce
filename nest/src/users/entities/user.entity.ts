@@ -34,10 +34,6 @@ export class User extends EntityWithDate {
   @Column({ nullable: true })
   avatar?: string;
 
-  @Exclude()
-  @Column({ name: 'refresh_token', nullable: true })
-  refreshToken: string;
-
   @Column({ name: 'role_id', default: 1 })
   roleId: number;
 

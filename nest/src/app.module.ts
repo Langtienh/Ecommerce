@@ -8,6 +8,7 @@ import { ResourcesModule } from './resources/resources.module';
 import { GroupsModule } from './groups/groups.module';
 import { RolesModule } from './roles/roles.module';
 import { PermissionsModule } from './permissions/permissions.module';
+import { AuthenticationModule } from './authentication/authentication.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { PermissionsModule } from './permissions/permissions.module';
     GroupsModule,
     RolesModule,
     PermissionsModule,
+    AuthenticationModule,
   ],
   controllers: [],
   providers: [],

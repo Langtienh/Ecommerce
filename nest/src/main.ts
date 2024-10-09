@@ -8,6 +8,7 @@ import { NestFactory, Reflector } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 // import { JwtAuthGuard } from './auth/jwt-auth.guard';
+import { JwtAuthGuard } from './authentication/jwt-auth.guard';
 import { TransformsInterceptor } from './core/tranforms.interceptor';
 
 async function bootstrap() {
@@ -28,7 +29,7 @@ async function bootstrap() {
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
   // Sử dụng JwtAuthGuard để xác thực người dùng
-  // app.useGlobalGuards(new JwtAuthGuard(reflector));
+  app.useGlobalGuards(new JwtAuthGuard(reflector));
 
   // enable cors
   // origin: Fe domain, example: 'http://localhost:3000',

@@ -8,7 +8,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { ReponseMessage } from 'src/decorator/customize';
+import { Public, ReponseMessage } from 'src/decorator/customize';
 import { ParamIdDto } from 'src/lib/utils';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
@@ -25,12 +25,14 @@ export class RolesController {
     return this.rolesService.create(createRoleDto);
   }
 
+  @Public()
   @ReponseMessage('Find all roles successfully')
   @Get()
   findAll() {
     return this.rolesService.findAll();
   }
 
+  @Public()
   @ReponseMessage('Find role by id successfully')
   @Get(':id')
   findOne(@Param() { id }: ParamIdDto) {

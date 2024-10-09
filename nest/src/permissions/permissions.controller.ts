@@ -8,7 +8,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { ReponseMessage } from 'src/decorator/customize';
+import { Public, ReponseMessage } from 'src/decorator/customize';
 import { ParamIdDto } from 'src/lib/utils';
 import { CreatePermissionDto } from './dto/create-permission.dto';
 import { UpdatePermissionDto } from './dto/update-permission.dto';
@@ -25,12 +25,14 @@ export class PermissionsController {
     return this.permissionsService.create(createPermissionDto);
   }
 
+  @Public()
   @ReponseMessage('Get all permissions successfully')
   @Get()
   findAll() {
     return this.permissionsService.findAll();
   }
 
+  @Public()
   @ReponseMessage('Get permission by id successfully')
   @Get(':id')
   findOne(@Param() { id }: ParamIdDto) {

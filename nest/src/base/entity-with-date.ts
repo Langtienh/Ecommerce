@@ -1,4 +1,3 @@
-import { ALLOWED_TYPES } from 'src/lib/utils';
 import { CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import {
   EntityWithSoftDelete,
@@ -14,7 +13,7 @@ export class EntityWithDate extends EntityWithSoftDelete {
 }
 
 export const EntityWithDateFields = [
-  { value: 'createdAt', type: ALLOWED_TYPES.DATE },
-  { value: 'updatedAt', type: ALLOWED_TYPES.DATE },
+  'createdAt',
+  'updatedAt',
   ...EntityWithSoftDeleteFields,
 ];

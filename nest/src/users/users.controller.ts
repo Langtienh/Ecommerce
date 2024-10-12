@@ -6,11 +6,13 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { ParamIdDto } from 'src/base/query-helper';
 import { Public, ReponseMessage } from 'src/decorator/customize';
-import { ParamIdDto } from 'src/lib/utils';
 import { CreateUserDto } from './dto/create-user.dto';
+import { QueryUser } from './dto/query-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
 
@@ -29,8 +31,8 @@ export class UsersController {
   @Public()
   @ReponseMessage('Get all users successfully')
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  findAll(@Query() query: QueryUser) {
+    return this.usersService.findAll(query);
   }
 
   @Public()

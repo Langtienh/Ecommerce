@@ -6,11 +6,13 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { ParamIdDto } from 'src/base/query-helper';
 import { Public, ReponseMessage } from 'src/decorator/customize';
-import { ParamIdDto } from 'src/lib/utils';
 import { CreateGroupDto } from './dto/create-group.dto';
+import { QueryGroupDto } from './dto/query-group.dto';
 import { UpdateGroupDto } from './dto/update-group.dto';
 import { GroupsService } from './groups.service';
 
@@ -28,8 +30,8 @@ export class GroupsController {
   @Public()
   @ReponseMessage('Get all groups successfully')
   @Get()
-  findAll() {
-    return this.groupsService.findAll();
+  findAll(@Query() query: QueryGroupDto) {
+    return this.groupsService.findAll(query);
   }
 
   @Public()

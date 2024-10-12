@@ -1,5 +1,8 @@
 import { Exclude } from 'class-transformer';
-import { EntityWithDate } from 'src/base/entity-with-date';
+import {
+  EntityWithDate,
+  EntityWithDateFields,
+} from 'src/base/entity-with-date';
 import { Role } from 'src/roles/entities/role.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
@@ -41,3 +44,13 @@ export class User extends EntityWithDate {
   @JoinColumn({ name: 'role_id' })
   role: Role;
 }
+
+export const UserFields = [
+  'email',
+  'name',
+  'phone',
+  'status',
+  'avatar',
+  'roleId',
+  ...EntityWithDateFields,
+];

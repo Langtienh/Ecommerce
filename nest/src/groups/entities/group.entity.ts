@@ -1,4 +1,7 @@
-import { EntityWithSoftDelete } from 'src/base/entity-with-soft-delete';
+import {
+  EntityWithSoftDelete,
+  EntityWithSoftDeleteFields,
+} from 'src/base/entity-with-soft-delete';
 import { Permission } from 'src/permissions/entities/permission.entity';
 import { Resource } from 'src/resources/entities/resource.entity';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
@@ -18,3 +21,9 @@ export class Group extends EntityWithSoftDelete {
   @OneToMany(() => Permission, (permission) => permission.group)
   permissions: Permission[];
 }
+
+export const groupFields = [
+  'name',
+  'resourceId',
+  ...EntityWithSoftDeleteFields,
+];

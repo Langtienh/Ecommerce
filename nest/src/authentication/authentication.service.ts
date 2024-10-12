@@ -210,6 +210,7 @@ export class AuthenticationService {
   }
 
   private filterUser(user: { password: string }) {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ..._user } = user;
     return _user;
   }

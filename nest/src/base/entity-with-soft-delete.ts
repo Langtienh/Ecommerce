@@ -1,5 +1,4 @@
 import { Exclude } from 'class-transformer';
-import { ALLOWED_TYPES } from 'src/lib/utils';
 import { DeleteDateColumn, PrimaryGeneratedColumn } from 'typeorm';
 
 export class EntityWithSoftDelete {
@@ -11,7 +10,4 @@ export class EntityWithSoftDelete {
   deletedAt: Date;
 }
 
-export const EntityWithSoftDeleteFields = [
-  { value: 'id', type: ALLOWED_TYPES.NUMBER },
-  { value: 'deletedAt', type: ALLOWED_TYPES.DATE },
-];
+export const EntityWithSoftDeleteFields = ['id', 'deletedAt'];

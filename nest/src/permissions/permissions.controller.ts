@@ -6,11 +6,13 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { ParamIdDto } from 'src/base/query-helper';
 import { Public, ReponseMessage } from 'src/decorator/customize';
-import { ParamIdDto } from 'src/lib/utils';
 import { CreatePermissionDto } from './dto/create-permission.dto';
+import { QueryPremissionDto } from './dto/query-permission.dto';
 import { UpdatePermissionDto } from './dto/update-permission.dto';
 import { PermissionsService } from './permissions.service';
 
@@ -28,8 +30,8 @@ export class PermissionsController {
   @Public()
   @ReponseMessage('Get all permissions successfully')
   @Get()
-  findAll() {
-    return this.permissionsService.findAll();
+  findAll(@Query() query: QueryPremissionDto) {
+    return this.permissionsService.findAll(query);
   }
 
   @Public()

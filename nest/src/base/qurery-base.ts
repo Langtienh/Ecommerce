@@ -1,23 +1,22 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsOptional } from 'class-validator';
+import { IsNumber, IsOptional } from 'class-validator';
+import { QueryHelper } from './query-helper';
 
 export class QueryBase {
-  @ApiProperty()
   @IsOptional()
   search?: string;
 
-  @ApiProperty()
+  @IsNumber()
   @IsOptional()
   @Transform(({ value }) => (value ? +value : 1))
   page: number = 1;
 
-  @ApiProperty()
+  @IsNumber()
   @IsOptional()
   @Transform(({ value }) => (value ? +value : 10))
   limit: number = 10;
 
-  @ApiProperty()
+  @Transform(({ value }) => QueryHelper.toArray(value))
   @IsOptional()
   sort: string[] = ['id'];
 }

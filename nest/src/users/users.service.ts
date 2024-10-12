@@ -5,10 +5,12 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { compare, genSalt, hash } from 'bcrypt';
+import { QueryHelper } from 'src/base/query-helper';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
+import { QueryUser } from './dto/query-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User, UserStatus } from './entities/user.entity';
+import { User, UserFields, UserStatus } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
@@ -38,8 +40,30 @@ export class UsersService {
     return this.userRepo.save({ ...createUserDto, password });
   }
 
-  findAll() {
-    return this.userRepo.find();
+  async findAll(querys: QueryUser) {
+    const { page, limit, search, sort, ...fields } = querys;
+    const queryBuilder = this.userRepo.createQueryBuilder('user');
+    if (search) {
+      queryBuilder.andWhere(
+        'user.email ILIKE :search or user.name ILIKE :search or user.phone ILIKE :search',
+        {
+          search: `%${search}%`,
+        },
+      );
+    }
+
+    // default
+    const order = QueryHelper.toOrder(sort, UserFields);
+    const where = QueryHelper.toFilter(fields, UserFields);
+    queryBuilder.andWhere(where);
+    queryBuilder.orderBy(order);
+    queryBuilder.skip((page - 1) * limit).take(limit);
+
+    // result
+    const [result, totalItem] = await queryBuilder.getManyAndCount();
+    const totalPage = Math.ceil(totalItem / limit);
+    const meta = { totalItem, totalPage, page, limit };
+    return { meta, result };
   }
 
   async findOne(id: number) {

@@ -6,11 +6,13 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { ParamIdDto } from 'src/base/query-helper';
 import { Public, ReponseMessage } from 'src/decorator/customize';
-import { ParamIdDto } from 'src/lib/utils';
 import { CreateRoleDto } from './dto/create-role.dto';
+import { QueryRoleDto } from './dto/query-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { RolesService } from './roles.service';
 
@@ -28,8 +30,8 @@ export class RolesController {
   @Public()
   @ReponseMessage('Find all roles successfully')
   @Get()
-  findAll() {
-    return this.rolesService.findAll();
+  findAll(@Query() query: QueryRoleDto) {
+    return this.rolesService.findAll(query);
   }
 
   @Public()

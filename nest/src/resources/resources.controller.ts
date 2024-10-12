@@ -6,12 +6,14 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { AccessTokenData } from 'src/authentication/types/token-payload';
+import { ParamIdDto } from 'src/base/query-helper';
 import { AccessToken, Public, ReponseMessage } from 'src/decorator/customize';
-import { ParamIdDto } from 'src/lib/utils';
 import { CreateResourceDto } from './dto/create-resource.dto';
+import { QueryResourceDto } from './dto/query-resource.dto';
 import { UpdateResourceDto } from './dto/update-resource.dto';
 import { ResourcesService } from './resources.service';
 
@@ -32,8 +34,8 @@ export class ResourcesController {
   @Public()
   @ReponseMessage('Get all resources successfully')
   @Get()
-  findAll() {
-    return this.resourcesService.findAll();
+  findAll(@Query() query: QueryResourceDto) {
+    return this.resourcesService.findAll(query);
   }
 
   @Public()

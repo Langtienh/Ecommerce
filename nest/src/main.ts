@@ -17,6 +17,7 @@ async function bootstrap() {
   // Sử dụng CustomValidationPipe để xử lý validation
   // Phải để transform: true thì mới sử dụng được Transform trong class-validator
   app.useGlobalPipes(
+    // new ValidationPipe({
     new CustomValidationPipe({
       transform: true,
     }),

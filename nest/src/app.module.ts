@@ -1,19 +1,19 @@
-import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { JwtModule } from '@nestjs/jwt';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { dataSourceOption } from 'db/data-source';
-import { UsersModule } from './users/users.module';
-import { ResourcesModule } from './resources/resources.module';
-import { GroupsModule } from './groups/groups.module';
-import { RolesModule } from './roles/roles.module';
-import { PermissionsModule } from './permissions/permissions.module';
-import { AuthenticationModule } from './authentication/authentication.module';
+import { Module } from '@nestjs/common'
+import { ConfigModule } from '@nestjs/config'
+import { JwtModule } from '@nestjs/jwt'
+import { TypeOrmModule } from '@nestjs/typeorm'
+import { dataSourceOption } from 'db/data-source'
+import { AuthenticationModule } from './authentication/authentication.module'
+import { GroupsModule } from './groups/groups.module'
+import { PermissionsModule } from './permissions/permissions.module'
+import { ResourcesModule } from './resources/resources.module'
+import { RolesModule } from './roles/roles.module'
+import { UsersModule } from './users/users.module'
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true,
+      isGlobal: true
     }),
     TypeOrmModule.forRoot(dataSourceOption),
     UsersModule,
@@ -22,9 +22,9 @@ import { AuthenticationModule } from './authentication/authentication.module';
     GroupsModule,
     RolesModule,
     PermissionsModule,
-    AuthenticationModule,
+    AuthenticationModule
   ],
   controllers: [],
-  providers: [],
+  providers: []
 })
 export class AppModule {}

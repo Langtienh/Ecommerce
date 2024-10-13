@@ -1,19 +1,15 @@
-import { User } from 'src/users/entities/user.entity';
-import { JoinColumn, ManyToOne } from 'typeorm';
-import { EntityWithDate, EntityWithDateFields } from './entity-with-date';
+import { User } from 'src/users/entities/user.entity'
+import { JoinColumn, ManyToOne } from 'typeorm'
+import { EntityWithDate, EntityWithDateFields } from './entity-with-date'
 
 export class EntityWithUpdator extends EntityWithDate {
   @ManyToOne(() => User)
   @JoinColumn({ name: 'updater_id' })
-  updater: User;
+  updater: User
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'creator_id' })
-  creator: User;
+  creator: User
 }
 
-export const EntityWithUpdateByFields = [
-  'updater_id',
-  'creator_id',
-  ...EntityWithDateFields,
-];
+export const EntityWithUpdateByFields = ['updater_id', 'creator_id', ...EntityWithDateFields]

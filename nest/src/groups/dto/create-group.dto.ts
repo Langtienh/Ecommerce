@@ -1,12 +1,12 @@
-import { IsInt, IsNotEmpty, IsString, MaxLength } from 'class-validator';
+import { IsInt, IsNotEmpty, IsString, MaxLength } from 'class-validator'
 
 export class CreateGroupDto {
   @MaxLength(63)
   @IsString()
   @IsNotEmpty()
-  name: string;
+  name: string
 
   @IsInt()
   @IsNotEmpty()
-  resourceId: number;
+  resourceId: number
 }

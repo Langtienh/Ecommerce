@@ -1,13 +1,10 @@
-"use server";
+'use server'
 
-import http from "@/lib/http";
-import { RegisterReponse } from "@/types/response";
-import { RegisterBodyType } from "./schema";
+import http from '@/lib/http'
+import { RegisterReponse } from '@/types/response'
+import { RegisterBodyType } from './schema'
 
 export const register = async (data: RegisterBodyType) => {
-  const res = await http.post<RegisterReponse>(
-    "/authentication/register",
-    data
-  );
-  return res;
-};
+  const res = await http.post<RegisterReponse>('/authentication/register', data)
+  return res
+}

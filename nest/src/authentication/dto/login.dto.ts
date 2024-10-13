@@ -1,7 +1,4 @@
-import { OmitType } from '@nestjs/mapped-types';
-import { RegisterDto } from './register.dto';
+import { OmitType } from '@nestjs/mapped-types'
+import { RegisterDto } from './register.dto'
 
-export class loginDto extends OmitType(RegisterDto, [
-  'name',
-  'phone',
-] as const) {}
+export class loginDto extends OmitType(RegisterDto, ['name', 'phone'] as const) {}

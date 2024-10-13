@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus } from '@nestjs/common';
+import { HttpException, HttpStatus } from '@nestjs/common'
 
 export class UnprocessableEntityException extends HttpException {
   constructor(message: string, constraints?: any) {
@@ -7,9 +7,9 @@ export class UnprocessableEntityException extends HttpException {
         message,
         constraints,
         statusCode: HttpStatus.UNPROCESSABLE_ENTITY,
-        error: 'Unprocessable Entity',
+        error: 'Unprocessable Entity'
       },
-      HttpStatus.UNPROCESSABLE_ENTITY,
-    );
+      HttpStatus.UNPROCESSABLE_ENTITY
+    )
   }
 }

@@ -4,9 +4,9 @@ export enum UserFieldSort {
   EMAIL = 'email',
   PHONE = 'phone',
   CREATED_AT = 'createdAt',
-  UPDATED_AT = 'updatedAt',
+  UPDATED_AT = 'updatedAt'
 }
 
 export interface SortField {
-  [key: string]: 'ASC' | 'DESC';
+  [key: string]: 'ASC' | 'DESC'
 }

@@ -1,13 +1,13 @@
-import { Exclude } from 'class-transformer';
-import { DeleteDateColumn, PrimaryGeneratedColumn } from 'typeorm';
+import { Exclude } from 'class-transformer'
+import { DeleteDateColumn, PrimaryGeneratedColumn } from 'typeorm'
 
 export class EntityWithSoftDelete {
   @PrimaryGeneratedColumn()
-  id: number;
+  id: number
 
   @Exclude()
   @DeleteDateColumn({ name: 'deleted_at' })
-  deletedAt: Date;
+  deletedAt: Date
 }
 
-export const EntityWithSoftDeleteFields = ['id', 'deletedAt'];
+export const EntityWithSoftDeleteFields = ['id', 'deletedAt']

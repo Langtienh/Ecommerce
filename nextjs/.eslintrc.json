@@ -1,13 +1,8 @@
 {
-  "extends": [
-    "next/core-web-vitals",
-    "eslint-config-prettier",
-    "prettier",
-    "next/typescript"
-  ],
+  "extends": ["next/core-web-vitals", "eslint-config-prettier", "prettier", "next/typescript"],
   "plugins": ["prettier"],
   "rules": {
-    "no-unused-vars": "warn",
+    "no-unused-vars": "off",
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/no-unused-vars": "off",
     "@typescript-eslint/no-empty-object-type": "off",

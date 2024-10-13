@@ -1,3 +1,3 @@
-import HeaderMain from "./header-main";
+import HeaderMain from './header-main'
 
-export { HeaderMain };
+export { HeaderMain }

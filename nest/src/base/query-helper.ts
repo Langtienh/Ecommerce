@@ -1,18 +1,10 @@
-import { Transform } from 'class-transformer';
-import { IsInt } from 'class-validator';
-import {
-  And,
-  Brackets,
-  In,
-  LessThan,
-  MoreThan,
-  Not,
-  ObjectLiteral,
-} from 'typeorm';
+import { Transform } from 'class-transformer'
+import { IsInt } from 'class-validator'
+import { And, Brackets, In, LessThan, MoreThan, Not, ObjectLiteral } from 'typeorm'
 export class ParamIdDto {
   @Transform(({ value }) => parseInt(value, 10))
   @IsInt()
-  id: number;
+  id: number
 }
 
 export class QueryHelper {
@@ -22,8 +14,8 @@ export class QueryHelper {
    * @returns string[]
    */
   static strToArr(str: string) {
-    if (!str) return [];
-    return str.split(',').map((item) => item.trim());
+    if (!str) return []
+    return str.split(',').map((item) => item.trim())
   }
 
   /**
@@ -32,16 +24,16 @@ export class QueryHelper {
    * @description Chuyển giá trị thành mảng
    */
   static toArray(value: any): any[] {
-    if (!Array.isArray(value)) return this.strToArr(value);
-    const result: string[] = [];
+    if (!Array.isArray(value)) return this.strToArr(value)
+    const result: string[] = []
     value.forEach((item) => {
       if (typeof item === 'string') {
-        result.push(...this.strToArr(item));
+        result.push(...this.strToArr(item))
       } else {
-        result.push(item);
+        result.push(item)
       }
-    });
-    return result;
+    })
+    return result
   }
 
   /**
@@ -50,26 +42,26 @@ export class QueryHelper {
    * @description Chuyển giá trị thành mảng số
    */
   static toNumberArray(value: any): number[] {
-    return this.toArray(value).map((v: any) => +v);
+    return this.toArray(value).map((v: any) => +v)
   }
 
   static toOrder(value: any, fields: string[]): Record<string, 'ASC' | 'DESC'> {
-    const result: Record<string, 'ASC' | 'DESC'> = {};
-    const arr = this.toArray(value);
+    const result: Record<string, 'ASC' | 'DESC'> = {}
+    const arr = this.toArray(value)
     arr.forEach((item) => {
-      const char = item.charAt(0);
-      const field = item.slice(1);
+      const char = item.charAt(0)
+      const field = item.slice(1)
       if (char === '-') {
         if (fields.includes(field)) {
-          result[field] = 'DESC';
+          result[field] = 'DESC'
         }
       } else {
         if (fields.includes(item)) {
-          result[item] = 'ASC';
+          result[item] = 'ASC'
         }
       }
-    });
-    return result;
+    })
+    return result
   }
 
   /**
@@ -80,50 +72,42 @@ export class QueryHelper {
    */
   static toFilter(
     value: { readonly [key: string]: any },
-    fields: string[],
+    fields: string[]
   ): string | ObjectLiteral | Brackets | ObjectLiteral[] {
-    const result: ObjectLiteral = {};
+    const result: ObjectLiteral = {}
     Object.keys(value).forEach((key) => {
-      const arrValue = this.toArray(value[key]);
+      const arrValue = this.toArray(value[key])
       // item.charAt(0) = '!' | '>' | '<'
-      const notEqual = arrValue
-        .filter((item) => item.charAt(0) === '!')
-        .map((item) => item.slice(1));
-      const greaterThan = arrValue
-        .filter((item) => item.charAt(0) === '>')
-        .map((item) => item.slice(1));
-      const lessThan = arrValue
-        .filter((item) => item.charAt(0) === '<')
-        .map((item) => item.slice(1));
+      const notEqual = arrValue.filter((item) => item.charAt(0) === '!').map((item) => item.slice(1))
+      const greaterThan = arrValue.filter((item) => item.charAt(0) === '>').map((item) => item.slice(1))
+      const lessThan = arrValue.filter((item) => item.charAt(0) === '<').map((item) => item.slice(1))
       const equal = arrValue.filter(
         (item) =>
-          !notEqual.includes(item.slice(1)) &&
-          !greaterThan.includes(item.slice(1)) &&
-          !lessThan.includes(item.slice(1)),
-      );
+          !notEqual.includes(item.slice(1)) && !greaterThan.includes(item.slice(1)) && !lessThan.includes(item.slice(1))
+      )
       // loại bỏ các trường không tồn tại trong fields
       if (fields.includes(key)) {
-        const conditions = [];
+        const conditions = []
 
         // nếu có giá trị thì thêm điều kiện
         if (equal.length) {
-          conditions.push(In(equal));
+          conditions.push(In(equal))
         }
         if (notEqual.length) {
-          conditions.push(Not(In(notEqual)));
+          conditions.push(Not(In(notEqual)))
         }
         if (greaterThan.length) {
-          conditions.push(MoreThan(greaterThan[0]));
+          conditions.push(MoreThan(greaterThan[0]))
         }
         if (lessThan.length) {
-          conditions.push(LessThan(lessThan[0]));
+          conditions.push(LessThan(lessThan[0]))
         }
 
         if (conditions.length) {
-          result[key] = And(...conditions);
+          result[key] = And(...conditions)
         }
       }
-    });
-    return result;
+    })
+    return result
   }
 }

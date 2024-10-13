@@ -13,7 +13,7 @@ export default function BackButton() {
     <Button
       onClick={handleClick}
       variant="link"
-      className="bg-white bg-opacity-15 rounded-xl text-white"
+      className="bg-inherit text-gray-500"
     >
       <FaArrowLeft size={24} className="size-6" />
     </Button>

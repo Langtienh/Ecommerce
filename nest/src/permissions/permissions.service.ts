@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { QueryHelper } from 'src/base/query-helper';
 import { Group } from 'src/groups/entities/group.entity';
-import { Repository } from 'typeorm';
+import { ILike, In, Repository } from 'typeorm';
 import { CreatePermissionDto } from './dto/create-permission.dto';
 import { QueryPremissionDto } from './dto/query-permission.dto';
 import { UpdatePermissionDto } from './dto/update-permission.dto';
@@ -33,31 +33,29 @@ export class PermissionsService {
   }
 
   async findAll(query: QueryPremissionDto) {
-    const { page, limit, sort, search, method, ...fields } = query;
+    const { page, limit, sort, method, name, apiPath, groupId, resourceId } =
+      query;
     const skip = (page - 1) * limit;
-
-    const queryBuilder = this.permisstionRepo.createQueryBuilder('permission');
-    queryBuilder.skip(skip).take(limit);
-
-    if (search) {
-      queryBuilder.andWhere(
-        'permission.name ILIKE :search or permission.apiPath ILike :search',
-        {
-          search: `%${search}%`,
-        },
-      );
-    }
-    // default
     const order = QueryHelper.toOrder(sort, permissionFields);
-    const where = QueryHelper.toFilter(fields, permissionFields);
-    queryBuilder.andWhere(where);
-    queryBuilder.orderBy(order);
-    // custom
-    if (method) {
-      queryBuilder.andWhere({ method });
-    }
     // result
-    const [result, totalItem] = await queryBuilder.getManyAndCount();
+    const [result, totalItem] = await this.permisstionRepo.findAndCount({
+      order,
+      skip,
+      take: limit,
+      where: {
+        method: method ? In(method) : null,
+        name: name ? ILike(`%${name}%`) : null,
+        apiPath: apiPath ? ILike(`%${apiPath}%`) : null,
+        group:
+          groupId && resourceId
+            ? {
+                id: groupId ? In(groupId) : null,
+                resourceId: resourceId ? In(resourceId) : null,
+              }
+            : null,
+      },
+      relations: { group: true },
+    });
     const totalPage = Math.ceil(totalItem / limit);
     const meta = { page, limit, totalPage, totalItem };
     return { meta, result };

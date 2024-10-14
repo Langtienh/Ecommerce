@@ -1,14 +1,54 @@
 import envConfig from '@/config'
-import { BaseReponse, ReponseError, ReponseSuccess } from '@/types/response'
 
-export class HttpError extends Error {
-  status: number
-  payload: ReponseError
+export interface ReponsePayload {
+  message: string
+  statusCode: number
+}
 
-  constructor({ status, payload }: { status: number; payload: ReponseError }) {
+export class Reponse {
+  message: string
+  statusCode: number
+  constructor(payload: ReponsePayload) {
+    this.message = payload.message
+    this.statusCode = payload.statusCode
+  }
+}
+
+export interface ReponseSuccessPayload<T> extends ReponsePayload {
+  data: T
+}
+
+export class ReponseSuccess<T> extends Reponse {
+  data: T
+  constructor(payload: ReponseSuccessPayload<T>) {
+    super(payload)
+    this.data = payload.data
+  }
+}
+
+export interface ReponseErrorPayload extends ReponsePayload {
+  error: string
+}
+
+export class ReponseError extends Error {
+  error: string
+  statusCode: number
+  constructor(payload: ReponseErrorPayload) {
     super(payload.message)
-    this.status = status
-    this.payload = payload
+    this.error = payload.error
+    this.statusCode = payload.statusCode
+  }
+}
+
+export interface EntityErrorPayload extends ReponseErrorPayload {
+  constraints: Record<string, string>
+}
+
+export class EntityError extends ReponseError {
+  constraints: Record<string, string>
+  constructor(payload: EntityErrorPayload) {
+    super(payload)
+    this.constraints = payload.constraints
   }
 }
 
@@ -38,14 +78,12 @@ const request = async <T>(
       ...option?.headers
     }
   })
-  const payload: BaseReponse = await res.json()
+  const payload: ReponsePayload = await res.json()
   if (!res.ok) {
-    throw new HttpError({ status: res.status, payload } as {
-      status: number
-      payload: ReponseError
-    })
+    if (res.status === 422) throw new EntityError(payload as EntityErrorPayload)
+    throw new ReponseError(payload as ReponseErrorPayload)
   }
-  return payload as ReponseSuccess<T>
+  return payload as ReponseSuccessPayload<T>
 }
 
 type NoBody = Omit<CustomRequestInit, 'body'>

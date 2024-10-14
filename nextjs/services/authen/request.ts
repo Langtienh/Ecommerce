@@ -1,5 +1,3 @@
-'use server'
-
 import http from '@/lib/http'
 import { RegisterReponse } from '@/types/response'
 import { RegisterBodyType } from './schema'

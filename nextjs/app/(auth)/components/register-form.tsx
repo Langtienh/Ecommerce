@@ -3,11 +3,12 @@
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import handleRequest from '@/lib/action-wrapper'
+import { handleErrorApi } from '@/lib/handle-request'
 import { register } from '@/services/authen/request'
 import { RegisterBodyType, RegisterFormSchema } from '@/services/authen/schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 
 export default function RegisterForm() {
   // 1. Define your form.
@@ -24,9 +25,11 @@ export default function RegisterForm() {
 
   // 2. Define a submit handler.
   async function onSubmit(values: RegisterBodyType) {
-    const res = await handleRequest(() => register(values), 'Đăng kí thành công', 'Lỗi khi đăng kí')
-    if (res) {
-      console.log(res)
+    try {
+      await register(values)
+      toast.success('Đăng ký thành công')
+    } catch (error) {
+      handleErrorApi({ error, setError: form.setError, message: 'Đăng ký thất bại' })
     }
   }
 

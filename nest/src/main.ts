@@ -1,4 +1,4 @@
-import { ClassSerializerInterceptor, ValidationPipe, VersioningType } from '@nestjs/common'
+import { ClassSerializerInterceptor, VersioningType } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { NestFactory, Reflector } from '@nestjs/core'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
@@ -6,6 +6,7 @@ import { AppModule } from './app.module'
 // import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { JwtAuthGuard } from './authentication/jwt-auth.guard'
 import { TransformsInterceptor } from './core/tranforms.interceptor'
+import { CustomValidationPipe } from './core/validation'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
@@ -16,8 +17,8 @@ async function bootstrap() {
   // Sử dụng CustomValidationPipe để xử lý validation
   // Phải để transform: true thì mới sử dụng được Transform trong class-validator
   app.useGlobalPipes(
-    new ValidationPipe({
-      // new CustomValidationPipe({
+    // new ValidationPipe({
+    new CustomValidationPipe({
       transform: true
     })
   )

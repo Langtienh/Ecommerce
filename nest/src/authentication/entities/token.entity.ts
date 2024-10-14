@@ -13,11 +13,14 @@ export class Token {
   @PrimaryGeneratedColumn()
   id: number
 
-  @Column()
+  @Column({ length: 255 })
   token: string
 
   @Column({ name: 'token_type', type: 'enum', enum: TOKEN_TYPE })
   tokenType: TOKEN_TYPE
+
+  @Column({ length: 6, type: 'char' })
+  otp: string
 
   @Column({ name: 'user_id' })
   userId: number

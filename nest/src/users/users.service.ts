@@ -110,4 +110,13 @@ export class UsersService {
     const user = await this.findOne(userId)
     return this.userRepo.save({ ...user, status: UserStatus.VERIFY })
   }
+
+  async updateRefreshToken(userId: number, refreshToken: string) {
+    const user = await this.findOne(userId)
+    return this.userRepo.save({ ...user, refreshToken })
+  }
+
+  hidenFiledUser({ password, refreshToken, ...user }: { password: string; refreshToken: string }) {
+    return user
+  }
 }

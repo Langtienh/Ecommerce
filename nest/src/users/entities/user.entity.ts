@@ -21,7 +21,7 @@ export class User extends EntityWithDate {
   @Column()
   password: string
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, length: 15 })
   phone: string
 
   @Column({
@@ -36,6 +36,10 @@ export class User extends EntityWithDate {
 
   @Column({ name: 'role_id', default: 1 })
   roleId: number
+
+  @Exclude()
+  @Column({ name: 'refresh_token', length: 255, nullable: true })
+  refreshToken: string
 
   @ManyToOne(() => Role)
   @JoinColumn({ name: 'role_id' })

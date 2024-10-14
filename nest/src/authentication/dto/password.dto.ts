@@ -11,6 +11,20 @@ export class ResetPasswordDto extends PasswordDto {
   @IsString()
   @IsNotEmpty()
   forgotPasswordToken: string
+
+  @IsString()
+  @IsNotEmpty()
+  otp: string
+}
+
+export class VerifyForgotPasswordOTPDto {
+  @IsString()
+  @IsNotEmpty()
+  forgotPasswordToken: string
+
+  @IsString()
+  @IsNotEmpty()
+  otp: string
 }
 
 export class ChangePasswordDto extends PasswordDto {

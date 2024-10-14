@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 
+import { LoadingProvider, OverlayLoading } from '@/components/loading'
 import { Toaster } from '@/components/ui/sonner'
 import { Roboto } from 'next/font/google'
 
@@ -22,8 +23,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body className={`${roboto.className} antialiased`}>{children}</body>
-      <Toaster position='top-center' richColors duration={2000} />
+      <body className={`${roboto.className} antialiased`}>
+        <LoadingProvider>
+          {children}
+          <OverlayLoading />
+        </LoadingProvider>
+
+        <Toaster position='top-center' richColors duration={2000} />
+      </body>
     </html>
   )
 }

@@ -1,0 +1,12 @@
+@keyframes moveLeftToRight {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.image-animation {
+  animation: moveLeftToRight 1s linear infinite;
+}

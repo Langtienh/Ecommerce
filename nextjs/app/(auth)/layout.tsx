@@ -16,7 +16,7 @@ export default function AuthLayout({
     <>
       <HeaderMain className='fixed top-0 w-full' />
       <div className='h-16'></div>
-      <main className='max-w-[700px] px-[10px] mx-auto pb-[100px]'>
+      <main className='max-w-[700px] px-[10px] mx-auto pb-[140px]'>
         <AuthNavigation />
         {children}
       </main>

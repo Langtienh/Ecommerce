@@ -12,13 +12,22 @@ export const passwordSchema = z
     message: 'Mật khẩu phải chứa ít nhất một ký tự đặc biệt'
   })
 
+export const emailSchema = z.string().email({ message: 'Email không hợp lệ' })
+export const nameSchema = z.string().trim().min(6, 'Tên tối thiểu 6 ký tự').max(63, 'Tên tối đa 63 ký tự')
+export const phoneSchema = z
+  .string()
+  .min(10, 'Không đúng định dạng số điện thoại')
+  .max(11, 'Không đúng định dạng số điện thoại')
+
 export const RegisterFormSchema = z
   .object({
-    name: z.string().trim().min(6, 'Tên tối thiểu 6 ký tự').max(63, 'Tên tối đa 63 ký tự'),
-    email: z.string().email({ message: 'Email không hợp lệ' }),
-    phone: z.string().min(10, 'Không đúng định dạng số điện thoại').max(11, 'Không đúng định dạng số điện thoại'),
+    name: nameSchema,
+    email: emailSchema,
+    phone: phoneSchema,
     password: passwordSchema,
-    confirmPassword: z.string()
+    confirmPassword: z.string(),
+    isAcceptTerms: z.boolean(),
+    isStudent: z.boolean()
   })
   .strict()
   .superRefine((data, ctx) => {
@@ -29,6 +38,26 @@ export const RegisterFormSchema = z
         path: ['confirmPassword']
       })
     }
+    if (data.isAcceptTerms !== true) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Vui lòng chấp nhận điều khoản sử dụng',
+        path: ['isAcceptTerms']
+      })
+    }
   })
 
 export type RegisterBodyType = z.infer<typeof RegisterFormSchema>
+
+export const LoginFormSchema = z.object({
+  email: emailSchema,
+  password: passwordSchema
+})
+
+export type LoginBodyType = z.infer<typeof LoginFormSchema>
+
+export const RestorePasswordSchema = z.object({
+  email: emailSchema
+})
+
+export type RestorePasswordBodyType = z.infer<typeof RestorePasswordSchema>

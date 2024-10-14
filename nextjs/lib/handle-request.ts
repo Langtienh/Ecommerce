@@ -4,7 +4,6 @@ import { EntityError } from './http'
 
 export const handleErrorApi = ({
   error,
-  message = 'Lỗi không xác định',
   setError
 }: {
   error: any
@@ -20,6 +19,6 @@ export const handleErrorApi = ({
       })
     })
   } else {
-    toast.error(error?.message || message)
+    toast.error(error?.message || 'Lỗi không xác định')
   }
 }

@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { dataSourceOption } from 'db/data-source'
 import { AuthenticationModule } from './authentication/authentication.module'
 import { GroupsModule } from './groups/groups.module'
+import { MailModule } from './mail/mail.module'
 import { PermissionsModule } from './permissions/permissions.module'
 import { ResourcesModule } from './resources/resources.module'
 import { RolesModule } from './roles/roles.module'
@@ -22,7 +23,8 @@ import { UsersModule } from './users/users.module'
     GroupsModule,
     RolesModule,
     PermissionsModule,
-    AuthenticationModule
+    AuthenticationModule,
+    MailModule
   ],
   controllers: [],
   providers: []

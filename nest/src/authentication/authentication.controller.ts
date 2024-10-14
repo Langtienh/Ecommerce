@@ -54,12 +54,14 @@ export class AuthenticationController {
     return this.authenticationService.reSendVerifyEmail(payload)
   }
 
+  @Public()
   @ReponseMessage('Send forgot password email successfully')
   @Post('password/send')
   forgotPassword(@Body() body: SendEmailDto) {
     return this.authenticationService.sendMailForgotPassword(body.email)
   }
 
+  @Public()
   @ReponseMessage('Resend verify email successfully')
   @Post('password/resend')
   resendForgotPassword(@Body() body: SendEmailDto) {

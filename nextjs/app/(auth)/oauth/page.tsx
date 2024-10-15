@@ -2,9 +2,9 @@
 
 import { refreshTokenTrigger } from '@/services/cookies/authen'
 import { useSearchParams } from 'next/navigation'
-import { useEffect } from 'react'
+import { Suspense, useEffect } from 'react'
 
-export default function Page() {
+function Client() {
   const searchParams = useSearchParams()
   const accessToken = searchParams.get('accessToken')
   const refreshToken = searchParams.get('refreshToken')
@@ -16,4 +16,12 @@ export default function Page() {
     setToken()
   }, [accessToken, refreshToken])
   return <></>
+}
+
+export default function Page() {
+  return (
+    <Suspense fallback={<></>}>
+      <Client />
+    </Suspense>
+  )
 }

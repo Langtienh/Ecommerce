@@ -4,7 +4,7 @@ import { useLoading } from '@/components/loading'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
+import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { handleErrorApi } from '@/lib/handle-request'
 import { register } from '@/services/authen/request'
@@ -109,7 +109,9 @@ export default function RegisterForm() {
                 <FormControl>
                   <Input placeholder='Nhập mật khẩu' type='password' {...field} />
                 </FormControl>
-
+                <FormDescription>
+                  (*) Mật khẩu phải chứa ít nhất 1 chữ hoa, 1 số và 1 ký tự đặc biệt và dài ít nhất 6 ký tự'
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -120,7 +122,7 @@ export default function RegisterForm() {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input placeholder='Nhập lại mật khẩu' type='password' {...field} />
+                  <Input placeholder='Xác nhận lại mật khẩu' type='password' {...field} />
                 </FormControl>
 
                 <FormMessage />

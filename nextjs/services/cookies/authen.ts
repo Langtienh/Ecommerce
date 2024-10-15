@@ -5,6 +5,7 @@ import { decodeJwtToken } from '@/lib/jwt'
 import { RegisterReponse } from '@/types/response'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
+import { VerifyForgotPasswordOTPBodyType } from '../authen/schema'
 
 export const registerTrigger = async (data: RegisterReponse) => {
   const verifyEmailTokenPayload = decodeJwtToken(data.verifyEmailToken)
@@ -15,6 +16,10 @@ export const registerTrigger = async (data: RegisterReponse) => {
     value: data.verifyEmailToken,
     expires: new Date(verifyEmailTokenPayload.exp * 1000)
   })
+}
+
+export const verifyEmailTrigger = async () => {
+  cookies().delete('verifyEmailToken')
 }
 
 export const refreshTokenTrigger = async ({
@@ -71,4 +76,28 @@ export const resendVerifyEmailTrigger = async (token: string) => {
     value: token,
     expires: new Date(verifyEmailTokenPayload.exp * 1000)
   })
+}
+
+export const verifyRestorePasswordOtpTrigger = async ({
+  forgotPasswordToken,
+  otp
+}: VerifyForgotPasswordOTPBodyType) => {
+  const verifyEmailTokenPayload = decodeJwtToken(forgotPasswordToken)
+  cookies().set({
+    ...COOKIES_OPTIONS,
+    name: 'forgotPasswordToken',
+    value: forgotPasswordToken,
+    expires: new Date(verifyEmailTokenPayload.exp * 1000)
+  })
+  cookies().set({
+    ...COOKIES_OPTIONS,
+    name: 'otp',
+    value: otp,
+    expires: new Date(verifyEmailTokenPayload.exp * 1000)
+  })
+}
+
+export const resetPasswordTrigger = async () => {
+  cookies().delete('forgotPasswordToken')
+  cookies().delete('otp')
 }

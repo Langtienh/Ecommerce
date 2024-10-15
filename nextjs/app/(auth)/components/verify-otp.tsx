@@ -6,37 +6,49 @@ import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
 import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from '@/components/ui/input-otp'
 import { handleErrorApi } from '@/lib/handle-request'
 import { delayForm } from '@/lib/utils'
-import { resendVerifyEmail, verifyEmail } from '@/services/authen/request'
-import { VerifyEmailBodyType, verifyEmailSchema } from '@/services/authen/schema'
+import { resendRestorePassword, verifyForgotPasswordOTP } from '@/services/authen/request'
+import { VerifyForgotPasswordOTPBodyType, verifyForgotPasswordOTPSchema } from '@/services/authen/schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 import { FieldErrors, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
 interface VerifyEmailFormProps {
   email: string
-  verifyEmailToken?: string
+  forgotPasswordToken: string
+  open: boolean
+  handleClose: () => void
 }
 
-export default function VerifyEmailForm({ email, verifyEmailToken }: VerifyEmailFormProps) {
+export default function VerifyForgotPasswordOTPForm({
+  email,
+  forgotPasswordToken,
+  open,
+  handleClose
+}: VerifyEmailFormProps) {
   const router = useRouter()
   const handleBack = () => router.back()
-  const form = useForm<VerifyEmailBodyType>({
-    resolver: zodResolver(verifyEmailSchema),
+  const form = useForm<VerifyForgotPasswordOTPBodyType>({
+    resolver: zodResolver(verifyForgotPasswordOTPSchema),
     defaultValues: {
       otp: '',
-      verifyEmailToken
+      forgotPasswordToken
     }
   })
   const { isLoading, startLoading, finallyLoading } = useLoading()
 
-  const onSubmit = async (data: VerifyEmailBodyType) => {
+  useEffect(() => {
+    form.setValue('forgotPasswordToken', forgotPasswordToken)
+  }, [forgotPasswordToken])
+
+  const onSubmit = async (data: VerifyForgotPasswordOTPBodyType) => {
     startLoading()
     try {
-      const res = await verifyEmail(data)
+      const res = await verifyForgotPasswordOTP(data, true)
       await delayForm()
       toast.success(res.message)
-      router.push('/')
+      router.push('/restore-password')
     } catch (error) {
       handleErrorApi({ error, setError: form.setError })
     } finally {
@@ -45,17 +57,17 @@ export default function VerifyEmailForm({ email, verifyEmailToken }: VerifyEmail
   }
   const handlerError = (
     error: FieldErrors<{
-      verifyEmailToken: string
+      forgotPasswordToken: string
       otp: string
     }>
   ) => {
-    toast.error(error.verifyEmailToken?.message || error.otp?.message)
+    toast.error(error.forgotPasswordToken?.message || error.otp?.message)
   }
   const handleResend = async () => {
     startLoading()
     try {
-      const res = await resendVerifyEmail()
-      form.setValue('verifyEmailToken', res.data.verifyEmailToken)
+      const res = await resendRestorePassword(email)
+      form.setValue('forgotPasswordToken', res.data.token)
       toast.success(res.message)
     } catch (error) {
       handleErrorApi({ error, setError: form.setError })
@@ -64,10 +76,10 @@ export default function VerifyEmailForm({ email, verifyEmailToken }: VerifyEmail
     }
   }
   return (
-    <Dialog open={true}>
+    <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className='sm:max-w-[425px] p-0 overflow-hidden'>
         <DialogHeader className='bg-[#f4f6f8] py-5'>
-          <DialogTitle className='text-xl text-center'>Xác thực email</DialogTitle>
+          <DialogTitle className='text-xl text-center'>Khôi phục mật khẩu</DialogTitle>
         </DialogHeader>
         <div className='p-5 pb-20 w-full'>
           <p className='text-center text-lg'>

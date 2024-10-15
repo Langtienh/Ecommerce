@@ -3,13 +3,7 @@ import { ApiTags } from '@nestjs/swagger'
 import { AccessToken, Public, ReponseMessage } from 'src/decorator/customize'
 import { AuthenticationService } from './authentication.service'
 import { loginDto } from './dto/login.dto'
-import {
-  ChangePasswordDto,
-  ResetPasswordDto,
-  SendEmailDto,
-  VerifyFogotPasswordDto,
-  VerifyForgotPasswordOTPDto
-} from './dto/password.dto'
+import { ChangePasswordDto, ResetPasswordDto, SendEmailDto, VerifyForgotPasswordOTPDto } from './dto/password.dto'
 import { RefreshTokenDto } from './dto/refresh-token.dto'
 import { RegisterDto } from './dto/register.dto'
 import { VerifyEmailDto } from './dto/verify-email.dto'
@@ -72,13 +66,6 @@ export class AuthenticationController {
   @Post('password/resend')
   resendForgotPassword(@Body() body: SendEmailDto) {
     return this.authenticationService.reSendMailForgotPassword(body.email)
-  }
-
-  @Public()
-  @ReponseMessage('Verify forgot password token successfully')
-  @Post('password/verify')
-  verifyFogotPassworToken(@Body() body: VerifyFogotPasswordDto) {
-    return this.authenticationService.verifyFogotPassworToken(body)
   }
 
   @Public()

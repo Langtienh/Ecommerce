@@ -68,3 +68,30 @@ export const verifyEmailSchema = z.object({
 })
 
 export type VerifyEmailBodyType = z.infer<typeof verifyEmailSchema>
+
+export const verifyForgotPasswordOTPSchema = z.object({
+  forgotPasswordToken: z.string(),
+  otp: z.string().length(6, 'Mã OTP phải có 6 ký tự')
+})
+
+export type VerifyForgotPasswordOTPBodyType = z.infer<typeof verifyForgotPasswordOTPSchema>
+
+export const ResetPasswordSchema = z
+  .object({
+    password: passwordSchema,
+    confirmPassword: z.string(),
+    otp: z.string().length(6, 'Mã OTP phải có 6 ký tự'),
+    forgotPasswordToken: z.string()
+  })
+  .strict()
+  .superRefine((data, ctx) => {
+    if (data.password !== data.confirmPassword) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Mật khẩu không khớp',
+        path: ['confirmPassword']
+      })
+    }
+  })
+
+export type ResetPasswordBodyType = z.infer<typeof ResetPasswordSchema>

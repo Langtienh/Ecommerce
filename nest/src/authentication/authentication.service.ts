@@ -9,12 +9,7 @@ import { UsersService } from 'src/users/users.service'
 import { Repository } from 'typeorm'
 import { CONFIG_TOKEN } from './constants'
 import { loginDto } from './dto/login.dto'
-import {
-  ChangePasswordDto,
-  ResetPasswordDto,
-  VerifyFogotPasswordDto,
-  VerifyForgotPasswordOTPDto
-} from './dto/password.dto'
+import { ChangePasswordDto, ResetPasswordDto, VerifyForgotPasswordOTPDto } from './dto/password.dto'
 import { RefreshTokenDto } from './dto/refresh-token.dto'
 import { RegisterDto } from './dto/register.dto'
 import { VerifyEmailDto } from './dto/verify-email.dto'
@@ -142,13 +137,7 @@ export class AuthenticationService {
     const user = await this.userService.findByEmail(email)
     if (!user) throw new UnauthorizedException('Email not found')
     // tạo token tự động lưu vào db rồi
-    const oldToken = await this.TokenRepo.findOne({
-      where: { userId: user.id, tokenType: TOKEN_TYPE.FORGOT_PASSWORD }
-    })
-    if (oldToken) {
-      await this.mailService.sendWithOtp(oldToken.otp, email, OTP_TYPE.restorePassword)
-      return { token: oldToken.token }
-    }
+    await this.TokenRepo.delete({ userId: user.id, tokenType: TOKEN_TYPE.FORGOT_PASSWORD })
     const otp = this.generateOtp(6)
     const token = await this.generateJwtToken({ id: user.id }, TOKEN_TYPE.FORGOT_PASSWORD, otp)
     await this.mailService.sendWithOtp(otp, email, OTP_TYPE.restorePassword)
@@ -167,17 +156,6 @@ export class AuthenticationService {
     }
   }
 
-  async verifyFogotPassworToken(body: VerifyFogotPasswordDto) {
-    const { forgotPasswordToken } = body
-    await this.verifyJwtToken(forgotPasswordToken, TOKEN_TYPE.FORGOT_PASSWORD)
-    const oldToken = await this.TokenRepo.findOne({
-      where: {
-        token: forgotPasswordToken
-      }
-    })
-    if (!oldToken) throw new UnauthorizedException('Token is invalid')
-  }
-
   async verifyForgotPasswordOtp(body: VerifyForgotPasswordOTPDto) {
     const { forgotPasswordToken, otp } = body
     const data = await this.verifyJwtToken(forgotPasswordToken, TOKEN_TYPE.FORGOT_PASSWORD)
@@ -194,11 +172,11 @@ export class AuthenticationService {
       where: { userId: data.id, tokenType: TOKEN_TYPE.FORGOT_PASSWORD, otp }
     })
     if (!isExistToken) throw new UnauthorizedException('Lỗi xác thực')
+    const user = await this.userService.updatePassword(data.id, password)
     await this.TokenRepo.delete({
       userId: data.id,
       tokenType: TOKEN_TYPE.FORGOT_PASSWORD
     })
-    const user = await this.userService.updatePassword(data.id, password)
     const [accessToken, refreshToken] = await this.generateAccessRefreshToken(user)
     return { accessToken, refreshToken, user: this.userService.hidenFiledUser(user) }
   }

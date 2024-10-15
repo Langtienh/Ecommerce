@@ -9,3 +9,7 @@ export interface LoginReponse {
 export interface RegisterReponse extends LoginReponse {
   verifyEmailToken: string
 }
+
+export interface ForgotPasswordReponse {
+  token: string
+}

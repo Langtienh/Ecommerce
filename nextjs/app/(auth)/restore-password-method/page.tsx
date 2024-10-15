@@ -5,12 +5,21 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input'
 import { handleErrorApi } from '@/lib/handle-request'
 import { delayForm } from '@/lib/utils'
+import { restorePassword } from '@/services/authen/request'
 import { RestorePasswordBodyType, RestorePasswordSchema } from '@/services/authen/schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Image from 'next/image'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
+import VerifyForgotPasswordOTPForm from '../components/verify-otp'
 
 export default function Page() {
+  const [isOpen, setIsOpen] = useState(false)
+  const [email, setEmail] = useState('')
+  const [token, setToken] = useState('')
+
+  const handleClose = () => setIsOpen(false)
   // 1. Define your form.
   const form = useForm<RestorePasswordBodyType>({
     resolver: zodResolver(RestorePasswordSchema),
@@ -23,14 +32,19 @@ export default function Page() {
   const onSubmit = async (values: RestorePasswordBodyType) => {
     startLoading()
     try {
-      // Do something
+      const res = await restorePassword(values)
       await delayForm()
+      toast.success(res.message)
+      setEmail(values.email)
+      setToken(res.data.token)
+      setIsOpen(true)
     } catch (error) {
       handleErrorApi({ error, setError: form.setError })
     } finally {
       finallyLoading()
     }
   }
+
   return (
     <>
       <div className='flex flex-col space-y-2 items-center justify-center mb-5'>
@@ -60,6 +74,7 @@ export default function Page() {
           </Button>
         </form>
       </Form>
+      <VerifyForgotPasswordOTPForm handleClose={handleClose} open={isOpen} email={email} forgotPasswordToken={token} />
     </>
   )
 }

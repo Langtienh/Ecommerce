@@ -10,6 +10,7 @@ import { PermissionsModule } from './permissions/permissions.module'
 import { ResourcesModule } from './resources/resources.module'
 import { RolesModule } from './roles/roles.module'
 import { UsersModule } from './users/users.module'
+import { OauthModule } from './oauth/oauth.module';
 
 @Module({
   imports: [
@@ -24,7 +25,8 @@ import { UsersModule } from './users/users.module'
     RolesModule,
     PermissionsModule,
     AuthenticationModule,
-    MailModule
+    MailModule,
+    OauthModule
   ],
   controllers: [],
   providers: []

@@ -43,19 +43,13 @@ export const refreshTokenTrigger = async ({
     value: refreshToken,
     expires: new Date(refreshTokenPayload.exp * 1000)
   })
-  cookies().set({
-    ...COOKIES_OPTIONS,
-    name: 'accessTokenPayload',
-    value: JSON.stringify(accessTokenPayload),
-    expires: new Date(accessTokenPayload.exp * 1000)
-  })
 }
 
 export const getAccessTokenPayload = async () => {
-  const accessTokenPayloadCookies = await cookies().get('accessTokenPayload')?.value
-  if (!accessTokenPayloadCookies) return null
-  const accessTokenPayload: AccessTokenPayload = JSON.parse(accessTokenPayloadCookies)
-  return accessTokenPayload
+  const accessToken = await cookies().get('accessToken')?.value
+  if (!accessToken) return null
+  const accessTokenPayload = decodeJwtToken(accessToken)
+  return accessTokenPayload as AccessTokenPayload
 }
 
 export const getOptionWithAccessToken = async () => {

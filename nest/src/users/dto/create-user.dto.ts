@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsOptional, IsPhoneNumber, IsString, Matches, MaxLength } from 'class-validator'
+import { IsEmail, IsNotEmpty, IsOptional, IsPhoneNumber, IsString, IsUrl, Matches, MaxLength } from 'class-validator'
 
 export class PasswordDto {
   @Matches(/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&#]{6,}$/, {
@@ -23,4 +23,8 @@ export class CreateUserDto extends PasswordDto {
   @IsPhoneNumber('VN')
   @IsOptional()
   phone?: string
+
+  @IsUrl()
+  @IsOptional()
+  avatar?: string
 }

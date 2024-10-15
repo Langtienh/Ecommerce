@@ -135,7 +135,7 @@ export class AuthenticationService {
     const otp = this.generateOtp(6)
     const verifyEmailToken = await this.generateJwtToken({ id }, TOKEN_TYPE.VERIFY_EMAIL, otp)
     await this.mailService.sendWithOtp(otp, email, OTP_TYPE.verifyEmail)
-    return { token: verifyEmailToken }
+    return { verifyEmailToken }
   }
 
   async sendMailForgotPassword(email: string) {

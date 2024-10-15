@@ -61,3 +61,10 @@ export const RestorePasswordSchema = z.object({
 })
 
 export type RestorePasswordBodyType = z.infer<typeof RestorePasswordSchema>
+
+export const verifyEmailSchema = z.object({
+  verifyEmailToken: z.string({ message: 'OTP hêt hạn, vui lòng gửi lại!' }),
+  otp: z.string().length(6, 'Mã OTP phải có 6 ký tự')
+})
+
+export type VerifyEmailBodyType = z.infer<typeof verifyEmailSchema>

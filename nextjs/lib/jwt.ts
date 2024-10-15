@@ -1,10 +1,5 @@
+import { JwtPayload } from '@/constants'
 import { jwtDecode } from 'jwt-decode'
-
-interface JwtPayload {
-  id: number
-  iat: number
-  exp: number
-}
 
 export const decodeJwtToken = (token: string): JwtPayload => {
   try {

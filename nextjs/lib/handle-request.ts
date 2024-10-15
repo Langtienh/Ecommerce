@@ -12,7 +12,6 @@ export const handleErrorApi = ({
 }) => {
   if (error instanceof EntityError && setError) {
     Object.keys(error.constraints).forEach((key) => {
-      console.log(key, '>>', 'error.constraints[key]')
       setError(key, {
         type: 'validate',
         message: error.constraints[key]

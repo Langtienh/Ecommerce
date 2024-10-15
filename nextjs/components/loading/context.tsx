@@ -1,5 +1,6 @@
 'use client'
-import { createContext, ReactNode, useContext, useState } from 'react'
+import { usePathname } from 'next/navigation'
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react'
 
 // Định nghĩa kiểu dữ liệu cho context
 interface LoadingContextType {
@@ -23,6 +24,12 @@ export const LoadingProvider = ({ children }: { children: ReactNode }) => {
 
   const startLoading = () => setIsLoading(true)
   const finallyLoading = () => setIsLoading(false)
+
+  const path = usePathname()
+
+  useEffect(() => {
+    finallyLoading()
+  }, [path])
 
   return (
     <LoadingContext.Provider value={{ isLoading, startLoading, finallyLoading }}>{children}</LoadingContext.Provider>

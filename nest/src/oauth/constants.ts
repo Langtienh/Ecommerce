@@ -7,3 +7,16 @@ export interface OauthGoogleUser {
   family_name: string
   picture: string
 }
+
+export interface OauthGithubUser {
+  id: number
+  avatar_url: string
+  name: string
+  email: string
+}
+
+export interface OauthGithubGetTokenResponse {
+  access_token: string
+  token_type: string
+  scope: string
+}

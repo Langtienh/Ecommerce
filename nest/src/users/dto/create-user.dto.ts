@@ -1,4 +1,5 @@
 import { IsEmail, IsNotEmpty, IsOptional, IsPhoneNumber, IsString, IsUrl, Matches, MaxLength } from 'class-validator'
+import { UserStatus } from '../entities/user.entity'
 
 export class PasswordDto {
   @Matches(/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&#]{6,}$/, {
@@ -27,4 +28,8 @@ export class CreateUserDto extends PasswordDto {
   @IsUrl()
   @IsOptional()
   avatar?: string
+
+  @IsString()
+  @IsOptional()
+  status?: UserStatus
 }

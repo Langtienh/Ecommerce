@@ -1,7 +1,8 @@
 import { Exclude } from 'class-transformer'
 import { EntityWithDate, EntityWithDateFields } from 'src/base/entity-with-date'
+import { Address } from 'src/me/entity/address.entity'
 import { Role } from 'src/roles/entities/role.entity'
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm'
 
 export enum UserStatus {
   UNVERIFY = 'unverify',
@@ -40,6 +41,9 @@ export class User extends EntityWithDate {
   @Exclude()
   @Column({ name: 'refresh_token', length: 255, nullable: true })
   refreshToken: string
+
+  @OneToMany(() => Address, (address) => address.user)
+  addresses: Address[]
 
   @ManyToOne(() => Role)
   @JoinColumn({ name: 'role_id' })

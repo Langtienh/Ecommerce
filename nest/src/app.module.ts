@@ -1,23 +1,41 @@
 import { Module } from '@nestjs/common'
-import { ConfigModule } from '@nestjs/config'
+import { ConfigModule, ConfigService } from '@nestjs/config'
 import { JwtModule } from '@nestjs/jwt'
 import { TypeOrmModule } from '@nestjs/typeorm'
-import { dataSourceOption } from 'db/data-source'
 import { AuthenticationModule } from './authentication/authentication.module'
 import { GroupsModule } from './groups/groups.module'
 import { MailModule } from './mail/mail.module'
+import { MeModule } from './me/me.module'
+import { OauthModule } from './oauth/oauth.module'
 import { PermissionsModule } from './permissions/permissions.module'
 import { ResourcesModule } from './resources/resources.module'
 import { RolesModule } from './roles/roles.module'
 import { UsersModule } from './users/users.module'
-import { OauthModule } from './oauth/oauth.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      isGlobal: true
+      isGlobal: true,
+      envFilePath: [
+        // `.env.local`, // Sử dụng file biến môi trường tương ứng với NODE_ENV
+        '.env' // Sử dụng file .env nếu không tìm thấy file tương ứng với NODE_ENV
+      ]
     }),
-    TypeOrmModule.forRoot(dataSourceOption),
+    TypeOrmModule.forRootAsync({
+      useFactory: async (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get<string>('DB_HOST'),
+        port: configService.get<number>('DB_PORT'),
+        username: configService.get<string>('DB_USERNAME'),
+        password: configService.get<string>('DB_PASSWORD'),
+        database: configService.get<string>('DB_NAME'),
+        entities: ['dist/**/*.entity{.ts,.js}'],
+        migrations: ['dist/db/migrations/*.js'],
+        synchronize: true,
+        ssl: configService.get('DB_SSL') === 'true'
+      }),
+      inject: [ConfigService]
+    }),
     UsersModule,
     JwtModule,
     ResourcesModule,
@@ -26,7 +44,8 @@ import { OauthModule } from './oauth/oauth.module';
     PermissionsModule,
     AuthenticationModule,
     MailModule,
-    OauthModule
+    OauthModule,
+    MeModule
   ],
   controllers: [],
   providers: []

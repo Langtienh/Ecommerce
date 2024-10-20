@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
 import { JwtModule } from '@nestjs/jwt'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { AuthenticationModule } from './authentication/authentication.module'
+import { DatabaseModule } from './database/database.module'
 import { GroupsModule } from './groups/groups.module'
 import { MailModule } from './mail/mail.module'
 import { MeModule } from './me/me.module'
@@ -17,7 +18,7 @@ import { UsersModule } from './users/users.module'
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: [
-        // `.env.local`, // Sử dụng file biến môi trường tương ứng với NODE_ENV
+        `.env.local`, // Sử dụng file biến môi trường tương ứng với NODE_ENV
         '.env' // Sử dụng file .env nếu không tìm thấy file tương ứng với NODE_ENV
       ]
     }),
@@ -45,7 +46,8 @@ import { UsersModule } from './users/users.module'
     AuthenticationModule,
     MailModule,
     OauthModule,
-    MeModule
+    MeModule,
+    DatabaseModule
   ],
   controllers: [],
   providers: []

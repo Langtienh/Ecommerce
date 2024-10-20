@@ -23,7 +23,7 @@ export class UsersService {
   }
 
   async isEmailExist(email: string) {
-    const user = await this.userRepo.findOne({ where: { email } })
+    const user = await this.userRepo.findOne({ where: { email }, withDeleted: true })
     if (user) {
       throw new ConflictException('Email already exists')
     }

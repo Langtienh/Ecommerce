@@ -17,7 +17,7 @@ export class RolesService {
   ) {}
 
   async isExistName(name: string, roleId?: number) {
-    const role = await this.roleRepo.findOne({ where: { name } })
+    const role = await this.roleRepo.findOne({ where: { name }, withDeleted: true })
     if (role && role.id !== roleId) {
       throw new ConflictException('Role already exists')
     }

@@ -12,7 +12,7 @@ export class ResourcesService {
   constructor(@InjectRepository(Resource) private resourceRepo: Repository<Resource>) {}
 
   async isResourceNameExist(name: string) {
-    const resource = await this.resourceRepo.findOne({ where: { name } })
+    const resource = await this.resourceRepo.findOne({ where: { name }, withDeleted: true })
     if (resource) {
       throw new ConflictException('Resource already exists')
     }
@@ -24,7 +24,7 @@ export class ResourcesService {
     return this.resourceRepo.save({
       ...createResourceDto,
       creatorId,
-      updatorId: creatorId
+      updaterId: creatorId
     })
   }
 

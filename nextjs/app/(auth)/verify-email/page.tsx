@@ -1,4 +1,4 @@
-import { getAccessTokenPayload } from '@/services/cookies/authen'
+import { getAccessTokenPayload } from '@/services/cookies/auth-cookie'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import VerifyEmailForm from '../components/verify-email-form'

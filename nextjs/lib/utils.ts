@@ -17,3 +17,9 @@ export function delayForm() {
 export function delayFetch() {
   return delay(envConfig.DELAY_FETCH)
 }
+
+export function getFirstLetterUppercase(name: string): string {
+  if (!name) return ''
+  const strs = name.split(' ')
+  return strs.map((str) => str.trim().charAt(0).toUpperCase()).join('')
+}

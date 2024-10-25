@@ -1,12 +1,13 @@
 'use client'
-import { useLoading } from '@/components/loading'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
 import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from '@/components/ui/input-otp'
+import useAccount from '@/hooks/use-account'
+import useLoading from '@/hooks/use-loading'
 import { handleErrorApi } from '@/lib/handle-request'
 import { delayForm } from '@/lib/utils'
-import { resendVerifyEmail, verifyEmail } from '@/services/authen/request'
+import authenRequestApi from '@/services/authen/authen-request'
 import { VerifyEmailBodyType, verifyEmailSchema } from '@/services/authen/schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
@@ -29,14 +30,15 @@ export default function VerifyEmailForm({ email, verifyEmailToken }: VerifyEmail
     }
   })
   const { isLoading, startLoading, finallyLoading } = useLoading()
-
+  const setUser = useAccount((state) => state.setUser)
   const onSubmit = async (data: VerifyEmailBodyType) => {
     startLoading()
     try {
-      const res = await verifyEmail(data)
+      const res = await authenRequestApi.verifyEmail(data)
+      setUser(res.data.user)
       await delayForm()
       toast.success(res.message)
-      router.push('/')
+      router.push('/smember')
     } catch (error) {
       handleErrorApi({ error, setError: form.setError })
     } finally {
@@ -54,7 +56,7 @@ export default function VerifyEmailForm({ email, verifyEmailToken }: VerifyEmail
   const handleResend = async () => {
     startLoading()
     try {
-      const res = await resendVerifyEmail()
+      const res = await authenRequestApi.resendVerifyEmail()
       form.setValue('verifyEmailToken', res.data.verifyEmailToken)
       toast.success(res.message)
     } catch (error) {

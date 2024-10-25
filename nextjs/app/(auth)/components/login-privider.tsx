@@ -24,7 +24,6 @@ export default function LoginProvider() {
       const url: string = res.data.redirectUri
       router.push(url)
     } catch (error) {
-      console.log(error)
       handleErrorApi({ error })
     }
   }

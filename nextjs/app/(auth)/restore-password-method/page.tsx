@@ -1,11 +1,11 @@
 'use client'
-import { useLoading } from '@/components/loading'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import useLoading from '@/hooks/use-loading'
 import { handleErrorApi } from '@/lib/handle-request'
 import { delayForm } from '@/lib/utils'
-import { restorePassword } from '@/services/authen/request'
+import authenRequestApi from '@/services/authen/authen-request'
 import { RestorePasswordBodyType, RestorePasswordSchema } from '@/services/authen/schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Image from 'next/image'
@@ -32,7 +32,7 @@ export default function Page() {
   const onSubmit = async (values: RestorePasswordBodyType) => {
     startLoading()
     try {
-      const res = await restorePassword(values)
+      const res = await authenRequestApi.restorePassword(values)
       await delayForm()
       toast.success(res.message)
       setEmail(values.email)

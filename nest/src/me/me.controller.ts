@@ -21,7 +21,7 @@ export class MeController {
   }
 
   @ReponseMessage('Cập nhật thông tin cá nhân thành công')
-  @Post()
+  @Put()
   async updateMe(@AccessToken() user: AccessTokenData, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(user.id, updateUserDto)
   }

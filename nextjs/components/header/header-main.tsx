@@ -10,12 +10,12 @@ interface HeaderMainProps {
 export default function HeaderMain({ className }: HeaderMainProps) {
   return (
     <div className={cn('h-16 bg-red-600 shadow-sm', className)}>
-      <div className='w-full max-w-[1400px] h-full px-3 mx-auto text-white flex justify-between items-center gap-3'>
+      <div className='w-full h-full px-3 mx-auto text-white flex justify-between items-center gap-3'>
         <Link href='/home'>
           <h2 className='hidden md:block'>Ecommerce</h2>
           <FaShopify className='w-9 md:hidden' size={36} />
         </Link>
-        <Category />
+        <Category className='hidden sm:flex' />
         <Search className='w-full' />
         <Menu />
       </div>

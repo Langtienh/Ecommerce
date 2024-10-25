@@ -1,7 +1,57 @@
+'use client'
+import useAccount from '@/hooks/use-account'
+import useRequestLogin from '@/hooks/use-request-login'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
 import Link from 'next/link'
+import { Button } from '../ui/button'
 import Auth from './auth'
+import CartIcon from './cart'
+
+interface MenuItemProps {
+  className?: string
+}
+
+export default function Menu() {
+  const user = useAccount((state) => state.user)
+  const openHandle = useRequestLogin((state) => state.openHandle)
+  const handleClick = (path: string) => openHandle(path)
+  return (
+    <>
+      {menuItems.map((item, index) => {
+        if (item.isAuthentication && !user)
+          return (
+            <Button
+              onClick={() => handleClick(item.path)}
+              variant='link'
+              key={`${item}${index}`}
+              className={cn(
+                'text-white gap-2 items-center shrink-0 p-2 rounded-xl hover:bg-white hover:bg-opacity-10 hidden',
+                item.hiddenOntablet ? 'lg:flex' : 'sm:flex'
+              )}
+            >
+              {item.icon}
+              <p className='text-xs no-underline'>{item.label}</p>
+            </Button>
+          )
+        return (
+          <Link
+            href={item.path}
+            key={`${item}${index}`}
+            className={cn(
+              'gap-2 items-center shrink-0 p-2 rounded-xl hover:bg-white hover:bg-opacity-10 hidden',
+              item.hiddenOntablet ? 'lg:flex' : 'sm:flex'
+            )}
+          >
+            {item.icon}
+            <p className='text-xs'>{item.label}</p>
+          </Link>
+        )
+      })}
+      <Auth className='hidden sm:block' />
+    </>
+  )
+}
 
 const menuItems = [
   {
@@ -11,8 +61,16 @@ const menuItems = [
       </>
     ),
     path: 'tel:18002044',
-    image: '/images/header/phone.svg',
-    isHiddenOnMobile: true
+    icon: (
+      <Image
+        width={24}
+        height={24}
+        alt='contact'
+        src='/images/header/phone.svg'
+        className='h-6 shrink-0 object-cover'
+      />
+    ),
+    hiddenOntablet: true
   },
   {
     label: (
@@ -21,8 +79,16 @@ const menuItems = [
       </>
     ),
     path: '/about',
-    image: '/images/header/location.svg',
-    isHiddenOnMobile: true
+    icon: (
+      <Image
+        width={24}
+        height={24}
+        alt='about'
+        src='/images/header/location.svg'
+        className='h-6 shrink-0 object-cover'
+      />
+    ),
+    hiddenOntablet: true
   },
   {
     label: (
@@ -31,8 +97,11 @@ const menuItems = [
       </>
     ),
     path: '/smember/invoices',
-    image: '/images/header/car.svg',
-    isHiddenOnMobile: true
+    icon: (
+      <Image width={40} height={24} alt='invoice' src='/images/header/car.svg' className='h-6 shrink-0 object-cover' />
+    ),
+    hiddenOntablet: true,
+    isAuthentication: true
   },
   {
     label: (
@@ -41,28 +110,8 @@ const menuItems = [
       </>
     ),
     path: '/cart',
-    image: '/images/header/cart.svg',
-    isHiddenOnMobile: false
+    icon: <CartIcon />,
+    hiddenOntablet: false,
+    isAuthentication: true
   }
 ]
-
-export default function Menu() {
-  return (
-    <>
-      {menuItems.map((item, index) => (
-        <Link
-          href={item.path}
-          key={`${item}${index}`}
-          className={cn(
-            'flex gap-2 items-center shrink-0 p-2 rounded-xl hover:bg-white hover:bg-opacity-10',
-            item.isHiddenOnMobile && 'hidden lg:flex'
-          )}
-        >
-          <Image width={24} height={24} alt={item.path} src={item.image} className='h-6 shrink-0 object-cover' />
-          <p className='text-xs'>{item.label}</p>
-        </Link>
-      ))}
-      <Auth />
-    </>
-  )
-}

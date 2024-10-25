@@ -1,17 +1,16 @@
 'use client'
 
-import { useLoading } from '@/components/loading'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import useLoading from '@/hooks/use-loading'
 import { handleErrorApi } from '@/lib/handle-request'
-import { register } from '@/services/authen/request'
+import authenRequestApi from '@/services/authen/authen-request'
 import { RegisterBodyType, RegisterFormSchema } from '@/services/authen/schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -35,12 +34,11 @@ export default function RegisterForm() {
   })
   // handle loading
   const { isLoading, startLoading, finallyLoading } = useLoading()
-  const router = useRouter()
   // 2. Define a submit handler.
   async function onSubmit(values: RegisterBodyType) {
     startLoading()
     try {
-      const res = await register(values)
+      const res = await authenRequestApi.register(values)
       setEmail(values.email)
       setName(values.name)
       setOpen(true)
@@ -49,12 +47,6 @@ export default function RegisterForm() {
     } finally {
       finallyLoading()
     }
-  }
-
-  // handle rederict
-  const handleContinue = () => {
-    setOpen(false)
-    router.push('/verify-email')
   }
 
   return (

@@ -1,15 +1,17 @@
 'use client'
 
-import { useLoading } from '@/components/loading'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import useAccount from '@/hooks/use-account'
+import useLoading from '@/hooks/use-loading'
 import { handleErrorApi } from '@/lib/handle-request'
 import { delayForm } from '@/lib/utils'
-import { login } from '@/services/authen/request'
+import authenRequestApi from '@/services/authen/authen-request'
 import { LoginBodyType, LoginFormSchema } from '@/services/authen/schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
@@ -22,15 +24,19 @@ export default function LoginForm() {
       password: ''
     }
   })
-  // handle loading
+  // 2. handle loading, store global state
+  const router = useRouter()
+  const setUser = useAccount((state) => state.setUser)
   const { isLoading, startLoading, finallyLoading } = useLoading()
-  // 2. Define a submit handler.
+  // 3. Define a submit handler.
   async function onSubmit(values: LoginBodyType) {
     startLoading()
     try {
-      const res = await login(values)
+      const res = await authenRequestApi.login(values)
       await delayForm()
+      setUser(res.data.user)
       toast.success(res.message)
+      router.push('/smember')
     } catch (error) {
       handleErrorApi({ error, setError: form.setError })
     } finally {

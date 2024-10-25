@@ -1,11 +1,12 @@
 'use client'
 
-import { useLoading } from '@/components/loading'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import useAccount from '@/hooks/use-account'
+import useLoading from '@/hooks/use-loading'
 import { handleErrorApi } from '@/lib/handle-request'
-import { resetPassword } from '@/services/authen/request'
+import authenRequestApi from '@/services/authen/authen-request'
 import { ResetPasswordBodyType, ResetPasswordSchema } from '@/services/authen/schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
@@ -30,15 +31,16 @@ export default function ResetPasswordForm({ forgotPasswordToken, otp }: ResetPas
   })
   // handle loading
   const { isLoading, startLoading, finallyLoading } = useLoading()
+  const setUser = useAccount((state) => state.setUser)
   const router = useRouter()
   // 2. Define a submit handler.
   async function onSubmit(values: ResetPasswordBodyType) {
     startLoading()
     try {
-      const res = await resetPassword(values)
-      console.log(res)
+      const res = await authenRequestApi.resetPassword(values)
+      setUser(res.data.user)
       toast.success(res.message)
-      router.push('/')
+      router.push('/smember')
     } catch (error) {
       handleErrorApi({ error, setError: form.setError })
     } finally {

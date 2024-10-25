@@ -1,5 +1,4 @@
 import { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies'
-import { UserStatus } from './types/entity/user'
 
 export const COOKIES_OPTIONS: Partial<ResponseCookie> = {
   httpOnly: true,

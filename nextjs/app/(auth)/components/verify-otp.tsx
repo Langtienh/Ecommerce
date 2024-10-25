@@ -1,12 +1,12 @@
 'use client'
-import { useLoading } from '@/components/loading'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
 import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from '@/components/ui/input-otp'
+import useLoading from '@/hooks/use-loading'
 import { handleErrorApi } from '@/lib/handle-request'
 import { delayForm } from '@/lib/utils'
-import { resendRestorePassword, verifyForgotPasswordOTP } from '@/services/authen/request'
+import authenRequestApi from '@/services/authen/authen-request'
 import { VerifyForgotPasswordOTPBodyType, verifyForgotPasswordOTPSchema } from '@/services/authen/schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
@@ -45,7 +45,7 @@ export default function VerifyForgotPasswordOTPForm({
   const onSubmit = async (data: VerifyForgotPasswordOTPBodyType) => {
     startLoading()
     try {
-      const res = await verifyForgotPasswordOTP(data, true)
+      const res = await authenRequestApi.verifyForgotPasswordOTP(data, true)
       await delayForm()
       toast.success(res.message)
       router.push('/restore-password')
@@ -66,7 +66,7 @@ export default function VerifyForgotPasswordOTPForm({
   const handleResend = async () => {
     startLoading()
     try {
-      const res = await resendRestorePassword(email)
+      const res = await authenRequestApi.resendRestorePassword(email)
       form.setValue('forgotPasswordToken', res.data.token)
       toast.success(res.message)
     } catch (error) {

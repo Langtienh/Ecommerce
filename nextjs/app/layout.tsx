@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
 import './globals.css'
 
-import { LoadingProvider, OverlayLoading } from '@/components/loading'
+import OverlayLoading from '@/components/loading'
+import RedirectLoginModal from '@/components/request-login-modal'
+import AuthTrigger from '@/components/trigger/auth-trigger'
 import { Toaster } from '@/components/ui/sonner'
 import { Roboto } from 'next/font/google'
 
@@ -24,11 +26,10 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body className={`${roboto.className} antialiased`}>
-        <LoadingProvider>
-          {children}
-          <OverlayLoading />
-        </LoadingProvider>
-
+        <AuthTrigger />
+        {children}
+        <OverlayLoading />
+        <RedirectLoginModal />
         <Toaster position='top-center' richColors duration={2000} />
       </body>
     </html>

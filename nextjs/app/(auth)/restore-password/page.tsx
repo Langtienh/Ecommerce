@@ -1,4 +1,4 @@
-import { verifyForgotPasswordOTP } from '@/services/authen/request'
+import authenRequestApi from '@/services/authen/authen-request'
 import { cookies } from 'next/headers'
 import Image from 'next/image'
 import { redirect } from 'next/navigation'
@@ -9,7 +9,7 @@ export default async function Page() {
   const forgotPasswordToken = cookies().get('forgotPasswordToken')?.value
   if (!otp || !forgotPasswordToken) redirect('/')
   try {
-    await verifyForgotPasswordOTP({ forgotPasswordToken, otp })
+    await authenRequestApi.verifyForgotPasswordOTP({ forgotPasswordToken, otp })
     return (
       <>
         <div className='mt-5 mb-10 flex flex-col justify-center space-y-2 items-center'>

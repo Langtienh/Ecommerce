@@ -1,11 +1,16 @@
 'use server'
 
 import { AccessTokenPayload, COOKIES_OPTIONS } from '@/constants'
+import http from '@/lib/http'
 import { decodeJwtToken } from '@/lib/jwt'
-import { RegisterReponse } from '@/types/response'
+import { LoginReponse, RegisterReponse } from '@/types/response'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { VerifyForgotPasswordOTPBodyType } from '../authen/schema'
+
+export const getRefreshToken = async () => {
+  return await cookies().get('refreshToken')?.value
+}
 
 export const registerTrigger = async (data: RegisterReponse) => {
   const verifyEmailTokenPayload = decodeJwtToken(data.verifyEmailToken)
@@ -45,16 +50,39 @@ export const refreshTokenTrigger = async ({
   })
 }
 
+export const logoutTrigger = async () => {
+  cookies().delete('accessToken')
+  cookies().delete('refreshToken')
+}
+
+export const refreshTokenRequest = async (refreshToken: string) => {
+  const res = await http.post<LoginReponse>('/authentication/refresh-token', { refreshToken })
+  await refreshTokenTrigger(res.data)
+  return res
+}
+
 export const getAccessTokenPayload = async () => {
-  const accessToken = await cookies().get('accessToken')?.value
-  if (!accessToken) return null
+  let accessToken = await cookies().get('accessToken')?.value
+  const refreshToken = await cookies().get('refreshToken')?.value
+  if (!refreshToken) {
+    return null
+  } else if (!accessToken) {
+    const res = await refreshTokenRequest(refreshToken)
+    accessToken = res.data.accessToken
+  }
   const accessTokenPayload = decodeJwtToken(accessToken)
   return accessTokenPayload as AccessTokenPayload
 }
 
 export const getOptionWithAccessToken = async () => {
-  const accessToken = await cookies().get('accessToken')?.value
-  if (!accessToken) redirect('/login')
+  let accessToken = await cookies().get('accessToken')?.value
+  const refreshToken = await cookies().get('refreshToken')?.value
+  if (!refreshToken) {
+    redirect('/login')
+  } else if (!accessToken) {
+    const res = await refreshTokenRequest(refreshToken)
+    accessToken = res.data.accessToken
+  }
   return {
     headers: {
       Authorization: `Bearer ${accessToken}`
@@ -94,4 +122,12 @@ export const verifyRestorePasswordOtpTrigger = async ({
 export const resetPasswordTrigger = async () => {
   cookies().delete('forgotPasswordToken')
   cookies().delete('otp')
+}
+
+export const checkAuthentication = async () => {
+  return cookies().has('refreshToken')
+}
+
+export const isLogin = async () => {
+  return cookies().has('refreshToken')
 }

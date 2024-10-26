@@ -48,4 +48,11 @@ export class ResourcesController {
   remove(@Param() { id }: ParamIdDto) {
     return this.resourcesService.remove(id)
   }
+
+  @ReponseMessage('Xóa resource đã chọn thành công')
+  @Delete()
+  removeMany(@Query('ids') ids: string) {
+    // todo check input
+    return this.resourcesService.removeMany(ids.split(',').map(Number))
+  }
 }

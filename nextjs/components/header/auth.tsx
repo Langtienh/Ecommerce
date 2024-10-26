@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation'
 import { FaShopify, FaUser } from 'react-icons/fa'
 import { MdDashboardCustomize, MdLogout } from 'react-icons/md'
 import { toast } from 'sonner'
+import AvatarUser from '../avatar-user'
 import { Button } from '../ui/button'
 interface AuthProps {
   className?: string
@@ -47,12 +48,7 @@ export default function Auth({ className }: AuthProps) {
             <DialogTitle className='text-center text-base'>{user.email}</DialogTitle>
           </DialogHeader>
           <div className='flex flex-col items-center justify-center'>
-            <Avatar className='size-20'>
-              <AvatarImage src={user.avatar} alt={user.name} />
-              <AvatarFallback className='bg-purple-600 font-bold text-2xl text-white'>
-                {getFirstLetterUppercase(user.name)}
-              </AvatarFallback>
-            </Avatar>
+            <AvatarUser className='size-5' user={user} />
             <p className='text-[22px] my-2'>{`Hi, ${user.name}`}</p>
             <div className='py-2'>
               {user.roleId !== 1 && (

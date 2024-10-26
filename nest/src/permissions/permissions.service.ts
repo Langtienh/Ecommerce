@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { QueryHelper } from 'src/base/query-helper'
 import { Group } from 'src/groups/entities/group.entity'
@@ -33,17 +33,20 @@ export class PermissionsService {
   }
 
   async findAll(query: QueryPremissionDto) {
-    const { page, limit, sort, method, name, apiPath, groupId, resourceId } = query
+    const { page, limit, sort, method, name, apiPath, groupId, resourceId, search } = query
+    if (page < 1) {
+      throw new BadRequestException('Page must be greater than 0')
+    }
     const skip = (page - 1) * limit
     const order = QueryHelper.toOrder(sort, permissionFields)
     // result
     const [result, totalItem] = await this.permisstionRepo.findAndCount({
       order,
-      skip,
-      take: limit,
+      skip: limit > 0 ? skip : 0,
+      take: limit > 0 ? limit : undefined,
       where: {
         method: method ? In(method) : null,
-        name: name ? ILike(`%${name}%`) : null,
+        name: name ? ILike(`%${search ?? name}%`) : null,
         apiPath: apiPath ? ILike(`%${apiPath}%`) : null,
         group:
           groupId && resourceId
@@ -55,7 +58,7 @@ export class PermissionsService {
       },
       relations: { group: true }
     })
-    const totalPage = Math.ceil(totalItem / limit)
+    const totalPage = limit > 0 ? Math.ceil(totalItem / limit) : 1
     const meta = { page, limit, totalPage, totalItem }
     return { meta, result }
   }

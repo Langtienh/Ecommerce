@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { AccessTokenData } from 'src/authentication/types/token-payload'
 import { AccessToken, ReponseMessage } from 'src/decorator/customize'
@@ -21,7 +21,7 @@ export class MeController {
   }
 
   @ReponseMessage('Cập nhật thông tin cá nhân thành công')
-  @Put()
+  @Patch()
   async updateMe(@AccessToken() user: AccessTokenData, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(user.id, updateUserDto)
   }

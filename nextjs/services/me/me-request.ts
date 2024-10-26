@@ -10,7 +10,7 @@ const meRequestApi = {
   },
   updateMe: async (data: UpdateMeBodyType) => {
     const option = await getOptionWithAccessToken()
-    const res = await http.put<User>('/me', data, option)
+    const res = await http.patch<User>('/me', data, option)
     return res
   }
 }

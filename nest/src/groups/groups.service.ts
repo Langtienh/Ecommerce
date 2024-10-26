@@ -1,6 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common'
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { QueryHelper } from 'src/base/query-helper'
+import { Permission } from 'src/permissions/entities/permission.entity'
 import { ResourcesService } from 'src/resources/resources.service'
 import { ILike, Repository } from 'typeorm'
 import { CreateGroupDto } from './dto/create-group.dto'
@@ -12,7 +13,8 @@ import { Group, groupFields } from './entities/group.entity'
 export class GroupsService {
   constructor(
     @InjectRepository(Group) private groupRepo: Repository<Group>,
-    private resourceService: ResourcesService
+    private resourceService: ResourcesService,
+    @InjectRepository(Permission) private permissionRepo: Repository<Permission>
   ) {}
 
   async create(createGroupDto: CreateGroupDto) {
@@ -22,10 +24,14 @@ export class GroupsService {
 
   async findAll(query: QueryGroupDto) {
     const { limit, page, sort, search, ...fileds } = query
+    if (page < 1) {
+      throw new BadRequestException('Page must be greater than 0')
+    }
     const skip = (page - 1) * limit
     const queryBuilder = this.groupRepo.createQueryBuilder('group')
     const order = QueryHelper.toOrder(sort, groupFields)
-    queryBuilder.skip(skip).take(limit).orderBy(order)
+    if (limit > 0) queryBuilder.take(limit).skip(skip)
+    queryBuilder.orderBy(order)
 
     const where = QueryHelper.toFilter(fileds, groupFields)
     if (search) {
@@ -35,7 +41,7 @@ export class GroupsService {
     }
     queryBuilder.andWhere(where)
     const [result, totalItem] = await queryBuilder.getManyAndCount()
-    const totalPage = Math.ceil(totalItem / limit)
+    const totalPage = limit > 0 ? Math.ceil(totalItem / limit) : 1
     const meta = { page, limit, totalPage, totalItem }
     return { meta, result }
   }
@@ -58,7 +64,9 @@ export class GroupsService {
     return this.groupRepo.save(group)
   }
 
-  remove(id: number) {
+  async remove(id: number) {
+    const permissions = await this.permissionRepo.exists({ where: { groupId: id } })
+    if (!permissions) return this.groupRepo.delete(id)
     return this.groupRepo.softDelete(id)
   }
 }

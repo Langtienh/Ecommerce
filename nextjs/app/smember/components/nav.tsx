@@ -16,7 +16,7 @@ export default function SmemberNav() {
   const path = usePathname()
   const isMatchPath = (href: string) => {
     if (path === '/smember') return href === '/smember'
-    return href.startsWith(path)
+    return path.startsWith(href) && href !== '/smember'
   }
   const router = useRouter()
   const removeUser = useAccount((state) => state.removeUser)

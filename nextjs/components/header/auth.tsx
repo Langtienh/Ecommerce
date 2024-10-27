@@ -48,7 +48,7 @@ export default function Auth({ className }: AuthProps) {
             <DialogTitle className='text-center text-base'>{user.email}</DialogTitle>
           </DialogHeader>
           <div className='flex flex-col items-center justify-center'>
-            <AvatarUser className='size-5' user={user} />
+            <AvatarUser className='size-20' user={user} />
             <p className='text-[22px] my-2'>{`Hi, ${user.name}`}</p>
             <div className='py-2'>
               {user.roleId !== 1 && (

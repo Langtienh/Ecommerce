@@ -13,8 +13,6 @@ const resourceRequestApi = {
     if (sort) {
       query += `&sort=${sort}`
     }
-    // todo bug: caching??? fix tạm bẳng cookies,noStore() hoặc revalidate path để không bị cache, đã thử cache: 'no-store', và next: { tags: ['resource'] } nhưng không được
-    // noStore()
     const res = await http.get<Paginate<Resource>>(query)
     return res
   },

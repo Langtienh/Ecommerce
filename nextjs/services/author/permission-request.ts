@@ -32,7 +32,7 @@ const permissionRequestApi = {
     if (status) {
       query += `&status=${status}`
     }
-    const res = await http.get<Paginate<PermissionPreFormat>>(query)
+    const res = await http.get<Paginate<PermissionPreFormat>>(query, { cache: 'no-store' })
     const result = res.data.result.map((item) => formatPermission(item))
     const data = { ...res.data, result }
     return { ...res, data }

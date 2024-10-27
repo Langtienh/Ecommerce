@@ -8,6 +8,7 @@ import { Role } from 'src/roles/entities/role.entity'
 import { User } from 'src/users/entities/user.entity'
 import { UsersService } from 'src/users/users.service'
 import { Repository } from 'typeorm'
+import { groupInitialized } from './data/group.data'
 import { permissionInitialized } from './data/permission.data'
 import { resourcesInitialized } from './data/resources.data'
 import { rolesInitialized } from './data/role.data'
@@ -72,10 +73,20 @@ export class DatabaseService implements OnModuleInit {
     }
   }
 
+  async initGroup() {
+    const countGroups = await this.groupRepository.count()
+    if (countGroups === 0) {
+      const groups = this.groupRepository.create(groupInitialized)
+      await this.groupRepository.save(groups)
+      this.logger.log('Group initialized')
+    }
+  }
+
   async onModuleInit() {
     await this.initRole()
     await this.initUser()
     await this.initResources()
+    await this.initGroup()
     await this.initPermissions()
   }
 }

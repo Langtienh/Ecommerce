@@ -11,7 +11,7 @@ export const usersInitialized = [
     avatar: 'https://i.pinimg.com/736x/be/4f/ff/be4fffdf34043a88966c8afa5e3cc1c5.jpg'
   },
   {
-    email: '"systemadmin@email.com"',
+    email: 'systemadmin@email.com',
     name: 'System admin',
     password: 'P123456@',
     status: UserStatus.VERIFY,

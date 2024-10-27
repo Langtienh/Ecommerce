@@ -11,6 +11,11 @@ export class QueryPremissionDto extends QueryBase {
   @IsOptional()
   method?: HTTP_METHOD[]
 
+  @IsArray()
+  @Transform(({ value }) => QueryHelper.toArray(value))
+  @IsOptional()
+  status?: string[]
+
   @IsString()
   @IsOptional()
   name?: string

@@ -58,12 +58,25 @@ interface Group {
   resourceId: number
 }
 
+enum HTTP_METHOD {
+  GET = 'GET',
+  POST = 'POST',
+  PUT = 'PUT',
+  PATCH = 'PATCH',
+  DELETE = 'DELETE'
+}
 // permission
-interface Permission {
+interface PermissionPreFormat {
   id: number
   name: string
   apiPath: string
   groupId: number
-  method: string
+  method: HTTP_METHOD
   isActive: boolean
+  group: Group
+}
+
+interface Permission extends Omit<PermissionPreFormat, 'group'> {
+  groupName: string
+  resourceId: number
 }

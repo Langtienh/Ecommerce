@@ -12,35 +12,41 @@ import { PermissionsService } from './permissions.service'
 export class PermissionsController {
   constructor(private readonly permissionsService: PermissionsService) {}
 
-  @ReponseMessage('Permission created successfully')
+  @ReponseMessage('Tạo mới quyền thành công')
   @Post()
   create(@Body() createPermissionDto: CreatePermissionDto) {
     return this.permissionsService.create(createPermissionDto)
   }
 
   @Public()
-  @ReponseMessage('Get all permissions successfully')
+  @ReponseMessage('Lấy danh sách quyền thành công')
   @Get()
   findAll(@Query() query: QueryPremissionDto) {
     return this.permissionsService.findAll(query)
   }
 
   @Public()
-  @ReponseMessage('Get permission by id successfully')
+  @ReponseMessage('Lấy chi tiết quyền thành công')
   @Get(':id')
   findOne(@Param() { id }: ParamIdDto) {
     return this.permissionsService.findOne(id)
   }
 
-  @ReponseMessage('Update permission successfully')
+  @ReponseMessage('Cập nhật quyền thành công')
   @Patch(':id')
   update(@Param() { id }: ParamIdDto, @Body() updatePermissionDto: UpdatePermissionDto) {
     return this.permissionsService.update(id, updatePermissionDto)
   }
 
-  @ReponseMessage('Delete permission successfully')
+  @ReponseMessage('Xóa quyền thành công')
   @Delete(':id')
   remove(@Param() { id }: ParamIdDto) {
     return this.permissionsService.remove(id)
+  }
+
+  @ReponseMessage('Xóa quyền đã chọn thành công')
+  @Delete()
+  removeMany(@Query('ids') ids: string) {
+    return this.permissionsService.removeMany(ids.split(',').map(Number))
   }
 }

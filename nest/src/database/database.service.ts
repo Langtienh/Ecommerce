@@ -8,6 +8,7 @@ import { Role } from 'src/roles/entities/role.entity'
 import { User } from 'src/users/entities/user.entity'
 import { UsersService } from 'src/users/users.service'
 import { Repository } from 'typeorm'
+import { permissionInitialized } from './data/permission.data'
 import { resourcesInitialized } from './data/resources.data'
 import { rolesInitialized } from './data/role.data'
 import { usersInitialized } from './data/user.data'
@@ -62,9 +63,19 @@ export class DatabaseService implements OnModuleInit {
     }
   }
 
+  async initPermissions() {
+    const countPermissions = await this.permissionRepository.count()
+    if (countPermissions === 0) {
+      const permissions = this.permissionRepository.create(permissionInitialized)
+      await this.permissionRepository.save(permissions)
+      this.logger.log('Permission initialized')
+    }
+  }
+
   async onModuleInit() {
     await this.initRole()
     await this.initUser()
     await this.initResources()
+    await this.initPermissions()
   }
 }

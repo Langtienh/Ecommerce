@@ -5,12 +5,14 @@ interface BaseQuery {
   sort?: string
 }
 
+interface PaginateMeta {
+  page: number
+  limit: number
+  totalPage: number
+  totalItem: number
+}
+
 interface Paginate<T> {
-  meta: {
-    page: number
-    limit: number
-    totalPage: number
-    totalItem: number
-  }
+  meta: PaginateMeta
   result: T[]
 }

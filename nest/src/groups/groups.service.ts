@@ -25,7 +25,7 @@ export class GroupsService {
   async findAll(query: QueryGroupDto) {
     const { limit, page, sort, search, ...fileds } = query
     if (page < 1) {
-      throw new BadRequestException('Page must be greater than 0')
+      throw new BadRequestException('Trang phải lớn hơn 0')
     }
     const skip = (page - 1) * limit
     const queryBuilder = this.groupRepo.createQueryBuilder('group')

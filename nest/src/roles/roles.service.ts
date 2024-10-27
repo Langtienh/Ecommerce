@@ -41,7 +41,7 @@ export class RolesService {
   async findAll(query: QueryRoleDto) {
     const { page, limit, search, sort, ...filter } = query
     if (page < 1) {
-      throw new BadRequestException('Page must be greater than 0')
+      throw new BadRequestException('Trang phải lớn hơn 0')
     }
     const skip = (page - 1) * limit
     const where = QueryHelper.toFilter(filter, roleFields)

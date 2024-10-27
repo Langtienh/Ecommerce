@@ -3,7 +3,7 @@ import FormEditResource from './form-edit-resource'
 
 export default function EditResource() {
   return (
-    <Card>
+    <Card className='m-5'>
       <CardHeader>
         <CardTitle>Thêm mới resource</CardTitle>
       </CardHeader>

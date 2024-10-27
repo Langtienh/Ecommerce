@@ -1,30 +1,18 @@
 export const resourcesInitialized = [
   {
-    name: 'users',
-    description: 'Users resource'
+    name: 'Users',
+    description: 'Quản lý người dùng'
   },
   {
-    name: 'roles',
-    description: 'Roles resource'
+    name: 'Authentications',
+    description: 'Kiểm tra đăng nhập'
   },
   {
-    name: 'resources',
-    description: 'Resources resource'
+    name: 'Authorization',
+    description: 'Phân quyền người dùng'
   },
   {
-    name: 'groups',
-    description: 'Groups resource'
-  },
-  {
-    name: 'permissions',
-    description: 'Permissions resource'
-  },
-  {
-    name: 'authentications',
-    description: 'Authentications resource'
-  },
-  {
-    name: 'me',
-    description: 'Me resource'
+    name: 'Products',
+    description: 'Quản lý sản phẩm'
   }
 ]

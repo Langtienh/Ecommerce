@@ -9,7 +9,7 @@ export default async function Page({ params: { id } }: { params: { id: string } 
       groupRequestApi.getAll({ limit: -1, resourceId: +id }),
       resourceRequestApi.getById(+id)
     ])
-    return <Groups groups={groupsResponse.data.result} resource={resourceResponse.data} />
+    return <Groups className='m-5' groups={groupsResponse.data.result} resource={resourceResponse.data} />
   } catch {
     notFound()
   }

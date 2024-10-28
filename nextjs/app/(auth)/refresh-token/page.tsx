@@ -5,10 +5,18 @@ import { handleErrorApi } from '@/lib/handle-request'
 import authenRequestApi from '@/services/authen/authen-request'
 import Image from 'next/image'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useEffect } from 'react'
+import { Suspense, useEffect } from 'react'
 import { ThreeDots } from 'react-loader-spinner'
 
-export default function RefreshTokenPage() {
+export default function Page() {
+  return (
+    <Suspense fallback={<UI />}>
+      <Wrapper />
+    </Suspense>
+  )
+}
+
+const Wrapper = () => {
   const searchParam = useSearchParams()
   const redirectUrl = searchParam.get('redirectUrl') || 'home'
   const router = useRouter()
@@ -20,11 +28,13 @@ export default function RefreshTokenPage() {
       } catch (error) {
         handleErrorApi({ error })
         router.push('/home')
-      } finally {
       }
     }
     refreshTokenHandle()
   }, [])
+  return <UI />
+}
+const UI = () => {
   return (
     <Dialog defaultOpen>
       <DialogOverlay>

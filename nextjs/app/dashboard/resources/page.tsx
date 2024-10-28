@@ -15,8 +15,8 @@ export default async function ResourcesPage({ searchParams }: ResourcesPageProps
   return (
     <Card className='m-5'>
       <CardHeader>
-        <CardTitle>Tài nguyên</CardTitle>
-        <CardDescription>Quản lý tài nguyên của dự án</CardDescription>
+        <CardTitle>Resources</CardTitle>
+        <CardDescription>Resources manager</CardDescription>
       </CardHeader>
       <CardContent>
         <ResourceTable data={res.data} />

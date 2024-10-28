@@ -40,6 +40,10 @@ interface Role {
   updatedAt: string
 }
 
+interface roleDetail extends Role {
+  permissions: Permission[]
+}
+
 // resource
 interface Resource {
   id: number

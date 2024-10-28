@@ -3,7 +3,6 @@
 import { AccessTokenPayload, COOKIES_OPTIONS } from '@/constants'
 import http from '@/lib/http'
 import { decodeJwtToken } from '@/lib/jwt'
-import { LoginReponse, RegisterReponse } from '@/types/response'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { VerifyForgotPasswordOTPBodyType } from '../authen/schema'
@@ -74,7 +73,7 @@ export const getAccessTokenPayload = async () => {
   return accessTokenPayload as AccessTokenPayload
 }
 
-export const getOptionWithAccessToken = async () => {
+export const serverGetOptionWithAccessToken = async () => {
   let accessToken = await cookies().get('accessToken')?.value
   const refreshToken = await cookies().get('refreshToken')?.value
   if (!refreshToken) {
@@ -130,4 +129,8 @@ export const checkAuthentication = async () => {
 
 export const isLogin = async () => {
   return cookies().has('refreshToken')
+}
+
+export const serverGetCookies = async (name: string) => {
+  return cookies().get(name)?.value
 }

@@ -66,7 +66,7 @@ const request = async <T>(
   const baseHeaders = {
     'Content-Type': 'application/json'
   }
-  const baseUrl = option?.baseUrl || envConfig.NEXT_PUBLIC_API_URL
+  const baseUrl = option?.baseUrl !== undefined ? option?.baseUrl : envConfig.NEXT_PUBLIC_API_URL
 
   const fullUrl = url.startsWith('/') ? `${baseUrl}${url}` : `${baseUrl}/${url}`
 

@@ -16,3 +16,9 @@ interface Paginate<T> {
   meta: PaginateMeta
   result: T[]
 }
+
+interface OptionWithAccessToken {
+  headers: {
+    Authorization: string
+  }
+}

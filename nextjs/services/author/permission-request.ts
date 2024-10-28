@@ -1,6 +1,6 @@
 import http from '@/lib/http'
 // import { unstable_noStore as noStore } from 'next/cache'
-import { getOptionWithAccessToken } from '../cookies/auth-cookie'
+import authenRequestApi from '../authen/authen-request'
 import { serverRevalidatePath } from '../server-action'
 import { AddPermissionType, UpdatePermissionType } from './author-schema'
 
@@ -32,38 +32,38 @@ const permissionRequestApi = {
     if (status) {
       query += `&status=${status}`
     }
-    const option = await getOptionWithAccessToken()
+    const option = await authenRequestApi.getOptionWithAccessToken()
     const res = await http.get<Paginate<PermissionPreFormat>>(query, option)
     const result = res.data.result.map((item) => formatPermission(item))
     const data = { ...res.data, result }
     return { ...res, data }
   },
   getById: async (id: number) => {
-    const option = await getOptionWithAccessToken()
+    const option = await authenRequestApi.getOptionWithAccessToken()
     const res = await http.get<PermissionPreFormat>(`/authorization/permissions/${id}`, option)
     const data = formatPermission(res.data)
     return { ...res, data }
   },
   delete: async (id: number) => {
-    const option = await getOptionWithAccessToken()
+    const option = await authenRequestApi.getOptionWithAccessToken()
     const res = await http.delete(`/authorization/permissions/${id}`, option)
     await serverRevalidatePath('/dashboard/permissions')
     return res
   },
   deleteMany: async (ids: number[]) => {
-    const option = await getOptionWithAccessToken()
+    const option = await authenRequestApi.getOptionWithAccessToken()
     const res = await http.delete(`/authorization/permissions?ids=${ids.join(',')}`, option)
     await serverRevalidatePath('/dashboard/permissions')
     return res
   },
   add: async (data: AddPermissionType) => {
-    const option = await getOptionWithAccessToken()
+    const option = await authenRequestApi.getOptionWithAccessToken()
     const res = await http.post<Permission>('/authorization/permissions', data, option)
     await serverRevalidatePath('/dashboard/permissions')
     return res
   },
   update: async (id: number, data: UpdatePermissionType) => {
-    const option = await getOptionWithAccessToken()
+    const option = await authenRequestApi.getOptionWithAccessToken()
     const res = await http.patch<Permission>(`/authorization/permissions/${id}`, data, option)
     await serverRevalidatePath('/dashboard/permissions')
     return res

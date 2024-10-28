@@ -1,13 +1,13 @@
 import http from '@/lib/http'
-import { ForgotPasswordReponse, LoginReponse, RegisterReponse } from '@/types/response'
 import {
-  getOptionWithAccessToken,
   getRefreshToken,
   logoutTrigger,
   refreshTokenTrigger,
   registerTrigger,
   resendVerifyEmailTrigger,
   resetPasswordTrigger,
+  serverGetCookies,
+  serverGetOptionWithAccessToken,
   verifyEmailTrigger,
   verifyRestorePasswordOtpTrigger
 } from '../cookies/auth-cookie'
@@ -20,7 +20,22 @@ import {
   VerifyForgotPasswordOTPBodyType
 } from './schema'
 
+const getOptionWithAccessToken = async () => {
+  // môi trường server không có window
+  if (typeof window === 'undefined') {
+    const accessToken = await serverGetCookies('accessToken')
+    return {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    }
+  }
+
+  return serverGetOptionWithAccessToken()
+}
+
 const authenRequestApi = {
+  getOptionWithAccessToken,
   register: async (body: RegisterBodyType) => {
     const res = await http.post<RegisterReponse>('/authentication/register', body)
     await registerTrigger(res.data)

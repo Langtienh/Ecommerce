@@ -9,13 +9,15 @@ export function middleware(request: NextRequest) {
   const prevUrl = request.nextUrl.toString()
   const isLogin = request.cookies.has('refreshToken')
 
-  // Chưa đăng nhập thì không cho vào private paths
-  if (privatePaths.some((path) => pathname.startsWith(path)) && !isLogin)
-    return NextResponse.redirect(new URL(`/login?redirectUrl=${prevUrl}`, request.url))
+  // xử lý private paths
+  if (privatePaths.some((path) => pathname.startsWith(path))) {
+    // Chưa đăng nhập thì không cho vào private paths
+    if (!isLogin) return NextResponse.redirect(new URL(`/login?redirectUrl=${prevUrl}`, request.url))
 
-  const accessToken = request.cookies.get('accessToken')
-  // Chưa có access token thì chuyển hướng sang trang refresh token
-  if (!accessToken) return NextResponse.redirect(new URL(`/refresh-token?redirectUrl=${prevUrl}`, request.url))
+    const accessToken = request.cookies.get('accessToken')
+    // Chưa có access token thì chuyển hướng sang trang refresh token
+    if (!accessToken) return NextResponse.redirect(new URL(`/refresh-token?redirectUrl=${prevUrl}`, request.url))
+  }
 
   // Đăng nhập rồi thì không cho vào login/register nữa
   if (authPaths.some((path) => pathname.startsWith(path)) && isLogin) {

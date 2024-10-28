@@ -1,5 +1,5 @@
 import http from '@/lib/http'
-import { unstable_noStore as noStore } from 'next/cache'
+// import { unstable_noStore as noStore } from 'next/cache'
 import { getOptionWithAccessToken } from '../cookies/auth-cookie'
 import { AddGroupType } from './author-schema'
 
@@ -9,7 +9,6 @@ interface GroupQuery extends BaseQuery {
 
 const groupRequestApi = {
   getAll: async ({ limit = 10, page = 1, search, sort, resourceId }: GroupQuery) => {
-    noStore()
     let query = `/authorization/groups?limit=${limit}&page=${page}`
     if (search) {
       query += `&search=${search}`
@@ -20,11 +19,13 @@ const groupRequestApi = {
     if (resourceId) {
       query += `&resourceId=${resourceId}`
     }
-    const res = await http.get<Paginate<Group>>(query)
+    const option = await getOptionWithAccessToken()
+    const res = await http.get<Paginate<Group>>(query, option)
     return res
   },
   getById: async (id: number) => {
-    const res = await http.get<Group>(`/authorization/groups/${id}`)
+    const option = await getOptionWithAccessToken()
+    const res = await http.get<Group>(`/authorization/groups/${id}`, option)
     return res
   },
   delete: async (id: number) => {

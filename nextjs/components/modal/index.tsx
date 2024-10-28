@@ -1,24 +1,35 @@
 'use client'
-import { Dialog, DialogContent } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogHeader } from '@/components/ui/dialog'
+import { DialogTitle } from '@radix-ui/react-dialog'
 import { usePathname, useRouter } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 
-export default function Modal({ children }: { children: React.ReactNode }) {
+interface ModalProps {
+  children: ReactNode
+  className?: string
+  title: string
+  description?: string
+}
+export default function Modal({ children, title, className, description }: ModalProps) {
   const router = useRouter()
-  const [isOpen, setIsOpen] = useState(true)
+  const [initialLoad, setInitialLoad] = useState(true)
   const path = usePathname()
   useEffect(() => {
-    setIsOpen((pre) => !pre)
+    if (initialLoad) {
+      setInitialLoad(false)
+    } else {
+      router.back()
+    }
   }, [path])
   return (
-    <Dialog
-      open={isOpen}
-      onOpenChange={(open) => {
-        router.back()
-        setIsOpen(!open)
-      }}
-    >
-      <DialogContent className='p-0'>{children}</DialogContent>
+    <Dialog defaultOpen={true} onOpenChange={() => router.back()}>
+      <DialogContent className={className}>
+        <DialogHeader>
+          <DialogTitle>{title}</DialogTitle>
+          {description && <DialogDescription>{description}</DialogDescription>}
+        </DialogHeader>
+        {children}
+      </DialogContent>
     </Dialog>
   )
 }

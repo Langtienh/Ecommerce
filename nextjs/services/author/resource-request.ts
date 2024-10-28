@@ -13,11 +13,13 @@ const resourceRequestApi = {
     if (sort) {
       query += `&sort=${sort}`
     }
-    const res = await http.get<Paginate<Resource>>(query)
+    const option = await getOptionWithAccessToken()
+    const res = await http.get<Paginate<Resource>>(query, option)
     return res
   },
   getById: async (id: number) => {
-    const res = await http.get<Resource>(`/authorization/resources/${id}`)
+    const option = await getOptionWithAccessToken()
+    const res = await http.get<Resource>(`/authorization/resources/${id}`, option)
     return res
   },
   delete: async (id: number) => {

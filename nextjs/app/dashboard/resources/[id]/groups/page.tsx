@@ -1,3 +1,4 @@
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import groupRequestApi from '@/services/author/group-request'
 import resourceRequestApi from '@/services/author/resource-request'
 import { notFound } from 'next/navigation'
@@ -9,7 +10,19 @@ export default async function Page({ params: { id } }: { params: { id: string } 
       groupRequestApi.getAll({ limit: -1, resourceId: +id }),
       resourceRequestApi.getById(+id)
     ])
-    return <Groups className='m-5' groups={groupsResponse.data.result} resource={resourceResponse.data} />
+    const resource = resourceResponse.data
+    const groups = groupsResponse.data.result
+    return (
+      <Card className='m-5'>
+        <CardHeader>
+          <CardTitle>{`${resource.name} resource`}</CardTitle>
+          <CardDescription>{resource.description}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Groups groups={groups} resource={resource} />
+        </CardContent>
+      </Card>
+    )
   } catch {
     notFound()
   }

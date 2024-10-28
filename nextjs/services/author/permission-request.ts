@@ -32,13 +32,15 @@ const permissionRequestApi = {
     if (status) {
       query += `&status=${status}`
     }
-    const res = await http.get<Paginate<PermissionPreFormat>>(query, { cache: 'no-store' })
+    const option = await getOptionWithAccessToken()
+    const res = await http.get<Paginate<PermissionPreFormat>>(query, option)
     const result = res.data.result.map((item) => formatPermission(item))
     const data = { ...res.data, result }
     return { ...res, data }
   },
   getById: async (id: number) => {
-    const res = await http.get<PermissionPreFormat>(`/authorization/permissions/${id}`)
+    const option = await getOptionWithAccessToken()
+    const res = await http.get<PermissionPreFormat>(`/authorization/permissions/${id}`, option)
     const data = formatPermission(res.data)
     return { ...res, data }
   },

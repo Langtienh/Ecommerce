@@ -1,6 +1,6 @@
 export const metadata = {
-  title: 'Resources manager',
-  description: 'Resources manager.'
+  title: 'Permission manager',
+  description: 'Permission manager.'
 }
 
 export default function ResourceLayout(props: { children: React.ReactNode; modal: React.ReactNode }) {

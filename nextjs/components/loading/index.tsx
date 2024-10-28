@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useEffect } from 'react'
 import { ThreeDots } from 'react-loader-spinner'
+import { Dialog, DialogOverlay } from '../ui/dialog'
 import './style.css'
 
 export default function OverlayLoading() {
@@ -16,18 +17,17 @@ export default function OverlayLoading() {
   }, [path])
   if (isLoading)
     return (
-      <div className='fixed z-[100] top-0 left-0 w-screen h-screen flex flex-col items-center justify-center bg-black bg-opacity-20'>
-        <Image width={200} height={200} alt='shipper' src='/images/shipper2.png' className='absolute image-animation' />
-        <div className='absolute translate-y-1/2'>
-          <ThreeDots
-            visible={true}
-            height='200'
-            width='200'
-            color='#d70018'
-            radius='12.5'
-            wrapperClass='grid-wrapper'
-          />
-        </div>
-      </div>
+      <Dialog defaultOpen>
+        <DialogOverlay>
+          <div className='w-screen h-screen flex flex-col justify-center items-center'>
+            <Image width={200} height={200} alt='shipper' src='/images/shipper2.png' className='image-animation' />
+            <h4 className='text-white flex items-start gap-2'>
+              <span>Đang tải</span>
+              <ThreeDots visible={true} height='40' width='40' color='#fff' radius='12.5' wrapperClass='grid-wrapper' />
+            </h4>
+            <h4 className='text-white'>Vui lòng chờ trong giây lát</h4>
+          </div>
+        </DialogOverlay>
+      </Dialog>
     )
 }

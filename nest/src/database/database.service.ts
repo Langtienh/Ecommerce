@@ -11,6 +11,7 @@ import { Repository } from 'typeorm'
 import { groupInitialized } from './data/group.data'
 import { permissionInitialized } from './data/permission.data'
 import { resourcesInitialized } from './data/resources.data'
+import { rolePermissions } from './data/role-permissions.data'
 import { rolesInitialized } from './data/role.data'
 import { usersInitialized } from './data/user.data'
 
@@ -82,11 +83,37 @@ export class DatabaseService implements OnModuleInit {
     }
   }
 
+  async initRolePermissions() {
+    const roles = await this.roleRepository.find({ relations: { permissions: true } })
+    const isExistData = roles.some((role) => role.permissions.length > 0)
+    if (!isExistData) {
+      const permissions = await this.permissionRepository.find()
+      const rolePermission = rolePermissions.map((rolePermission) => {
+        const role = roles.find((role) => role.id === rolePermission.id)
+        const permission = permissions.filter((permission) =>
+          rolePermission.permissions.map((p) => p.id).includes(permission.id)
+        )
+        return {
+          role,
+          permissions: permission
+        }
+      })
+
+      await Promise.all(
+        rolePermission.map(async (rolePermission) => {
+          await this.roleRepository.save({ ...rolePermission.role, permissions: rolePermission.permissions })
+        })
+      )
+      this.logger.log('Role Permission initialized')
+    }
+  }
+
   async onModuleInit() {
     await this.initRole()
     await this.initUser()
     await this.initResources()
     await this.initGroup()
     await this.initPermissions()
+    await this.initRolePermissions()
   }
 }

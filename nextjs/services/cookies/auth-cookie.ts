@@ -82,6 +82,7 @@ export const serverGetOptionWithAccessToken = async () => {
     const res = await refreshTokenRequest(refreshToken)
     accessToken = res.data.accessToken
   }
+  await refreshTokenTrigger({ accessToken, refreshToken })
   return {
     headers: {
       Authorization: `Bearer ${accessToken}`

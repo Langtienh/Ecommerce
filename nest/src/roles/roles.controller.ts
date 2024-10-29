@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import { ParamIdDto, QueryIdsDto } from 'src/base/query-helper'
-import { ReponseMessage } from 'src/decorator/customize'
+import { Public, ReponseMessage } from 'src/decorator/customize'
 import { CreateRoleDto } from './dto/create-role.dto'
 import { QueryRoleDto } from './dto/query-role.dto'
 import { UpdateRoleDto } from './dto/update-role.dto'
@@ -46,5 +46,13 @@ export class RolesController {
   @Delete()
   removeMany(@Query() { ids }: QueryIdsDto) {
     return this.rolesService.removeMany(ids)
+  }
+
+  // devlopment
+  @Public()
+  @ReponseMessage('Find all permissions successfully')
+  @Get(':id/permissions')
+  getRolePermissions(@Param() { id }: ParamIdDto) {
+    return this.rolesService.getRolePermissions(id)
   }
 }

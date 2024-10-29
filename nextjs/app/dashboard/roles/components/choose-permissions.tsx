@@ -31,7 +31,7 @@ export default function ChoosePermissions({
           <Accordion type='single' collapsible>
             {resources.map((resource) => {
               const isExistPermission =
-                resource.groups.length > 0 && resource.groups.every((group) => group.permissions.length > 0)
+                resource.groups.length > 0 && resource.groups.some((group) => group.permissions.length > 0)
               return (
                 <AccordionItem key={`resource-${resource.id}`} value={`resource-${resource.id}`}>
                   <AccordionTrigger className='flex items-center justify-between text-lg'>
@@ -74,9 +74,9 @@ export default function ChoosePermissions({
                                         group: group
                                       })
                                     }
-                                    id={`resource-${resource.id}`}
+                                    id={`group--${group.id}`}
                                   />
-                                  <Label htmlFor={`resource-${resource.id}`}>{`${group.name} group`}</Label>
+                                  <Label htmlFor={`group--${group.id}`}>{`${group.name} group`}</Label>
                                 </li>
                               )}
                             </>

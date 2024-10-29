@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
 import { JwtModule } from '@nestjs/jwt'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { MailModule } from 'src/mail/mail.module'
+import { Role } from 'src/roles/entities/role.entity'
 import { User } from 'src/users/entities/user.entity'
 import { UsersModule } from 'src/users/users.module'
 import { AuthenticationController } from './authentication.controller'
@@ -13,7 +14,7 @@ import { JwtStrategy } from './jwt.strategy'
 @Module({
   imports: [
     MailModule,
-    TypeOrmModule.forFeature([User, Token]),
+    TypeOrmModule.forFeature([User, Token, Role]),
     UsersModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],

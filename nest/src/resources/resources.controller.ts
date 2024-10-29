@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestj
 import { ApiTags } from '@nestjs/swagger'
 import { AccessTokenData } from 'src/authentication/types/token-payload'
 import { ParamIdDto, QueryIdsDto } from 'src/base/query-helper'
-import { AccessToken, Public, ReponseMessage } from 'src/decorator/customize'
+import { AccessToken, ReponseMessage } from 'src/decorator/customize'
 import { CreateResourceDto } from './dto/create-resource.dto'
 import { QueryResourceDto } from './dto/query-resource.dto'
 import { UpdateResourceDto } from './dto/update-resource.dto'
@@ -53,7 +53,6 @@ export class ResourcesController {
     return this.resourcesService.removeMany(ids)
   }
 
-  @Public()
   @ReponseMessage('Get all permissions successfully')
   @Get(':id/permissions')
   getAllPermissions(@Param() { id }: ParamIdDto, @Query() query: QueryResourceDto) {

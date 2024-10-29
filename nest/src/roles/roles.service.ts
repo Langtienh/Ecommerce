@@ -91,4 +91,12 @@ export class RolesService {
     if (!users) return this.roleRepo.delete(ids)
     else throw new ConflictException('Không thể xóa role này vì có user đang sử dụng')
   }
+
+  async getRolePermissions(id: number) {
+    return this.roleRepo.find({
+      relations: ['permissions'],
+      where: { id: id > 0 ? id : undefined },
+      order: { id: 'ASC' }
+    })
+  }
 }

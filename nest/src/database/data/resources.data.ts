@@ -14,5 +14,9 @@ export const resourcesInitialized = [
   {
     name: 'Products',
     description: 'Quản lý sản phẩm'
+  },
+  {
+    name: 'Me',
+    description: 'Các api về người request'
   }
 ]

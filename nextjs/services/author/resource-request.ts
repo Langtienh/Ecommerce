@@ -45,6 +45,15 @@ const resourceRequestApi = {
     const res = await http.patch<Resource>(`/authorization/resources/${id}`, data, option)
     await serverRevalidatePath('/dashboard/resources')
     return res
+  },
+  getAllPermission: async (params?: { resourceId?: number; page?: number; limit?: number }) => {
+    const resourceId = params?.resourceId || -1
+    const limit = params?.limit || -1
+    const page = params?.page || 1
+    const option = await authenRequestApi.getOptionWithAccessToken()
+    let query = `/authorization/resources/${resourceId}/permissions?limit=${limit}&page=${page}`
+    const res = await http.get<Paginate<ResourceDetail>>(query, option)
+    return res
   }
 }
 export default resourceRequestApi

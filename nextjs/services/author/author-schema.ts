@@ -32,3 +32,10 @@ export const UpdateGroupSchema = z.object({
 })
 
 export type UpdateGroupType = z.infer<typeof UpdateGroupSchema>
+
+export const AddRoleSchema = z.object({
+  name: z.string({ message: 'Tên không được để trống' }),
+  description: z.string({ message: 'Mô tả không được để trống' })
+})
+
+export type AddRoleType = z.infer<typeof AddRoleSchema>

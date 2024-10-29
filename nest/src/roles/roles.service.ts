@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { QueryHelper } from 'src/base/query-helper'
 import { Permission } from 'src/permissions/entities/permission.entity'
 import { User } from 'src/users/entities/user.entity'
-import { Repository } from 'typeorm'
+import { ILike, In, Repository } from 'typeorm'
 import { CreateRoleDto } from './dto/create-role.dto'
 import { QueryRoleDto } from './dto/query-role.dto'
 import { UpdateRoleDto } from './dto/update-role.dto'
@@ -39,22 +39,20 @@ export class RolesService {
   }
 
   async findAll(query: QueryRoleDto) {
-    const { page, limit, search, sort, ...filter } = query
+    const { page, limit, search, sort } = query
     if (page < 1) {
       throw new BadRequestException('Trang phải lớn hơn 0')
     }
     const skip = (page - 1) * limit
-    const where = QueryHelper.toFilter(filter, roleFields)
     const order = QueryHelper.toOrder(sort, roleFields)
-    const queryBuilder = this.roleRepo.createQueryBuilder('role')
-    if (limit > 0) queryBuilder.take(limit).skip(skip)
-    queryBuilder.where(where).orderBy(order)
-    if (search) {
-      queryBuilder.andWhere('role.name LIKE :search', {
-        search: `%${search}%`
-      })
-    }
-    const [result, totalItem] = await queryBuilder.getManyAndCount()
+    const [result, totalItem] = await this.roleRepo.findAndCount({
+      where: {
+        name: search ? ILike(`%${search}%`) : undefined
+      },
+      order,
+      skip: skip > 0 ? skip : undefined,
+      take: limit > 0 ? limit : undefined
+    })
     const totalPage = limit > 0 ? Math.ceil(totalItem / limit) : 1
     const meta = { totalItem, totalPage, page, limit }
     return { meta, result }
@@ -73,7 +71,7 @@ export class RolesService {
     if (updateRoleDto.name) await this.isExistName(updateRoleDto.name, id)
     Object.assign(role, updateRoleDto)
     if (permissionIds) {
-      const permissions = await this.permissionRepo.findByIds(permissionIds)
+      const permissions = await this.permissionRepo.find({ where: { id: In(permissionIds) } })
       if (permissions.length !== permissionIds.length) {
         throw new NotFoundException('Some permission not found')
       }
@@ -85,6 +83,12 @@ export class RolesService {
   async remove(id: number) {
     const users = await this.userRepo.exists({ where: { roleId: id } })
     if (!users) return this.roleRepo.delete(id)
-    return await this.roleRepo.softDelete(id)
+    else throw new ConflictException('Không thể xóa role này vì có user đang sử dụng')
+  }
+
+  async removeMany(ids: number[]) {
+    const users = await this.userRepo.exists({ where: { roleId: In(ids) } })
+    if (!users) return this.roleRepo.delete(ids)
+    else throw new ConflictException('Không thể xóa role này vì có user đang sử dụng')
   }
 }

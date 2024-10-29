@@ -16,7 +16,7 @@ export function middleware(request: NextRequest) {
 
     const accessToken = request.cookies.get('accessToken')
     // Chưa có access token thì chuyển hướng sang trang refresh token
-    if (!accessToken) return NextResponse.redirect(new URL(`/refresh-token?redirectUrl=${prevUrl}`, request.url))
+    if (!accessToken) return NextResponse.redirect(new URL(`/api/refresh-token?redirectUrl=${prevUrl}`, request.url))
   }
 
   // Đăng nhập rồi thì không cho vào login/register nữa

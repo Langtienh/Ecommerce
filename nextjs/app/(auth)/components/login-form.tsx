@@ -11,11 +11,22 @@ import authenRequestApi from '@/services/authen/authen-request'
 import { LoginBodyType, LoginFormSchema } from '@/services/authen/schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { Suspense } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
 export default function LoginForm() {
+  return (
+    <Suspense>
+      <HandleWithSearchParam />
+    </Suspense>
+  )
+}
+
+const HandleWithSearchParam = () => {
+  const searchParam = useSearchParams()
+  const redirectUrl = searchParam.get('redirectUrl') || '/smember'
   // 1. Define your form.
   const form = useForm<LoginBodyType>({
     resolver: zodResolver(LoginFormSchema),
@@ -36,7 +47,7 @@ export default function LoginForm() {
       await delayForm()
       setUser(res.data.user)
       toast.success(res.message)
-      router.push('/smember')
+      router.push(redirectUrl)
     } catch (error) {
       handleErrorApi({ error, setError: form.setError })
     } finally {

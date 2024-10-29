@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { QueryHelper } from 'src/base/query-helper'
 import { Group } from 'src/groups/entities/group.entity'
@@ -87,7 +87,7 @@ export class PermissionsService {
   async remove(id: number) {
     const roleExist = await this.roleRepo.exists({ where: { permissions: { id } } })
     if (roleExist) {
-      throw new BadRequestException('Quyền đang được sử dụng')
+      throw new ConflictException('Quyền đang được sử dụng')
     }
     return this.permisstionRepo.delete(id)
   }
@@ -95,7 +95,7 @@ export class PermissionsService {
   async removeMany(ids: number[]) {
     const roleExist = await this.roleRepo.exists({ where: { permissions: { id: In(ids) } } })
     if (roleExist) {
-      throw new BadRequestException('Quyền đang được sử dụng')
+      throw new ConflictException('Quyền đang được sử dụng')
     }
     return this.permisstionRepo.delete(ids)
   }

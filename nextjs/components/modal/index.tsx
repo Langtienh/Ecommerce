@@ -1,5 +1,6 @@
 'use client'
 import { Dialog, DialogContent, DialogDescription, DialogHeader } from '@/components/ui/dialog'
+import { cn } from '@/lib/utils'
 import { DialogTitle } from '@radix-ui/react-dialog'
 import { usePathname, useRouter } from 'next/navigation'
 import { ReactNode, useEffect, useState } from 'react'
@@ -23,10 +24,10 @@ export default function Modal({ children, title, className, description }: Modal
   }, [path])
   return (
     <Dialog defaultOpen={true} onOpenChange={() => router.back()}>
-      <DialogContent className={className}>
+      <DialogContent className={cn('max-h-[600px] overflow-auto', className)}>
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
-          {description && <DialogDescription>{description}</DialogDescription>}
+          <DialogDescription>{description || ''}</DialogDescription>
         </DialogHeader>
         {children}
       </DialogContent>

@@ -82,12 +82,35 @@ export class ResourcesService {
   async remove(id: number) {
     const group = await this.groupRepo.exists({ where: { resourceId: id } })
     if (!group) return this.resourceRepo.delete(id)
-    return this.resourceRepo.softDelete(id)
+    else throw new ConflictException('Resource đang được sử dụng')
   }
 
   async removeMany(ids: number[]) {
     const groups = await this.groupRepo.find({ where: { resourceId: In(ids) } })
     if (!groups.length) return this.resourceRepo.delete(ids)
     else throw new ConflictException('Resource đang được sử dụng')
+  }
+
+  async getAllPermissions(resourceId: number, query: QueryResourceDto) {
+    const { limit, page } = query
+    if (page < 1) {
+      throw new BadRequestException('Trang phải lớn hơn 0')
+    }
+    const [result, totalItem] = await this.resourceRepo.findAndCount({
+      where: {
+        id: resourceId > 0 ? resourceId : undefined
+      },
+      relations: {
+        groups: {
+          permissions: true
+        }
+      },
+      take: limit > 0 ? limit : undefined,
+      skip: limit > 0 ? (page - 1) * limit : undefined,
+      order: { id: 'ASC' }
+    })
+    const totalPage = limit > 0 ? Math.ceil(totalItem / limit) : 1
+    const meta = { totalItem, totalPage, page, limit }
+    return { meta, result }
   }
 }

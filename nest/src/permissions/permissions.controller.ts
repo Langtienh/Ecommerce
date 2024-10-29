@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
-import { ParamIdDto } from 'src/base/query-helper'
-import { Public, ReponseMessage } from 'src/decorator/customize'
+import { ParamIdDto, QueryIdsDto } from 'src/base/query-helper'
+import { ReponseMessage } from 'src/decorator/customize'
 import { CreatePermissionDto } from './dto/create-permission.dto'
 import { QueryPremissionDto } from './dto/query-permission.dto'
 import { UpdatePermissionDto } from './dto/update-permission.dto'
@@ -18,14 +18,12 @@ export class PermissionsController {
     return this.permissionsService.create(createPermissionDto)
   }
 
-  @Public()
   @ReponseMessage('Lấy danh sách quyền thành công')
   @Get()
   findAll(@Query() query: QueryPremissionDto) {
     return this.permissionsService.findAll(query)
   }
 
-  @Public()
   @ReponseMessage('Lấy chi tiết quyền thành công')
   @Get(':id')
   findOne(@Param() { id }: ParamIdDto) {
@@ -46,7 +44,7 @@ export class PermissionsController {
 
   @ReponseMessage('Xóa quyền đã chọn thành công')
   @Delete()
-  removeMany(@Query('ids') ids: string) {
-    return this.permissionsService.removeMany(ids.split(',').map(Number))
+  removeMany(@Query() { ids }: QueryIdsDto) {
+    return this.permissionsService.removeMany(ids)
   }
 }

@@ -1,10 +1,17 @@
 import { Transform } from 'class-transformer'
 import { IsInt } from 'class-validator'
 import { And, Brackets, In, LessThan, MoreThan, Not, ObjectLiteral } from 'typeorm'
+
 export class ParamIdDto {
-  @Transform(({ value }) => parseInt(value, 10))
   @IsInt()
+  @Transform(({ value }) => parseInt(value, 10))
   id: number
+}
+
+export class QueryIdsDto {
+  @IsInt({ each: true })
+  @Transform(({ value }) => value.split(',').map(Number))
+  ids: number[]
 }
 
 export class QueryHelper {

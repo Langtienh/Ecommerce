@@ -80,21 +80,20 @@ const crudMenuItems = [
 
 const authorMenuItems = [
   {
+    label: 'Vai trò',
+    icon: FaUserShield,
+    href: '/dashboard/roles'
+  },
+  {
     label: 'Tài nguyên',
     icon: GrResources,
     href: '/dashboard/resources'
   },
-
   {
     label: 'Quyền',
     icon: FaConnectdevelop,
     href: '/dashboard/permissions'
-  },
-  {
-    label: 'Vai trò',
-    icon: FaUserShield,
-    href: '/dashboard/roles'
   }
 ]
 
-const menus = [homeMenuItems, crudMenuItems, authorMenuItems]
+const menus = [homeMenuItems, authorMenuItems, crudMenuItems]

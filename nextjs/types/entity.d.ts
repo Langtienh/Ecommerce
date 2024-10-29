@@ -40,7 +40,7 @@ interface Role {
   updatedAt: string
 }
 
-interface roleDetail extends Role {
+interface RoleDetail extends Role {
   permissions: Permission[]
 }
 
@@ -55,11 +55,19 @@ interface Resource {
   updaterId: number
 }
 
+interface ResourceDetail extends Resource {
+  groups: GroupDetail[]
+}
+
 // group
 interface Group {
   id: number
   name: string
   resourceId: number
+}
+
+interface GroupDetail extends Group {
+  permissions: Permission[]
 }
 
 enum HTTP_METHOD {

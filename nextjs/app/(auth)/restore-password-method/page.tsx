@@ -4,7 +4,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input'
 import useLoading from '@/hooks/use-loading'
 import { handleErrorApi } from '@/lib/handle-request'
-import { delayForm } from '@/lib/utils'
+import { delayForm, imageSrc } from '@/lib/utils'
 import authenRequestApi from '@/services/authen/authen-request'
 import { RestorePasswordBodyType, RestorePasswordSchema } from '@/services/authen/schema'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -48,7 +48,7 @@ export default function Page() {
   return (
     <>
       <div className='flex flex-col space-y-2 items-center justify-center mb-5'>
-        <Image src='/images/shipper.png' width={100} height={100} alt='shipper' />
+        <Image src={imageSrc('/shipper')} width={100} height={100} alt='shipper' />
         <h3>Quên mật khẩu</h3>
         <p className='text-[13px] text-gray-500'>
           Hãy nhập email của bạn vào bên dưới để bắt đầu quá trình khôi phục mật khẩu.

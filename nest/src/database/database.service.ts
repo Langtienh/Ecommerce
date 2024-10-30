@@ -47,11 +47,12 @@ export class DatabaseService implements OnModuleInit {
   }
 
   async initUser() {
+    const defaltPassword = this.configService.get<string>('DEFAULT_PASSWORD')
     const countUsers = await this.userRepository.count()
     if (countUsers === 0) {
       const userswithPassword = await Promise.all(
         usersInitialized.map(async (user) => {
-          const hashedPassword = await this.userService.hashPassword(user.password)
+          const hashedPassword = await this.userService.hashPassword(defaltPassword)
           return {
             ...user,
             password: hashedPassword

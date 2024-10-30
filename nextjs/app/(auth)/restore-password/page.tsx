@@ -1,3 +1,4 @@
+import { imageSrc } from '@/lib/utils'
 import authenRequestApi from '@/services/authen/authen-request'
 import { cookies } from 'next/headers'
 import Image from 'next/image'
@@ -13,7 +14,7 @@ export default async function Page() {
     return (
       <>
         <div className='mt-5 mb-10 flex flex-col justify-center space-y-2 items-center'>
-          <Image width={100} height={100} alt='shipper' src='/images/shipper.png' />
+          <Image width={100} height={100} alt='shipper' src={imageSrc('/shipper')} />
           <h3>Tạo mật khẩu mới</h3>
         </div>
         <ResetPasswordForm otp={otp} forgotPasswordToken={forgotPasswordToken} />

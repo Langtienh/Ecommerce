@@ -1,6 +1,7 @@
 'use client'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import useRequestLogin from '@/hooks/use-request-login'
+import { imageSrc } from '@/lib/utils'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from '../ui/button'
@@ -17,7 +18,7 @@ export default function RedirectLoginModal() {
     >
       <DialogContent className='p-4 w-[350px] rounded-xl flex flex-col gap-4 items-center justify-center'>
         <h3 className='text-red-600 text-center text-[25px]'>Smember</h3>
-        <Image width={80} height={80} alt='shipper' src='/images/shipper.png' />
+        <Image width={80} height={80} alt='shipper' src={imageSrc('/shipper')} />
         <p className='text-center text-[15px] font-semibold'>
           Vui lòng đăng nhập tài khoản Smember để xem ưu đãi và thanh toán dễ dàng hơn.
         </p>

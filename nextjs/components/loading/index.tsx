@@ -1,6 +1,7 @@
 'use client'
 
 import useLoading from '@/hooks/use-loading'
+import { imageSrc } from '@/lib/utils'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useEffect } from 'react'
@@ -20,7 +21,7 @@ export default function OverlayLoading() {
       <Dialog defaultOpen>
         <DialogOverlay>
           <div className='w-screen h-screen flex flex-col justify-center items-center'>
-            <Image width={200} height={200} alt='shipper' src='/images/shipper2.png' className='image-animation' />
+            <Image width={200} height={200} alt='shipper' src={imageSrc('/shipper2')} className='image-animation' />
             <h4 className='text-white flex items-start gap-2'>
               <span>Đang tải</span>
               <ThreeDots visible={true} height='40' width='40' color='#fff' radius='12.5' wrapperClass='grid-wrapper' />

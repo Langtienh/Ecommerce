@@ -16,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <div>
-      <ThemeProvider attribute='class' defaultTheme='dark' enableSystem disableTransitionOnChange>
+      <ThemeProvider attribute='class' defaultTheme='system' enableSystem disableTransitionOnChange>
         <div className='h-12'></div>
         <div className='flex'>
           <div className='w-14 shrink-0'></div>

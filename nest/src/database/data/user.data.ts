@@ -4,7 +4,6 @@ export const usersInitialized = [
   {
     email: 'user@gmail.com',
     name: 'User',
-    password: 'P123456@',
     status: UserStatus.VERIFY,
     roleId: 1,
     phone: '0123456789',
@@ -13,7 +12,6 @@ export const usersInitialized = [
   {
     email: 'systemadmin@email.com',
     name: 'System admin',
-    password: 'P123456@',
     status: UserStatus.VERIFY,
     roleId: 2,
     phone: '0123456789',
@@ -22,7 +20,6 @@ export const usersInitialized = [
   {
     email: 'admin@gmail.com',
     name: 'Admin',
-    password: 'P123456@',
     status: UserStatus.VERIFY,
     roleId: 3,
     phone: '0123456789',
@@ -31,7 +28,6 @@ export const usersInitialized = [
   {
     email: 'admindemo@gmail.com',
     name: 'Viewer admin',
-    password: 'P123456@',
     status: UserStatus.VERIFY,
     roleId: 4,
     phone: '0123456789',

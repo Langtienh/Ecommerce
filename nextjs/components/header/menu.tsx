@@ -1,7 +1,7 @@
 'use client'
 import useAccount from '@/hooks/use-account'
 import useRequestLogin from '@/hooks/use-request-login'
-import { cn } from '@/lib/utils'
+import { cn, imageSrc } from '@/lib/utils'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from '../ui/button'
@@ -66,7 +66,7 @@ const menuItems = [
         width={24}
         height={24}
         alt='contact'
-        src='/images/header/phone.svg'
+        src={imageSrc('/header/phone')}
         className='h-6 shrink-0 object-cover'
       />
     ),
@@ -84,7 +84,7 @@ const menuItems = [
         width={24}
         height={24}
         alt='about'
-        src='/images/header/location.svg'
+        src={imageSrc('/header/location')}
         className='h-6 shrink-0 object-cover'
       />
     ),
@@ -98,7 +98,7 @@ const menuItems = [
     ),
     path: '/smember/invoices',
     icon: (
-      <Image width={40} height={24} alt='invoice' src='/images/header/car.svg' className='h-6 shrink-0 object-cover' />
+      <Image width={40} height={24} alt='invoice' src={imageSrc('/header/car')} className='h-6 shrink-0 object-cover' />
     ),
     hiddenOntablet: true,
     isAuthentication: true

@@ -2,17 +2,18 @@
 import { Button } from '@/components/ui/button'
 import { handleErrorApi } from '@/lib/handle-request'
 import http from '@/lib/http'
+import { imageSrc } from '@/lib/utils'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 
 const providers = [
   {
     label: 'google',
-    image: '/images/logo/google.png'
+    image: 'logo/google'
   },
   {
     label: 'github',
-    image: '/images/logo/github.png'
+    image: 'logo/github'
   }
 ]
 
@@ -40,7 +41,7 @@ export default function LoginProvider() {
             width={24}
             height={24}
             alt={provider.label}
-            src={provider.image}
+            src={imageSrc(provider.image)}
             className='size-6 rounded-full text-base'
           />
           <span className='capitalize'>{provider.label}</span>

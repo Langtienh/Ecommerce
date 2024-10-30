@@ -23,3 +23,8 @@ export function getFirstLetterUppercase(name: string): string {
   const strs = name.split(' ')
   return strs.map((str) => str.trim().charAt(0).toUpperCase()).join('')
 }
+
+export const imageSrc = (url: string) => {
+  if (url.startsWith('/')) return `${envConfig.IMAGE_PREFIX_URL}${url}`
+  return `${envConfig.IMAGE_PREFIX_URL}/${url}`
+}

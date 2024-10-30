@@ -94,7 +94,7 @@ export class OauthService {
     const data = await this.getGoogleUser(code)
     const { accessToken, isNew, refreshToken } = await this.checkGoogleUser(data)
     const frontendUrl = this.configService.get<string>('FRONTEND_HOST')
-    const url = `${frontendUrl}/oauth?accessToken=${accessToken}&refreshToken=${refreshToken}&isNew=${isNew}`
+    const url = `${frontendUrl}/api/oauth?accessToken=${accessToken}&refreshToken=${refreshToken}&isNew=${isNew}`
     return url
   }
 
@@ -174,7 +174,7 @@ export class OauthService {
     const data = await this.getGithubUser(code)
     const { accessToken, isNew, refreshToken } = await this.checkGithubUser(data)
     const frontendUrl = this.configService.get<string>('FRONTEND_HOST')
-    const url = `${frontendUrl}/oauth?accessToken=${accessToken}&refreshToken=${refreshToken}&isNew=${isNew}`
+    const url = `${frontendUrl}/api/oauth?accessToken=${accessToken}&refreshToken=${refreshToken}&isNew=${isNew}`
     return url
   }
 }

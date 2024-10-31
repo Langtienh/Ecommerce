@@ -1,9 +1,9 @@
 import Modal from '@/components/modal'
-import resourceRequestApi from '@/services/author/resource-request'
+import { requestApi } from '@/services'
 import FormPemission from '../../components/form-edit-add'
 
 export default async function CreatePage() {
-  const res = await resourceRequestApi.getAll({ limit: -1 })
+  const res = await requestApi.resource.getMany({ limit: -1 })
   const resources = res.data.result
   return (
     <Modal title='Thêm mới permission'>

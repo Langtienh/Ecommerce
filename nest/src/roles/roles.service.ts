@@ -1,13 +1,13 @@
-import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common'
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { QueryHelper } from 'src/base/query-helper'
+import { queryHelper } from 'src/base/query-helper'
 import { Permission } from 'src/permissions/entities/permission.entity'
 import { User } from 'src/users/entities/user.entity'
 import { ILike, In, Repository } from 'typeorm'
 import { CreateRoleDto } from './dto/create-role.dto'
 import { QueryRoleDto } from './dto/query-role.dto'
 import { UpdateRoleDto } from './dto/update-role.dto'
-import { Role, roleFields } from './entities/role.entity'
+import { Role } from './entities/role.entity'
 
 @Injectable()
 export class RolesService {
@@ -39,19 +39,15 @@ export class RolesService {
   }
 
   async findAll(query: QueryRoleDto) {
-    const { page, limit, search, sort } = query
-    if (page < 1) {
-      throw new BadRequestException('Trang phải lớn hơn 0')
-    }
-    const skip = (page - 1) * limit
-    const order = QueryHelper.toOrder(sort, roleFields)
+    const { page, limit, search, order, where, skip, take } = queryHelper.buildQuery(query, Role)
     const [result, totalItem] = await this.roleRepo.findAndCount({
       where: {
+        ...where,
         name: search ? ILike(`%${search}%`) : undefined
       },
       order,
-      skip: skip > 0 ? skip : undefined,
-      take: limit > 0 ? limit : undefined
+      skip,
+      take
     })
     const totalPage = limit > 0 ? Math.ceil(totalItem / limit) : 1
     const meta = { totalItem, totalPage, page, limit }

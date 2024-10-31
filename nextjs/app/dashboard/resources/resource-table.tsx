@@ -26,7 +26,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import useLoading from '@/hooks/use-loading'
 import { handleErrorApi } from '@/lib/handle-request'
 import { getIndexSelectedRow, getSelectedRow } from '@/lib/tanstack-table-helpper'
-import resourceRequestApi from '@/services/author/resource-request'
+import { requestApi } from '@/services'
+import { Resource } from '@/services/resource-request-api'
 import Link from 'next/link'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { toast } from 'sonner'
@@ -47,7 +48,7 @@ export default function ResourceTable({ data }: { data: Paginate<Resource> }) {
     startLoading()
     try {
       const dataSelected = getSelectedRow(rowSelection, data.result)
-      const res = await resourceRequestApi.deleteMany(dataSelected.map((item) => item.id))
+      const res = await requestApi.resource.deleteMany(dataSelected.map((item) => item.id))
       toast.success(res.message)
     } catch (error) {
       handleErrorApi({ error })

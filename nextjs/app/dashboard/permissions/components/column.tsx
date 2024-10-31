@@ -2,10 +2,11 @@ import { ColumnDef } from '@tanstack/react-table'
 
 import ColumnHeaderServerSort from '@/components/table-helpper/header-server-sort'
 import { Checkbox } from '@/components/ui/checkbox'
+import { PermissionWittGroup } from '@/services/permission-request-api'
 import Actions from './actions'
 import { PermissionMethod, PermissionStatus } from './data'
 
-export const permissionColumns: ColumnDef<Permission>[] = [
+export const permissionColumns: ColumnDef<PermissionWittGroup>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -52,17 +53,19 @@ export const permissionColumns: ColumnDef<Permission>[] = [
   {
     accessorKey: 'isActive',
     header: 'Status',
-    cell: ({ row }) => <PermissionStatus isActive={!!row.getValue('isActive') ? 'true' : 'false'} />
+    cell: ({ row }) => <PermissionStatus isActive={!!row.getValue('isActive')} />
   },
   {
-    accessorKey: 'groupName',
+    accessorKey: 'group.name',
+    id: 'group',
     header: 'Group',
     cell: ({ row }) => {
-      return <div>{row.getValue('groupName')}</div>
+      return <div>{row.getValue('group')}</div>
     }
   },
   {
-    accessorKey: 'resourceId',
+    accessorKey: 'group.resourceId',
+    id: 'resourceId',
     header: 'ResourceId',
     cell: ({ row }) => {
       return <div className='font-medium text-center'>{row.getValue('resourceId')}</div>

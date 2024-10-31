@@ -1,6 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import resourceRequestApi from '@/services/author/resource-request'
-import roleRequestApi from '@/services/author/role-request'
+import { requestApi } from '@/services'
 import { notFound } from 'next/navigation'
 import FormRole from '../../components/form-edit-add'
 
@@ -11,16 +10,12 @@ export default async function Editpermission({
   params: {
     id: string
   }
-  searchParams: {
-    page?: number
-    limit?: number
-    reourceId?: number
-  }
+  searchParams: Record<string, any>
 }) {
   try {
-    const res = await roleRequestApi.getById(Number(id))
+    const res = await requestApi.role.getById(Number(id))
     const role = res.data
-    const res2 = await resourceRequestApi.getAllPermission(searchParams)
+    const res2 = await requestApi.resource.getAllPermission(searchParams)
     const resources = res2.data.result
     return (
       <Card className='m-5'>

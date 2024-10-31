@@ -8,9 +8,10 @@ import { Switch } from '@/components/ui/switch'
 import useLoading from '@/hooks/use-loading'
 import { handleErrorApi } from '@/lib/handle-request'
 import { delayForm } from '@/lib/utils'
-import { AddPermissionSchema, AddPermissionType } from '@/services/author/author-schema'
-import groupRequestApi from '@/services/author/group-request'
-import permissionRequestApi from '@/services/author/permission-request'
+import { requestApi } from '@/services'
+import { Group } from '@/services/group-request-api'
+import { AddPermissionSchema, AddPermissionType, PermissionWittGroup } from '@/services/permission-request-api'
+import { Resource } from '@/services/resource-request-api'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -18,15 +19,21 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { HTTP_METHOD_VALUE, PermissionMethod } from './data'
 
-export default function FormPemission({ permission, resources }: { permission?: Permission; resources: Resource[] }) {
+export default function FormPemission({
+  permission,
+  resources
+}: {
+  permission?: PermissionWittGroup
+  resources: Resource[]
+}) {
   const [resourceIdSelected, setResourceIdSelected] = useState<number | undefined>(undefined)
   const [groups, setGroups] = useState<Group[]>([])
 
   useEffect(() => {
     const fetchGroups = async () => {
-      const resourceId = permission?.resourceId || resourceIdSelected
+      const resourceId = permission?.group.resourceId || resourceIdSelected
       if (resourceId) {
-        const res = await groupRequestApi.getAll({ resourceId, limit: -1 })
+        const res = await requestApi.group.getMany({ resourceId, limit: -1 })
         setGroups(res.data.result)
       }
     }
@@ -52,8 +59,8 @@ export default function FormPemission({ permission, resources }: { permission?: 
     try {
       let res = undefined
       if (permission) {
-        res = await permissionRequestApi.update(permission.id, values)
-      } else res = await permissionRequestApi.add(values)
+        res = await requestApi.permission.update(permission.id, values)
+      } else res = await requestApi.permission.add(values)
       await delayForm()
       toast.success(res.message)
       router.push('/dashboard/permissions')
@@ -116,7 +123,7 @@ export default function FormPemission({ permission, resources }: { permission?: 
             )}
           />
           <Select
-            value={resourceIdSelected?.toString() || permission?.resourceId.toString()}
+            value={resourceIdSelected?.toString() || permission?.group.resourceId.toString()}
             onValueChange={(value) => {
               setResourceIdSelected(Number(value))
             }}

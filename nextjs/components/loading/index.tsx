@@ -14,7 +14,7 @@ export default function OverlayLoading() {
   const finallyLoading = useLoading((state) => state.finallyLoading)
   const path = usePathname()
   useEffect(() => {
-    finallyLoading()
+    if (path) finallyLoading()
   }, [path])
   if (isLoading)
     return (

@@ -1,5 +1,4 @@
 import { PlusCircledIcon } from '@radix-ui/react-icons'
-import * as React from 'react'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -16,47 +15,52 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Separator } from '@/components/ui/separator'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { ReactNode, Suspense } from 'react'
 
 interface ColumnFilterProps<TData, TValue> {
-  selectedValues?: string[]
   defaultSelected: string[]
   title: string
   fieldName: string
   options: {
     value: string
-    item: React.ReactNode
+    item: ReactNode
   }[]
 }
 
-export function FieldFilter<TData, TValue>({
-  title,
-  fieldName,
-  options,
-  defaultSelected,
-  selectedValues
-}: ColumnFilterProps<TData, TValue>) {
-  const _selectedValues = selectedValues || defaultSelected
+export function FieldFilter<TData, TValue>(props: ColumnFilterProps<TData, TValue>) {
+  return (
+    <Suspense>
+      <Wrapper {...props} />
+    </Suspense>
+  )
+}
+
+function Wrapper<TData, TValue>({ title, fieldName, options, defaultSelected }: ColumnFilterProps<TData, TValue>) {
+  const key = `${fieldName}[in]`
+  const searchParams = useSearchParams()
+  const _selectedValues = searchParams.getAll(key).length > 0 ? searchParams.getAll(key) : defaultSelected
   const { replace, refresh } = useRouter()
   const patchName = usePathname()
-  const searchParams = useSearchParams()
-
   const handleClearFilter = () => {
     const params = new URLSearchParams(searchParams)
-    params.delete(fieldName)
+    params.delete(key)
     replace(`${patchName}?${params}`)
   }
-  const handleSelect = (value: string, isSelected: boolean) => {
+  const handleSelect = (value: string, isSelect: boolean) => {
     const newSelectedValues = [..._selectedValues]
     const params = new URLSearchParams(searchParams)
     params.set('page', '1')
-    if (isSelected) {
+    if (isSelect) {
       newSelectedValues.push(value)
     } else {
       const index = newSelectedValues.indexOf(value)
       newSelectedValues.splice(index, 1)
     }
-    if (newSelectedValues.length === defaultSelected.length) params.delete(fieldName)
-    else params.set(fieldName, newSelectedValues.join(','))
+    if (newSelectedValues.length === defaultSelected.length) params.delete(key)
+    else {
+      params.delete(key) // Xóa các giá trị hiện có cho khóa
+      newSelectedValues.forEach((val) => params.append(key, val))
+    }
     replace(`${patchName}?${params}`)
   }
   return (

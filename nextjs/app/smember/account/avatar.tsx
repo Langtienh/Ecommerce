@@ -2,6 +2,7 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { getFirstLetterUppercase } from '@/lib/utils'
+import { User } from '@/services/user-request-api'
 import { FaCamera } from 'react-icons/fa'
 
 export default function UploadAvatar({ user }: { user: User }) {

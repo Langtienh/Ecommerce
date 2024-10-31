@@ -32,4 +32,8 @@ export class CreateUserDto extends PasswordDto {
   @IsString()
   @IsOptional()
   status?: UserStatus
+
+  @IsString()
+  @IsOptional()
+  roleId?: number
 }

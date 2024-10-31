@@ -6,23 +6,23 @@ import { Input } from '@/components/ui/input'
 import useLoading from '@/hooks/use-loading'
 import { handleErrorApi } from '@/lib/handle-request'
 import { delayForm } from '@/lib/utils'
-import { AddRoleSchema, AddRoleType } from '@/services/author/author-schema'
-import roleRequestApi from '@/services/author/role-request'
+import { requestApi } from '@/services'
+import { ResourceDetail } from '@/services/resource-request-api'
+import { AddRoleSchema, AddRoleType, RoleDetail } from '@/services/role-request-api'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import ChoosePermissions, { ChangePermissionParams } from './choose-permissions'
 
 export default function FormRole({ role, resources }: { role?: RoleDetail; resources: ResourceDetail[] }) {
-  const [permissionIds, setPermissionIds] = useState<number[]>(role?.permissions.map((p) => p.id) || [])
   // 1. Define your form.
   const form = useForm<AddRoleType>({
     resolver: zodResolver(AddRoleSchema),
     defaultValues: {
       name: role?.name || '',
-      description: role?.description || ''
+      description: role?.description || '',
+      permissionIds: role?.permissions.map((p) => p.id) || []
     }
   })
   // 2. handle loading, store global state
@@ -34,8 +34,8 @@ export default function FormRole({ role, resources }: { role?: RoleDetail; resou
     try {
       let res = undefined
       if (role) {
-        res = await roleRequestApi.update(role.id, values, permissionIds)
-      } else res = await roleRequestApi.add(values, permissionIds)
+        res = await requestApi.role.update(role.id, values)
+      } else res = await requestApi.role.add(values)
       await delayForm()
       toast.success(res.message)
       router.push('/dashboard/roles')
@@ -46,23 +46,36 @@ export default function FormRole({ role, resources }: { role?: RoleDetail; resou
     }
   }
   const handleChangePermission = ({ group, permissionId, resource, checked }: ChangePermissionParams) => {
+    const prevPermissionIds = form.getValues('permissionIds')
     if (permissionId) {
-      if (checked) setPermissionIds((prev) => [...prev, permissionId])
-      else setPermissionIds((prev) => prev.filter((id) => id !== permissionId))
+      if (checked) form.setValue('permissionIds', [...prevPermissionIds, permissionId])
+      else
+        form.setValue(
+          'permissionIds',
+          prevPermissionIds.filter((id: number) => id !== permissionId)
+        )
     }
     if (group) {
       group.permissions.forEach((per) => {
         if (checked) {
-          if (!permissionIds.includes(per.id)) setPermissionIds((prev) => [...prev, per.id])
-        } else setPermissionIds((prev) => prev.filter((id) => id !== per.id))
+          if (!prevPermissionIds.includes(per.id)) form.setValue('permissionIds', [...prevPermissionIds, per.id])
+        } else
+          form.setValue(
+            'permissionIds',
+            prevPermissionIds.filter((id: number) => id !== per.id)
+          )
       })
     }
     if (resource) {
       resource.groups.forEach((group) => {
         group.permissions.forEach((per) => {
           if (checked) {
-            if (!permissionIds.includes(per.id)) setPermissionIds((prev) => [...prev, per.id])
-          } else setPermissionIds((prev) => prev.filter((id) => id !== per.id))
+            if (!prevPermissionIds.includes(per.id)) form.setValue('permissionIds', [...prevPermissionIds, per.id])
+          } else
+            form.setValue(
+              'permissionIds',
+              prevPermissionIds.filter((id: number) => id !== per.id)
+            )
         })
       })
     }
@@ -98,7 +111,7 @@ export default function FormRole({ role, resources }: { role?: RoleDetail; resou
         <ChoosePermissions
           handleChangePermission={handleChangePermission}
           resources={resources}
-          permissionIds={permissionIds}
+          permissionIds={form.getValues('permissionIds')}
         />
         <Button disabled={isLoading} type='submit' className='w-full'>
           {role ? 'Cập nhật' : 'Thêm mới'}

@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button'
 import useLoading from '@/hooks/use-loading'
 import { handleErrorApi } from '@/lib/handle-request'
-import roleRequestApi from '@/services/author/role-request'
+import { requestApi } from '@/services'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 
@@ -17,7 +17,7 @@ export default function DeleteManyButton({
   const handleDeleteMany = async () => {
     startLoading()
     try {
-      const res = await roleRequestApi.deleteMany(ids)
+      const res = await requestApi.role.deleteMany(ids)
       toast.success(res.message)
     } catch (error) {
       handleErrorApi({ error })

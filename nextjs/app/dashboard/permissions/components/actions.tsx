@@ -11,18 +11,19 @@ import {
 } from '@/components/ui/dropdown-menu'
 import useLoading from '@/hooks/use-loading'
 import { handleErrorApi } from '@/lib/handle-request'
-import permissionRequestApi from '@/services/author/permission-request'
+import { requestApi } from '@/services'
+import { PermissionWittGroup } from '@/services/permission-request-api'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 
-export default function Actions({ permission }: { permission: Permission }) {
+export default function Actions({ permission }: { permission: PermissionWittGroup }) {
   const { startLoading, finallyLoading } = useLoading()
   const router = useRouter()
   const handleDelete = async (id: number) => {
     startLoading()
     try {
-      const res = await permissionRequestApi.delete(id)
+      const res = await requestApi.permission.delete(id)
       toast.success(res.message)
       router.refresh()
     } catch (error) {
@@ -31,10 +32,10 @@ export default function Actions({ permission }: { permission: Permission }) {
       finallyLoading()
     }
   }
-  const handleChangeStatus = async (permission: Permission) => {
+  const handleChangeStatus = async (permission: PermissionWittGroup) => {
     startLoading()
     try {
-      const res = await permissionRequestApi.update(permission.id, { isActive: !permission.isActive })
+      const res = await requestApi.permission.update(permission.id, { isActive: !permission.isActive })
       toast.success(res.message)
       router.refresh()
     } catch (error) {

@@ -1,13 +1,13 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { QueryHelper } from 'src/base/query-helper'
+import { queryHelper } from 'src/base/query-helper'
 import { Permission } from 'src/permissions/entities/permission.entity'
 import { ResourcesService } from 'src/resources/resources.service'
 import { ILike, Repository } from 'typeorm'
 import { CreateGroupDto } from './dto/create-group.dto'
 import { QueryGroupDto } from './dto/query-group.dto'
 import { UpdateGroupDto } from './dto/update-group.dto'
-import { Group, groupFields } from './entities/group.entity'
+import { Group } from './entities/group.entity'
 
 @Injectable()
 export class GroupsService {
@@ -23,24 +23,14 @@ export class GroupsService {
   }
 
   async findAll(query: QueryGroupDto) {
-    const { limit, page, sort, search, ...fileds } = query
-    if (page < 1) {
-      throw new BadRequestException('Trang phải lớn hơn 0')
-    }
-    const skip = (page - 1) * limit
-    const queryBuilder = this.groupRepo.createQueryBuilder('group')
-    const order = QueryHelper.toOrder(sort, groupFields)
-    if (limit > 0) queryBuilder.take(limit).skip(skip)
-    queryBuilder.orderBy(order)
-
-    const where = QueryHelper.toFilter(fileds, groupFields)
-    if (search) {
-      queryBuilder.andWhere({
-        name: ILike(`%${search}%`)
-      })
-    }
-    queryBuilder.andWhere(where)
-    const [result, totalItem] = await queryBuilder.getManyAndCount()
+    const { limit, page, order, search, skip, take, where } = queryHelper.buildQuery(query, Group)
+    const [result, totalItem] = await this.groupRepo.findAndCount({
+      order,
+      skip,
+      take,
+      where: [{ ...where, name: ILike(`%${search}%`) }],
+      relations: { resource: true, permissions: true }
+    })
     const totalPage = limit > 0 ? Math.ceil(totalItem / limit) : 1
     const meta = { page, limit, totalPage, totalItem }
     return { meta, result }

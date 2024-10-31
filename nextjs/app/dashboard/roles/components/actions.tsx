@@ -11,7 +11,8 @@ import {
 } from '@/components/ui/dropdown-menu'
 import useLoading from '@/hooks/use-loading'
 import { handleErrorApi } from '@/lib/handle-request'
-import roleRequestApi from '@/services/author/role-request'
+import { requestApi } from '@/services'
+import { Role } from '@/services/role-request-api'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
@@ -22,7 +23,7 @@ export default function Actions({ role }: { role: Role }) {
   const handleDelete = async (id: number) => {
     startLoading()
     try {
-      const res = await roleRequestApi.delete(id)
+      const res = await requestApi.role.delete(id)
       toast.success(res.message)
       router.refresh()
     } catch (error) {

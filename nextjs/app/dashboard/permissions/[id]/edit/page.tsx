@@ -1,14 +1,13 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import permissionRequestApi from '@/services/author/permission-request'
-import resourceRequestApi from '@/services/author/resource-request'
+import { requestApi } from '@/services'
 import { notFound } from 'next/navigation'
 import FormPemission from '../../components/form-edit-add'
 
 export default async function Editpermission({ params: { id } }: { params: { id: string } }) {
   try {
-    const res = await permissionRequestApi.getById(Number(id))
+    const res = await requestApi.permission.getById(Number(id))
     const permission = res.data
-    const res2 = await resourceRequestApi.getAll({ limit: -1 })
+    const res2 = await requestApi.resource.getMany({ limit: -1 })
     const resources = res2.data.result
     return (
       <Card className='m-5'>

@@ -11,7 +11,8 @@ import {
 } from '@/components/ui/dropdown-menu'
 import useLoading from '@/hooks/use-loading'
 import { handleErrorApi } from '@/lib/handle-request'
-import resourceRequestApi from '@/services/author/resource-request'
+import { requestApi } from '@/services'
+import { Resource } from '@/services/resource-request-api'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
@@ -22,7 +23,7 @@ export default function Actions({ resource }: { resource: Resource }) {
   const handleDelete = async (id: number) => {
     startLoading()
     try {
-      const res = await resourceRequestApi.delete(id)
+      const res = await requestApi.resource.delete(id)
       toast.success(res.message)
       router.refresh()
     } catch (error) {

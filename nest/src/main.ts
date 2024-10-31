@@ -7,6 +7,7 @@ import { AppModule } from './app.module'
 import { JwtAuthGuard } from './authentication/jwt-auth.guard'
 import { TransformsInterceptor } from './core/tranforms.interceptor'
 import { CustomValidationPipe } from './core/validation'
+import test from './test'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
@@ -58,5 +59,6 @@ async function bootstrap() {
   const PORT = configService.get<number>('PORT')
 
   await app.listen(PORT)
+  await test()
 }
 bootstrap()

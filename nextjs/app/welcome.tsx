@@ -14,6 +14,7 @@ import {
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import envConfig from '@/config'
+import useAccount from '@/hooks/use-account'
 import useLoading from '@/hooks/use-loading'
 import { handleErrorApi } from '@/lib/handle-request'
 import { imageSrc } from '@/lib/utils'
@@ -59,6 +60,7 @@ export default function Welcome() {
 
 export const GetStated = () => {
   const router = useRouter()
+  const setUser = useAccount((state) => state.setUser)
   const { startLoading, finallyLoading } = useLoading()
   const handleLogin = async () => {
     startLoading()
@@ -66,8 +68,9 @@ export const GetStated = () => {
       const email = envConfig.ADMIN_EMAIL
       const password = envConfig.ADMIN_PASSWORD
       const data = { email, password }
-      const res = authenRequestApi.login(data)
-      toast.success((await res).message)
+      const res = await authenRequestApi.login(data)
+      setUser(res.data.user)
+      toast.success(res.message)
       router.push('/dashboard/roles')
     } catch (error) {
       handleErrorApi({ error })

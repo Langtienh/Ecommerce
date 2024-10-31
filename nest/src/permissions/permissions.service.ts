@@ -1,13 +1,13 @@
-import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common'
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { QueryHelper } from 'src/base/query-helper'
+import { queryHelper } from 'src/base/query-helper'
 import { Group } from 'src/groups/entities/group.entity'
 import { Role } from 'src/roles/entities/role.entity'
 import { ILike, In, Repository } from 'typeorm'
 import { CreatePermissionDto } from './dto/create-permission.dto'
 import { QueryPremissionDto } from './dto/query-permission.dto'
 import { UpdatePermissionDto } from './dto/update-permission.dto'
-import { Permission, permissionFields } from './entities/permission.entity'
+import { Permission } from './entities/permission.entity'
 
 @Injectable()
 export class PermissionsService {
@@ -35,30 +35,15 @@ export class PermissionsService {
   }
 
   async findAll(query: QueryPremissionDto) {
-    const { page, limit, sort, method, apiPath, groupId, resourceId, search, status } = query
-    if (page < 1) {
-      throw new BadRequestException('Trang phải lớn hơn 0')
-    }
-    const skip = (page - 1) * limit
-    const order = QueryHelper.toOrder(sort, permissionFields)
-    // result
+    const { limit, order, page, search, skip, take, where } = queryHelper.buildQuery(query, Permission)
     const [result, totalItem] = await this.permisstionRepo.findAndCount({
       order,
-      skip: limit > 0 ? skip : 0,
-      take: limit > 0 ? limit : undefined,
-      where: {
-        method: method ? In(method) : undefined,
-        name: search ? ILike(`%${search}%`) : undefined,
-        apiPath: apiPath ? ILike(`%${apiPath}%`) : undefined,
-        isActive: status ? In(status.map((item) => item === 'true')) : undefined,
-        group:
-          groupId && resourceId
-            ? {
-                id: groupId ? In(groupId) : undefined,
-                resourceId: resourceId ? In(resourceId) : undefined
-              }
-            : undefined
-      },
+      skip,
+      take,
+      where: [
+        { ...where, name: ILike(`%${search}%`) },
+        { ...where, apiPath: ILike(`%${search}%`) }
+      ],
       relations: { group: true }
     })
     const totalPage = limit > 0 ? Math.ceil(totalItem / limit) : 1

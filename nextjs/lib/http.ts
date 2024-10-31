@@ -52,7 +52,7 @@ export class EntityError extends ReponseError {
   }
 }
 
-interface CustomRequestInit extends RequestInit {
+export interface CustomRequestInit extends RequestInit {
   baseUrl?: string
 }
 
@@ -86,7 +86,7 @@ const request = async <T>(
   return payload as ReponseSuccessPayload<T>
 }
 
-type NoBody = Omit<CustomRequestInit, 'body'>
+export type NoBody = Omit<CustomRequestInit, 'body'>
 const http = {
   get: <T>(url: string, option?: NoBody) => request<T>('GET', url, option),
   post: <T>(url: string, body: any, option?: NoBody) => request<T>('POST', url, { ...option, body }),

@@ -1,17 +1,9 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import roleRequestApi from '@/services/author/role-request'
+import { requestApi } from '@/services'
 import RoleTable from './components/table'
 
-interface RolePageProps {
-  searchParams: {
-    page?: number
-    limit?: number
-    search?: string
-    sort?: string
-  }
-}
-export default async function RolePage({ searchParams }: RolePageProps) {
-  const res = await roleRequestApi.getAll(searchParams)
+export default async function RolePage({ searchParams }: { searchParams: Record<string, any> }) {
+  const res = await requestApi.role.getMany(searchParams)
   return (
     <Card className='m-5'>
       <CardHeader>

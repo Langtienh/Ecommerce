@@ -4,7 +4,9 @@ import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
 import useLoading from '@/hooks/use-loading'
 import { handleErrorApi } from '@/lib/handle-request'
-import groupRequestApi from '@/services/author/group-request'
+import { requestApi } from '@/services'
+import { Group } from '@/services/group-request-api'
+import { Resource } from '@/services/resource-request-api'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { FaEdit } from 'react-icons/fa'
@@ -20,10 +22,10 @@ export default function Groups({ groups, resource }: { groups: Group[]; resource
     startLoading()
     try {
       if (groupIdEdit) {
-        const res = await groupRequestApi.update(groupIdEdit, { name: newGroup, resourceId: resource.id })
+        const res = await requestApi.group.update(groupIdEdit, { name: newGroup, resourceId: resource.id })
         toast.success(res.message)
       } else {
-        const res = await groupRequestApi.add({ name: newGroup, resourceId: resource.id })
+        const res = await requestApi.group.add({ name: newGroup, resourceId: resource.id })
         toast.success(res.message)
       }
       router.refresh()
@@ -38,7 +40,7 @@ export default function Groups({ groups, resource }: { groups: Group[]; resource
   const handleDeleteGroup = async (id: number) => {
     startLoading()
     try {
-      await groupRequestApi.delete(id)
+      await requestApi.group.delete(id)
       toast.success('Delete group success')
       router.refresh()
     } catch (error) {

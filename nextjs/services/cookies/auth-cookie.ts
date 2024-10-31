@@ -135,3 +135,11 @@ export const isLogin = async () => {
 export const serverGetCookies = async (name: string) => {
   return cookies().get(name)?.value
 }
+
+export const serverSetCookies = async (name: string, value: string) => {
+  cookies().set({
+    ...COOKIES_OPTIONS,
+    name,
+    value
+  })
+}

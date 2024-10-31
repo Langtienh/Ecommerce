@@ -3,8 +3,10 @@ import { Button } from '@/components/ui/button'
 import { handleErrorApi } from '@/lib/handle-request'
 import http from '@/lib/http'
 import { imageSrc } from '@/lib/utils'
+import { serverSetCookies } from '@/services/cookies/auth-cookie'
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { Suspense } from 'react'
 
 const providers = [
   {
@@ -18,11 +20,22 @@ const providers = [
 ]
 
 export default function LoginProvider() {
+  return (
+    <Suspense>
+      <Wrapper />
+    </Suspense>
+  )
+}
+
+const Wrapper = () => {
+  const searchParam = useSearchParams()
+  const redirectUri = searchParam.get('redirectUri') || '/home'
   const router = useRouter()
   const handleClick = async (provider: string) => {
     try {
       const res = await http.get<{ redirectUri: string }>(`/oauth/${provider}`)
       const url: string = res.data.redirectUri
+      await serverSetCookies('redirectUri', redirectUri)
       router.push(url)
     } catch (error) {
       handleErrorApi({ error })

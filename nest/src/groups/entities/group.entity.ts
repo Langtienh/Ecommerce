@@ -1,4 +1,5 @@
-import { EntityWithSoftDelete, EntityWithSoftDeleteFields } from 'src/base/entity-with-soft-delete'
+import { EntityWithSoftDelete } from 'src/base/entity-with-soft-delete'
+import { Property } from 'src/decorator/customize'
 import { Permission } from 'src/permissions/entities/permission.entity'
 import { Resource } from 'src/resources/entities/resource.entity'
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm'
@@ -6,8 +7,10 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm'
 @Entity()
 export class Group extends EntityWithSoftDelete {
   @Column()
+  @Property
   name: string
 
+  @Property
   @Column({ name: 'resource_id' })
   resourceId: number
 
@@ -18,5 +21,3 @@ export class Group extends EntityWithSoftDelete {
   @OneToMany(() => Permission, (permission) => permission.group)
   permissions: Permission[]
 }
-
-export const groupFields = ['name', 'resourceId', ...EntityWithSoftDeleteFields]

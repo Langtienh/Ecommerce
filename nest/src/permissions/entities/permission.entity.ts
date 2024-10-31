@@ -1,4 +1,5 @@
-import { EntityWithSoftDelete, EntityWithSoftDeleteFields } from 'src/base/entity-with-soft-delete'
+import { EntityWithSoftDelete } from 'src/base/entity-with-soft-delete'
+import { Property } from 'src/decorator/customize'
 import { Group } from 'src/groups/entities/group.entity'
 import { Role } from 'src/roles/entities/role.entity'
 import { Column, Entity, JoinColumn, ManyToMany, ManyToOne } from 'typeorm'
@@ -14,18 +15,23 @@ export enum HTTP_METHOD {
 @Entity()
 export class Permission extends EntityWithSoftDelete {
   @Column()
+  @Property
   name: string
 
   @Column({ name: 'api_path' })
+  @Property
   apiPath: string
 
   @Column({ type: 'enum', enum: HTTP_METHOD })
+  @Property
   method: HTTP_METHOD
 
   @Column({ name: 'is_active', default: true })
+  @Property
   isActive: boolean
 
   @Column({ name: 'group_id' })
+  @Property
   groupId: number
 
   @ManyToOne(() => Group)
@@ -35,5 +41,3 @@ export class Permission extends EntityWithSoftDelete {
   @ManyToMany(() => Role, (role) => role.permissions)
   roles: Role[]
 }
-
-export const permissionFields = ['name', 'apiPath', 'method', 'isActive', 'groupId', ...EntityWithSoftDeleteFields]

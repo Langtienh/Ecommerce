@@ -1,12 +1,12 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import meRequestApi from '@/services/me/me-request'
+import { requestApi } from '@/services'
 import { redirect } from 'next/navigation'
 import UploadAvatar from './avatar'
 import FormChangeInfo from './form-change-info'
 
 export default async function Page() {
   try {
-    const res = await meRequestApi.getMe()
+    const res = await requestApi.me.getMe()
     return (
       <Card className='w-full max-w-[600px] mx-auto'>
         <CardContent>

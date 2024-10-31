@@ -1,5 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import resourceRequestApi from '@/services/author/resource-request'
+import { requestApi } from '@/services'
 import ResourceTable from './resource-table'
 
 interface ResourcesPageProps {
@@ -11,7 +11,7 @@ interface ResourcesPageProps {
   }
 }
 export default async function ResourcesPage({ searchParams }: ResourcesPageProps) {
-  const res = await resourceRequestApi.getAll(searchParams)
+  const res = await requestApi.resource.getMany(searchParams)
   return (
     <Card className='m-5'>
       <CardHeader>

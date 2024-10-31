@@ -1,11 +1,11 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import resourceRequestApi from '@/services/author/resource-request'
+import { requestApi } from '@/services'
 import { notFound } from 'next/navigation'
 import FormEditResource from '../../create/form-edit-resource'
 
 export default async function EditResource({ params: { id } }: { params: { id: string } }) {
   try {
-    const res = await resourceRequestApi.getById(Number(id))
+    const res = await requestApi.resource.getById(Number(id))
     const resource = res.data
     return (
       <Card className='m-5'>

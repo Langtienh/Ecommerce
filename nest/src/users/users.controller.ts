@@ -12,7 +12,7 @@ import { UsersService } from './users.service'
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @ReponseMessage('User created successfully')
+  @ReponseMessage('Tạo mới user thành công')
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto)
@@ -30,15 +30,15 @@ export class UsersController {
     return this.usersService.findOne(id)
   }
 
-  @ReponseMessage('Update user successfully')
+  @ReponseMessage('Cập nhật user thành công')
   @Patch(':id')
   update(@Param() { id }: ParamIdDto, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(id, updateUserDto)
   }
 
-  @ReponseMessage('Delete user successfully')
+  @ReponseMessage('Xóa user thành công')
   @Delete(':id')
-  remove(@Param() { id }: ParamIdDto) {
-    return this.usersService.remove(id)
+  remove(@Param() { id }: ParamIdDto, @Query('softDelete') softDelete?: string) {
+    return this.usersService.remove(id, softDelete === 'true')
   }
 }

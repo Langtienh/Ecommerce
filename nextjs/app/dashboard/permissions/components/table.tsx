@@ -16,16 +16,15 @@ import * as React from 'react'
 import TablePagination from '@/components/table-helpper/pagination'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { getSelectedRow } from '@/lib/tanstack-table-helpper'
+import { PermissionWittGroup } from '@/services/permission-request-api'
 import { permissionColumns } from './column'
 import TableToolbar from './toolbar'
 
 interface PermissionTableProps {
-  data: Paginate<Permission>
-  methods?: HTTP_METHOD[]
-  status?: string[]
+  data: Paginate<PermissionWittGroup>
 }
 
-export default function PermissionTable({ data, methods, status }: PermissionTableProps) {
+export default function PermissionTable({ data }: PermissionTableProps) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
@@ -59,8 +58,6 @@ export default function PermissionTable({ data, methods, status }: PermissionTab
       <TableToolbar
         ids={getSelectedRow(rowSelection, data.result).map((item) => item.id)}
         table={table}
-        methods={methods}
-        status={status}
         handleMutateSelected={handleMutateSelected}
       />
       <div className='rounded-md border'>

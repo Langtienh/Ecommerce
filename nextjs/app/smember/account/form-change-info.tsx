@@ -6,8 +6,9 @@ import useAccount from '@/hooks/use-account'
 import useLoading from '@/hooks/use-loading'
 import { formatTimestamp } from '@/lib/format'
 import { handleErrorApi } from '@/lib/handle-request'
-import { UpdateMeBodyType, UpdateMeSchema } from '@/services/authen/schema'
-import meRequestApi from '@/services/me/me-request'
+import { requestApi } from '@/services'
+import { UpdateMeBodyType, UpdateMeSchema } from '@/services/me-request-api'
+import { User } from '@/services/user-request-api'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
@@ -29,7 +30,7 @@ export default function FormChangeInfo({ user }: { user: User }) {
   async function onSubmit(values: UpdateMeBodyType) {
     startLoading()
     try {
-      const res = await meRequestApi.updateMe(values)
+      const res = await requestApi.me.updateMe(values)
       setUser(res.data)
       toast.success(res.message)
     } catch (error) {

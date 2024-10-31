@@ -28,3 +28,13 @@ export const imageSrc = (url: string) => {
   if (url.startsWith('/')) return `${envConfig.IMAGE_PREFIX_URL}${url}`
   return `${envConfig.IMAGE_PREFIX_URL}/${url}`
 }
+
+export const convertSearchParamToString = (query: Record<string, string>) => {
+  const searchParams = new URLSearchParams()
+  Object.entries(query).forEach(([key, value]) => {
+    if (value) {
+      searchParams.append(key, value)
+    }
+  })
+  return searchParams.toString()
+}

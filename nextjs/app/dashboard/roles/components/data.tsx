@@ -1,5 +1,6 @@
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
+import { HTTP_METHOD, HTTP_METHOD_VALUES } from '@/services/permission-request-api'
 
 export const PermissionStatus = ({ isActive }: { isActive: string }) => {
   if (isActive === 'true')
@@ -23,17 +24,7 @@ export const PermissionMethod = ({ method }: { method: HTTP_METHOD }) => (
   <span className={cn('font-bold uppercase', HTTP_METHOD_COLOR[method])}>{method}</span>
 )
 
-export enum HTTP_METHOD {
-  DELETE = 'DELETE',
-  GET = 'GET',
-  POST = 'POST',
-  PUT = 'PUT',
-  PATCH = 'PATCH'
-}
-
-export const HTTP_METHOD_VALUE = Object.values(HTTP_METHOD)
-
-export const HTTP_METHOD_OPTIONS = HTTP_METHOD_VALUE.map((method) => ({
+export const HTTP_METHOD_OPTIONS = HTTP_METHOD_VALUES.map((method) => ({
   item: <PermissionMethod method={method} />,
   value: method
 }))

@@ -1,5 +1,6 @@
 import { Exclude } from 'class-transformer'
-import { EntityWithDate, EntityWithDateFields } from 'src/base/entity-with-date'
+import { EntityWithDate } from 'src/base/entity-with-date'
+import { Property } from 'src/decorator/customize'
 import { Address } from 'src/me/entity/address.entity'
 import { Role } from 'src/roles/entities/role.entity'
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm'
@@ -12,9 +13,11 @@ export enum UserStatus {
 
 @Entity('users')
 export class User extends EntityWithDate {
+  @Property
   @Column({ unique: true })
   email: string
 
+  @Property
   @Column()
   name: string
 
@@ -22,9 +25,11 @@ export class User extends EntityWithDate {
   @Column()
   password: string
 
+  @Property
   @Column({ nullable: true, length: 15 })
   phone: string
 
+  @Property
   @Column({
     type: 'enum',
     enum: UserStatus,
@@ -32,9 +37,11 @@ export class User extends EntityWithDate {
   })
   status: UserStatus
 
+  @Property
   @Column({ nullable: true })
   avatar?: string
 
+  @Property
   @Column({ name: 'role_id', default: 1 })
   roleId: number
 
@@ -49,5 +56,3 @@ export class User extends EntityWithDate {
   @JoinColumn({ name: 'role_id' })
   role: Role
 }
-
-export const UserFields = ['email', 'name', 'phone', 'status', 'avatar', 'roleId', ...EntityWithDateFields]

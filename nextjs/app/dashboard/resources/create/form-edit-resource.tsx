@@ -6,8 +6,8 @@ import { Input } from '@/components/ui/input'
 import useLoading from '@/hooks/use-loading'
 import { handleErrorApi } from '@/lib/handle-request'
 import { delayForm } from '@/lib/utils'
-import { AddResourceSchema, AddResourceType } from '@/services/author/author-schema'
-import resourceRequestApi from '@/services/author/resource-request'
+import { requestApi } from '@/services'
+import { AddResourceSchema, AddResourceType, Resource } from '@/services/resource-request-api'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
@@ -30,8 +30,8 @@ export default function FormEditResource({ resource }: { resource?: Resource }) 
     try {
       let res = undefined
       if (resource) {
-        res = await resourceRequestApi.update(resource.id, values)
-      } else res = await resourceRequestApi.add(values)
+        res = await requestApi.resource.update(resource.id, values)
+      } else res = await requestApi.resource.add(values)
       await delayForm()
       toast.success(res.message)
       router.push('/dashboard/resources')

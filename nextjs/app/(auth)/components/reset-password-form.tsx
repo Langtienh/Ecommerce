@@ -60,7 +60,7 @@ export default function ResetPasswordForm({ forgotPasswordToken, otp }: ResetPas
                   <Input placeholder='Nhập mật khẩu mới của bạn' type='password' {...field} />
                 </FormControl>
                 <FormDescription>
-                  (*) Mật khẩu phải chứa ít nhất 1 chữ hoa, 1 số và 1 ký tự đặc biệt và dài ít nhất 6 ký tự'
+                  (*) Mật khẩu phải chứa ít nhất 1 chữ hoa, 1 số và 1 ký tự đặc biệt và dài ít nhất 6 ký tự
                 </FormDescription>
                 <FormMessage />
               </FormItem>

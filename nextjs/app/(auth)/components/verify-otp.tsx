@@ -10,7 +10,6 @@ import authenRequestApi from '@/services/authen/authen-request'
 import { VerifyForgotPasswordOTPBodyType, verifyForgotPasswordOTPSchema } from '@/services/authen/schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
 import { FieldErrors, useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
@@ -37,10 +36,6 @@ export default function VerifyForgotPasswordOTPForm({
     }
   })
   const { isLoading, startLoading, finallyLoading } = useLoading()
-
-  useEffect(() => {
-    form.setValue('forgotPasswordToken', forgotPasswordToken)
-  }, [forgotPasswordToken])
 
   const onSubmit = async (data: VerifyForgotPasswordOTPBodyType) => {
     startLoading()

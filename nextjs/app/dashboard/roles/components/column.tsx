@@ -3,6 +3,7 @@ import { ColumnDef } from '@tanstack/react-table'
 import ColumnHeaderServerSort from '@/components/table-helpper/header-server-sort'
 import { Checkbox } from '@/components/ui/checkbox'
 import { formatTimestamp } from '@/lib/format'
+import { Role } from '@/services/role-request-api'
 import Actions from './actions'
 
 export const roleColumns: ColumnDef<Role>[] = [
@@ -27,8 +28,8 @@ export const roleColumns: ColumnDef<Role>[] = [
   },
   {
     accessorKey: 'id',
-    header: ({ column }) => <ColumnHeaderServerSort column={column} title='PermissionId' />,
-    cell: ({ row }) => <div>{`PER00${row.getValue('id')}`}</div>
+    header: ({ column }) => <ColumnHeaderServerSort column={column} title='RoleId' />,
+    cell: ({ row }) => <div>{`ROL00${row.getValue('id')}`}</div>
   },
   {
     accessorKey: 'name',

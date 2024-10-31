@@ -95,10 +95,3 @@ export const ResetPasswordSchema = z
   })
 
 export type ResetPasswordBodyType = z.infer<typeof ResetPasswordSchema>
-
-export const UpdateMeSchema = z.object({
-  name: nameSchema,
-  phone: phoneSchema
-})
-
-export type UpdateMeBodyType = z.infer<typeof UpdateMeSchema>

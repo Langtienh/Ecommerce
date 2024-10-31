@@ -4,6 +4,7 @@ import { ColumnDef } from '@tanstack/react-table'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { formatTimestamp } from '@/lib/format'
+import { Resource } from '@/services/resource-request-api'
 import Actions from './actions'
 
 export const resourceColumns: ColumnDef<Resource>[] = [

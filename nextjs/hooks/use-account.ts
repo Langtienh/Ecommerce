@@ -1,3 +1,4 @@
+import { User } from '@/services/user-request-api'
 import { create } from 'zustand'
 
 interface State {

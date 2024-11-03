@@ -1,14 +1,7 @@
-import { ArrowDownIcon, ArrowUpIcon, CaretSortIcon, EyeNoneIcon } from '@radix-ui/react-icons'
+import { ArrowDownIcon, ArrowUpIcon, CaretSortIcon } from '@radix-ui/react-icons'
 import { Column } from '@tanstack/react-table'
 
 import { Button } from '@/components/ui/button'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu'
 import { cn } from '@/lib/utils'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
@@ -33,65 +26,35 @@ export default function ColumnHeaderServerSort<TData, TValue>({
   const sort = prevSort?.split(',') || []
   const isColumnSortedASC = sort.includes(sortName)
   const isColumnSortedDESC = sort.includes(`-${sortName}`)
-  const handleSort = (isDesc: boolean) => {
+  const handleSort = () => {
     const params = new URLSearchParams(searchParams)
     params.set('page', '1')
-    if (isDesc) {
-      if (isColumnSortedDESC) {
-        sort.splice(sort.indexOf(`-${sortName}`), 1)
-      } else {
-        if (isColumnSortedASC) {
-          sort.splice(sort.indexOf(sortName), 1)
-        }
-        sort.push(`-${sortName}`)
-      }
-    } else {
-      if (isColumnSortedASC) {
-        sort.splice(sort.indexOf(sortName), 1)
-      } else {
-        if (isColumnSortedDESC) {
-          sort.splice(sort.indexOf(`-${sortName}`), 1)
-        }
-        sort.push(sortName)
-      }
-    }
+    if (isColumnSortedASC) {
+      sort.splice(sort.indexOf(sortName), 1)
+      sort.unshift(`-${sortName}`)
+    } else if (isColumnSortedDESC) {
+      sort.splice(sort.indexOf(`-${sortName}`), 1)
+    } else sort.unshift(`${sortName}`)
+
     params.set('sort', sort.join(','))
     if (sort.length === 0) {
       params.delete('sort')
     }
     replace(`${patchName}?${params.toString()}`, { scroll: false })
   }
+
   return (
     <div className={cn('flex items-center space-x-2', className)}>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant='ghost' size='sm' className='-ml-3 h-8 data-[state=open]:bg-accent'>
-            <span>{title}</span>
-            {isColumnSortedDESC ? (
-              <ArrowDownIcon className='ml-2 h-4 w-4' />
-            ) : isColumnSortedASC ? (
-              <ArrowUpIcon className='ml-2 h-4 w-4' />
-            ) : (
-              <CaretSortIcon className='ml-2 h-4 w-4' />
-            )}
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align='start'>
-          <DropdownMenuItem onClick={() => handleSort(false)}>
-            <ArrowUpIcon className='mr-2 h-3.5 w-3.5 text-muted-foreground/70' />
-            Asc
-          </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleSort(true)}>
-            <ArrowDownIcon className='mr-2 h-3.5 w-3.5 text-muted-foreground/70' />
-            Desc
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => column.toggleVisibility(false)}>
-            <EyeNoneIcon className='mr-2 h-3.5 w-3.5 text-muted-foreground/70' />
-            Hide
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+      <Button onClick={handleSort} variant='ghost' size='sm' className='-ml-3 h-8 data-[state=open]:bg-accent'>
+        <span>{title}</span>
+        {isColumnSortedDESC ? (
+          <ArrowDownIcon className='ml-2 h-4 w-4' />
+        ) : isColumnSortedASC ? (
+          <ArrowUpIcon className='ml-2 h-4 w-4' />
+        ) : (
+          <CaretSortIcon className='ml-2 h-4 w-4' />
+        )}
+      </Button>
     </div>
   )
 }

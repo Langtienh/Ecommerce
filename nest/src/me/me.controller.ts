@@ -1,9 +1,9 @@
+import { AccessTokenData } from '@/authentication/types/token-payload'
+import { AccessToken, ReponseMessage } from '@/decorator/customize'
+import { UpdateUserDto } from '@/users/dto/update-user.dto'
+import { UsersService } from '@/users/users.service'
 import { Body, Controller, Delete, Get, Param, Patch, Post, Put } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
-import { AccessTokenData } from 'src/authentication/types/token-payload'
-import { AccessToken, ReponseMessage } from 'src/decorator/customize'
-import { UpdateUserDto } from 'src/users/dto/update-user.dto'
-import { UsersService } from 'src/users/users.service'
 import { AddressService } from './address.services'
 import { CreateAddressDto } from './dto/create-address.dto'
 

@@ -1,16 +1,16 @@
-import { EntityWithSoftDelete } from 'src/base/entity-with-soft-delete'
-import { Property } from 'src/decorator/customize'
-import { Permission } from 'src/permissions/entities/permission.entity'
-import { Resource } from 'src/resources/entities/resource.entity'
+import { entityWithDateProperties } from '@/base/entity-with-date'
+import { EntityWithSoftDelete } from '@/base/entity-with-soft-delete'
+import { Property } from '@/decorator/customize'
+import { Permission } from '@/permissions/entities/permission.entity'
+import { Resource } from '@/resources/entities/resource.entity'
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm'
 
+@Property({ ...entityWithDateProperties, name: 'string', resourceId: 'number' })
 @Entity()
 export class Group extends EntityWithSoftDelete {
   @Column()
-  @Property
   name: string
 
-  @Property
   @Column({ name: 'resource_id' })
   resourceId: number
 

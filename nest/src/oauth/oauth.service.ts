@@ -1,8 +1,8 @@
+import { AuthenticationService } from '@/authentication/authentication.service'
+import { UserStatus } from '@/users/entities/user.entity'
+import { UsersService } from '@/users/users.service'
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import { AuthenticationService } from 'src/authentication/authentication.service'
-import { UserStatus } from 'src/users/entities/user.entity'
-import { UsersService } from 'src/users/users.service'
 import { OauthGithubGetTokenResponse, OauthGithubUser, OauthGoogleUser } from './constants'
 
 @Injectable()

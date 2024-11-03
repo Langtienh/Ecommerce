@@ -1,4 +1,4 @@
-import { HTTP_METHOD } from 'src/permissions/entities/permission.entity'
+import { HTTP_METHOD } from '@/permissions/entities/permission.entity'
 
 export const permissionInitialized: {
   name: string

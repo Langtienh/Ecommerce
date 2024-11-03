@@ -1,7 +1,21 @@
-import { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies'
 import { UserStatus } from './services/user-request-api'
 
-export const COOKIES_OPTIONS: Partial<ResponseCookie> = {
+export interface COOKIES_OPTIONS_TYPE {
+  httpOnly?: boolean | undefined
+  secure?: boolean | undefined
+  domain?: string | undefined
+  expires?: number | Date | undefined
+  maxAge?: number | undefined
+  sameSite?: boolean | 'lax' | 'strict' | 'none' | undefined
+  path?: string | undefined
+  priority?: 'low' | 'medium' | 'high' | undefined
+}
+
+export interface SET_COOKIES_OPTIONS_TYPE extends COOKIES_OPTIONS_TYPE {
+  name: string
+  value: string
+}
+export const COOKIES_OPTIONS: COOKIES_OPTIONS_TYPE = {
   httpOnly: true,
   secure: true
 }

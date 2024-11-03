@@ -35,7 +35,7 @@ export default function ChoosePermissions({
               const isExistPermission =
                 resource.groups.length > 0 && resource.groups.some((group) => group.permissions.length > 0)
               return (
-                <AccordionItem key={`resource-${resource.id}`} value={`resource-${resource.id}`}>
+                <AccordionItem key={`resourceItem-${resource.id}`} value={`resource-${resource.id}`}>
                   <AccordionTrigger className='flex items-center justify-between text-lg'>
                     <span className='font-xl'>{`${resource.name} resource`}</span>
                   </AccordionTrigger>
@@ -65,7 +65,7 @@ export default function ChoosePermissions({
                             <>
                               {group.permissions.length > 0 && (
                                 <li
-                                  key={`group--${group.id}`}
+                                  key={`group-checked${group.id}`}
                                   className='flex items-center space-x-2 pb-4 min-w-[330px]'
                                 >
                                   <Switch

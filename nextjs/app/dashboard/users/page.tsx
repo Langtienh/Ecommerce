@@ -4,7 +4,10 @@ import Table from './components/table'
 
 export default async function Page({ searchParams }: { searchParams: Record<string, string> }) {
   try {
-    const res = await requestApi.user.getMany(searchParams)
+    const [userResponse, roleResponse] = await Promise.all([
+      requestApi.user.getMany(searchParams),
+      requestApi.role.getMany({ limit: -1 })
+    ])
     return (
       <Card className='m-5'>
         <CardHeader>
@@ -12,7 +15,7 @@ export default async function Page({ searchParams }: { searchParams: Record<stri
           <CardDescription>User manager</CardDescription>
         </CardHeader>
         <CardContent>
-          <Table data={res.data} />
+          <Table roles={roleResponse.data.result} data={userResponse.data} />
         </CardContent>
       </Card>
     )

@@ -16,15 +16,17 @@ import * as React from 'react'
 import TablePagination from '@/components/table-helpper/pagination'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { getSelectedRow } from '@/lib/tanstack-table-helpper'
+import { Role } from '@/services/role-request-api'
 import { UserDetail } from '@/services/user-request-api'
 import { columns } from './column'
 import TableToolbar from './toolbar'
 
 interface UserTableProps {
   data: Paginate<UserDetail>
+  roles: Role[]
 }
 
-export default function UserTable({ data }: UserTableProps) {
+export default function UserTable({ data, roles }: UserTableProps) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
@@ -56,6 +58,7 @@ export default function UserTable({ data }: UserTableProps) {
   return (
     <div className='w-full'>
       <TableToolbar
+        roles={roles}
         ids={getSelectedRow(rowSelection, data.result).map((item) => item.id)}
         table={table}
         handleMutateSelected={handleMutateSelected}

@@ -11,7 +11,8 @@ interface ResourcesPageProps {
   }
 }
 export default async function ResourcesPage({ searchParams }: ResourcesPageProps) {
-  const res = await requestApi.resource.getMany(searchParams)
+  // thử nghiệm sử dụng phân trang ở client
+  const res = await requestApi.resource.getMany({ limit: '-1' })
   return (
     <Card className='m-5'>
       <CardHeader>

@@ -1,11 +1,11 @@
 // Cần phải có file này để xác thực người dùng bằng JWT
 // Mục đích của file là decode token và trả về thông tin người dùng
+import { Role } from '@/roles/entities/role.entity'
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { PassportStrategy } from '@nestjs/passport'
 import { InjectRepository } from '@nestjs/typeorm'
 import { ExtractJwt, Strategy } from 'passport-jwt'
-import { Role } from 'src/roles/entities/role.entity'
 import { Repository } from 'typeorm'
 import { AccessTokenData } from './types/token-payload'
 

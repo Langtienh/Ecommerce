@@ -1,3 +1,3 @@
-import { QueryBase } from 'src/base/query-helper'
+import { QueryBase } from '@/base/query-helper'
 
 export class QueryGroupDto extends QueryBase {}

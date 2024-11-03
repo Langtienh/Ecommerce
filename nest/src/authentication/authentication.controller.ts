@@ -1,6 +1,6 @@
+import { AccessToken, Public, ReponseMessage } from '@/decorator/customize'
 import { Body, Controller, Get, Post } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
-import { AccessToken, Public, ReponseMessage } from 'src/decorator/customize'
 import { AuthenticationService } from './authentication.service'
 import { loginDto } from './dto/login.dto'
 import { ChangePasswordDto, ResetPasswordDto, SendEmailDto, VerifyForgotPasswordOTPDto } from './dto/password.dto'

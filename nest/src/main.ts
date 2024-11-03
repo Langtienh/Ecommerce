@@ -1,13 +1,12 @@
+import { AppModule } from '@/app.module'
+import { JwtAuthGuard } from '@/authentication/jwt-auth.guard'
+import { TransformsInterceptor } from '@/core/tranforms.interceptor'
+import { CustomValidationPipe } from '@/core/validation'
+import test from '@/test'
 import { ClassSerializerInterceptor, VersioningType } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { NestFactory, Reflector } from '@nestjs/core'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
-import { AppModule } from './app.module'
-// import { JwtAuthGuard } from './auth/jwt-auth.guard';
-import { JwtAuthGuard } from './authentication/jwt-auth.guard'
-import { TransformsInterceptor } from './core/tranforms.interceptor'
-import { CustomValidationPipe } from './core/validation'
-import test from './test'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)

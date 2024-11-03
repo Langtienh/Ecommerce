@@ -1,7 +1,8 @@
 import { ThemeProvider } from '@/components/theme/theme-provider'
 import { CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@radix-ui/react-dropdown-menu'
-import Welcome, { GetStated } from './welcome'
+import GetStated from './login-demo'
+import Welcome from './welcome'
 
 export default function Home() {
   return (

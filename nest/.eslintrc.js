@@ -17,20 +17,6 @@ module.exports = {
     'no-unused-vars': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-unused-vars': 'off',
-    '@typescript-eslint/no-empty-object-type': 'off',
-    'prettier/prettier': [
-      'warn',
-      {
-        arrowParens: 'always',
-        semi: false,
-        trailingComma: 'none',
-        tabWidth: 2,
-        endOfLine: 'auto',
-        useTabs: false,
-        singleQuote: true,
-        printWidth: 120,
-        jsxSingleQuote: true
-      }
-    ]
+    '@typescript-eslint/no-empty-object-type': 'off'
   }
 }

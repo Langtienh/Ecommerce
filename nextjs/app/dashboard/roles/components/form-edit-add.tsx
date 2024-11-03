@@ -11,6 +11,7 @@ import { ResourceDetail } from '@/services/resource-request-api'
 import { AddRoleSchema, AddRoleType, RoleDetail } from '@/services/role-request-api'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import ChoosePermissions, { ChangePermissionParams } from './choose-permissions'
@@ -28,6 +29,7 @@ export default function FormRole({ role, resources }: { role?: RoleDetail; resou
   // 2. handle loading, store global state
   const router = useRouter()
   const { isLoading, startLoading, finallyLoading } = useLoading()
+  const [permissionIds, setPermissionIds] = useState<number[]>(role?.permissions.map((p) => p.id) || [])
   // 3. Define a submit handler.
   async function onSubmit(values: AddRoleType) {
     startLoading()
@@ -46,39 +48,36 @@ export default function FormRole({ role, resources }: { role?: RoleDetail; resou
     }
   }
   const handleChangePermission = ({ group, permissionId, resource, checked }: ChangePermissionParams) => {
-    const prevPermissionIds = form.getValues('permissionIds')
     if (permissionId) {
-      if (checked) form.setValue('permissionIds', [...prevPermissionIds, permissionId])
-      else
-        form.setValue(
-          'permissionIds',
-          prevPermissionIds.filter((id: number) => id !== permissionId)
-        )
+      if (checked) {
+        setPermissionIds([...permissionIds, permissionId])
+      } else {
+        setPermissionIds(permissionIds.filter((id) => id !== permissionId))
+      }
     }
     if (group) {
-      group.permissions.forEach((per) => {
-        if (checked) {
-          if (!prevPermissionIds.includes(per.id)) form.setValue('permissionIds', [...prevPermissionIds, per.id])
-        } else
-          form.setValue(
-            'permissionIds',
-            prevPermissionIds.filter((id: number) => id !== per.id)
-          )
-      })
+      if (checked) {
+        setPermissionIds([...permissionIds, ...group.permissions.map((p) => p.id)])
+      } else {
+        setPermissionIds(permissionIds.filter((id) => !group.permissions.map((p) => p.id).includes(id)))
+      }
     }
     if (resource) {
-      resource.groups.forEach((group) => {
-        group.permissions.forEach((per) => {
-          if (checked) {
-            if (!prevPermissionIds.includes(per.id)) form.setValue('permissionIds', [...prevPermissionIds, per.id])
-          } else
-            form.setValue(
-              'permissionIds',
-              prevPermissionIds.filter((id: number) => id !== per.id)
-            )
-        })
-      })
+      if (checked) {
+        setPermissionIds([...permissionIds, ...resource.groups.map((g) => g.permissions.map((p) => p.id)).flat()])
+      } else {
+        setPermissionIds(
+          permissionIds.filter(
+            (id) =>
+              !resource.groups
+                .map((g) => g.permissions.map((p) => p.id))
+                .flat()
+                .includes(id)
+          )
+        )
+      }
     }
+    form.setValue('permissionIds', permissionIds)
   }
   return (
     <Form {...form}>
@@ -111,7 +110,7 @@ export default function FormRole({ role, resources }: { role?: RoleDetail; resou
         <ChoosePermissions
           handleChangePermission={handleChangePermission}
           resources={resources}
-          permissionIds={form.getValues('permissionIds')}
+          permissionIds={permissionIds}
         />
         <Button disabled={isLoading} type='submit' className='w-full'>
           {role ? 'Cập nhật' : 'Thêm mới'}

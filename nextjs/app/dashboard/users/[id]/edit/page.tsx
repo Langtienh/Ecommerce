@@ -4,27 +4,27 @@ import { notFound } from 'next/navigation'
 import FormRole from '../../components/form-edit-add'
 
 export default async function Editpermission({
-  params: { id },
-  searchParams
+  params: { id }
 }: {
   params: {
     id: string
   }
-  searchParams: Record<string, string>
 }) {
   try {
-    const res = await requestApi.role.getById(Number(id))
-    const role = res.data
-    const res2 = await requestApi.resource.getAllPermission(searchParams)
-    const resources = res2.data.result
+    const [rolesReponse, userResponse] = await Promise.all([
+      requestApi.role.getMany({ limit: -1 }),
+      requestApi.user.getById(+id)
+    ])
+    const user = userResponse.data
+    const roles = rolesReponse.data.result
     return (
       <Card className='m-5'>
         <CardHeader>
-          <CardTitle>{`${role.name} role`}</CardTitle>
-          <CardDescription>{`Chỉnh sửa ${role.name} role`}</CardDescription>
+          <CardTitle>{`USER00${user.id}`}</CardTitle>
+          <CardDescription>{user.name}</CardDescription>
         </CardHeader>
         <CardContent>
-          <FormRole role={role} resources={resources} />
+          <FormRole roles={roles} user={user} />
         </CardContent>
       </Card>
     )

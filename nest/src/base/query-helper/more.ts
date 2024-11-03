@@ -1,3 +1,5 @@
+export type QueryValue = string | string[] | Record<string, string | string[]>
+
 export const queryHelperUtil = {
   strToArr(str: string) {
     if (!str) return []
@@ -23,9 +25,31 @@ export const queryHelperUtil = {
   toEnumArray(value: any, obj: Record<string, string>): any[] {
     return this.toArray(value).filter((item) => Object.values(obj).includes(item))
   },
-  // Hàm trả về các khóa của class
-  getKey<T>(cls: new () => T): (keyof T)[] {
-    const instance = new cls()
-    return (Reflect.getMetadata('properties', instance) as (keyof T)[]) || []
+  getProperTies<T>(clx: new () => T) {
+    return Reflect.getMetadata('properties', clx)
+  },
+  convertValue(type: string, value: string) {
+    switch (type.toLowerCase()) {
+      case 'string':
+        return value
+      case 'number':
+        return Number(value)
+      case 'boolean':
+        return value === 'true'
+      case 'date':
+        return new Date(value)
+      default:
+        return value
+    }
+  },
+  filterPropery<T>(cls: new () => T, query: Record<string, QueryValue>): Record<keyof T, QueryValue> {
+    const properties: Record<keyof T, string> = this.getProperTies(cls)
+    const res: Record<keyof T, QueryValue> = {} as Record<keyof T, QueryValue>
+    Object.keys(query).forEach((key) => {
+      if (properties[key]) {
+        res[key] = query[key] as QueryValue
+      }
+    })
+    return res
   }
 }

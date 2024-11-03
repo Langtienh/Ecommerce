@@ -1,4 +1,14 @@
-import { IsEmail, IsNotEmpty, IsOptional, IsPhoneNumber, IsString, IsUrl, Matches, MaxLength } from 'class-validator'
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsPhoneNumber,
+  IsString,
+  IsUrl,
+  Matches,
+  MaxLength
+} from 'class-validator'
 import { UserStatus } from '../entities/user.entity'
 
 export class PasswordDto {
@@ -33,7 +43,7 @@ export class CreateUserDto extends PasswordDto {
   @IsOptional()
   status?: UserStatus
 
-  @IsString()
+  @IsNumber()
   @IsOptional()
   roleId?: number
 }

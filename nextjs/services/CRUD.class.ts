@@ -1,9 +1,10 @@
 import http, { NoBody } from '@/lib/http'
 import { getOptionWithAccessToken } from './client-server'
+import { serverRevalidatePath } from './server-action'
 export default class CRUD<GetMany, GetOne, AddUpdateReponse, AddBody, UpdateBody> {
-  private prefix: string
+  protected prefix: string
   private baseUrl?: string
-  private url: string
+  protected url: string
   constructor(prefix: string, baseUrl?: string) {
     this.prefix = prefix
     this.baseUrl = baseUrl
@@ -64,11 +65,16 @@ export class CRUDWithAccsessToken<GetMany, GetOne, AddUpdateReponse, AddBody, Up
   }
   add = async (data: AddBody) => {
     const option = await this.getOptionWithAccessToken()
-    return super.add(data, option)
+    const res = super.add(data, option)
+    serverRevalidatePath(`/dashboard/${this.prefix.replace('/', '')}`)
+    return res
   }
   update = async (id: number, data: UpdateBody) => {
+    serverRevalidatePath(`/dashboard/${this.prefix}`)
     const option = await this.getOptionWithAccessToken()
-    return super.update(id, data, option)
+    const res = super.update(id, data, option)
+    serverRevalidatePath(`/dashboard/${this.prefix.replace('/', '')}`)
+    return res
   }
   delete = async (id: number) => {
     const option = await this.getOptionWithAccessToken()

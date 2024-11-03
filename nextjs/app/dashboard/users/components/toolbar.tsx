@@ -2,6 +2,7 @@ import { SearchInput } from '@/components/search'
 import { FieldFilter } from '@/components/table-helpper/field-filter'
 import TableViewOptions from '@/components/table-helpper/view-option'
 import { Button } from '@/components/ui/button'
+import { Role } from '@/services/role-request-api'
 import { USER_STATUS_VALUES, UserDetail } from '@/services/user-request-api'
 import { Table } from '@tanstack/react-table'
 import Link from 'next/link'
@@ -11,8 +12,9 @@ interface TableControlProps {
   table: Table<UserDetail>
   ids: number[]
   handleMutateSelected: () => void
+  roles: Role[]
 }
-export default function TableToolbar({ table, handleMutateSelected, ids }: TableControlProps) {
+export default function TableToolbar({ table, handleMutateSelected, ids, roles }: TableControlProps) {
   return (
     <div className='flex items-center gap-x-3 py-4'>
       <SearchInput placeholder='Nhập tên, email hoặc số điện thoại' className='max-w-xs' />
@@ -22,9 +24,18 @@ export default function TableToolbar({ table, handleMutateSelected, ids }: Table
         title='Status'
         options={USER_STATUS_VALUES.map((value) => ({ value, item: <p className='uppercase'>{value}</p> }))}
       />
+      <FieldFilter
+        defaultSelected={roles.map((role) => role.id.toString())}
+        fieldName='roleId'
+        title='Role'
+        options={roles.map((value) => ({
+          value: value.id.toString(),
+          item: <p className='capitalize'>{value.name}</p>
+        }))}
+      />
       <TableViewOptions table={table} />
       <Button asChild>
-        <Link href='/dashboard/roles/create'>Thêm mới</Link>
+        <Link href='/dashboard/users/create'>Thêm mới</Link>
       </Button>
       <DeleteManyButton ids={ids} handleMutateSelected={handleMutateSelected} />
     </div>

@@ -3,70 +3,54 @@
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import envConfig from '@/config'
 import useLoading from '@/hooks/use-loading'
 import { handleErrorApi } from '@/lib/handle-request'
 import { delayForm } from '@/lib/utils'
 import { requestApi } from '@/services'
-import { ResourceDetail } from '@/services/resource-request-api'
-import { AddRoleSchema, AddRoleType, RoleDetail } from '@/services/role-request-api'
+import { Role } from '@/services/role-request-api'
+import { AddUserSchema, AddUserType, USER_STATUS_VALUES, UserDetail, UserStatus } from '@/services/user-request-api'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
-import ChoosePermissions, { ChangePermissionParams } from './choose-permissions'
 
-export default function FormRole({ role, resources }: { role?: RoleDetail; resources: ResourceDetail[] }) {
-  const [permissionIds, setPermissionIds] = useState<number[]>(role?.permissions.map((p) => p.id) || [])
+export default function FormRole({ roles, user }: { roles: Role[]; user?: UserDetail }) {
   // 1. Define your form.
-  const form = useForm<AddRoleType>({
-    resolver: zodResolver(AddRoleSchema),
+  const form = useForm<AddUserType>({
+    resolver: zodResolver(AddUserSchema),
     defaultValues: {
-      name: role?.name || '',
-      description: role?.description || '',
-      permissionIds: role?.permissions.map((p) => p.id) || []
+      name: user?.name,
+      email: user?.email,
+      phone: user?.phone,
+      roleId: user?.roleId || 1,
+      status: user?.status || UserStatus.VERIFY
     }
   })
   // 2. handle loading, store global state
   const router = useRouter()
   const { isLoading, startLoading, finallyLoading } = useLoading()
   // 3. Define a submit handler.
-  async function onSubmit(values: AddRoleType) {
+  async function onSubmit(values: AddUserType) {
     startLoading()
     try {
       let res = undefined
-      if (role) {
-        res = await requestApi.role.update(role.id, values)
-      } else res = await requestApi.role.add(values)
+      if (user) {
+        res = await requestApi.user.update(user.id, values)
+      } else {
+        if (!values.password && !user) {
+          values.password = envConfig.ADMIN_PASSWORD
+        }
+        res = await requestApi.user.add(values)
+      }
       await delayForm()
       toast.success(res.message)
-      router.push('/dashboard/roles')
+      router.push('/dashboard/users')
     } catch (error) {
       handleErrorApi({ error, setError: form.setError })
     } finally {
       finallyLoading()
-    }
-  }
-  const handleChangePermission = ({ group, permissionId, resource, checked }: ChangePermissionParams) => {
-    if (permissionId) {
-      if (checked) setPermissionIds((prev) => [...prev, permissionId])
-      else setPermissionIds((prev) => prev.filter((id) => id !== permissionId))
-    }
-    if (group) {
-      group.permissions.forEach((per) => {
-        if (checked) {
-          if (!permissionIds.includes(per.id)) setPermissionIds((prev) => [...prev, per.id])
-        } else setPermissionIds((prev) => prev.filter((id) => id !== per.id))
-      })
-    }
-    if (resource) {
-      resource.groups.forEach((group) => {
-        group.permissions.forEach((per) => {
-          if (checked) {
-            if (!permissionIds.includes(per.id)) setPermissionIds((prev) => [...prev, per.id])
-          } else setPermissionIds((prev) => prev.filter((id) => id !== per.id))
-        })
-      })
     }
   }
   return (
@@ -78,7 +62,7 @@ export default function FormRole({ role, resources }: { role?: RoleDetail; resou
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder='Nhập tên role' {...field} />
+                <Input autoComplete='name' placeholder='Nhập tên người dùng' {...field} />
               </FormControl>
 
               <FormMessage />
@@ -87,23 +71,90 @@ export default function FormRole({ role, resources }: { role?: RoleDetail; resou
         />
         <FormField
           control={form.control}
-          name='description'
+          name='email'
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input placeholder='Nhập mô tả' {...field} />
+                <Input autoComplete='email' type='email' placeholder='Nhập email' {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <ChoosePermissions
-          handleChangePermission={handleChangePermission}
-          resources={resources}
-          permissionIds={permissionIds}
+        <FormField
+          control={form.control}
+          name='phone'
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input placeholder='Nhập số điện thoại' {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
+        <FormField
+          control={form.control}
+          name='password'
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input type='password' placeholder='Nhập mật khẩu (có thể bỏ qua)' {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <div className='flex flex-wrap justify-between items-center gap-y-8'>
+          <FormField
+            control={form.control}
+            name='roleId'
+            render={({ field }) => (
+              <FormItem>
+                <Select onValueChange={(value) => field.onChange(+value)} defaultValue={field.value.toString()}>
+                  <FormControl>
+                    <SelectTrigger className='w-[200px]'>
+                      <SelectValue placeholder='Role' />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {roles.map((role) => (
+                      <SelectItem key={`role-${role.id}`} value={role.id.toString()}>
+                        {role.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name='status'
+            render={({ field }) => (
+              <FormItem>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger className='w-[200px]'>
+                      <SelectValue placeholder='Role' />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {USER_STATUS_VALUES.map((userStatus) => (
+                      <SelectItem key={`userStatus-${userStatus}`} value={userStatus}>
+                        {userStatus}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
         <Button disabled={isLoading} type='submit' className='w-full'>
-          {role ? 'Cập nhật' : 'Thêm mới'}
+          {user ? 'Cập nhật' : 'Thêm mới'}
         </Button>
       </form>
     </Form>

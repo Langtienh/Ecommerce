@@ -1,8 +1,8 @@
+import { EntityWithDate, entityWithDateProperties } from '@/base/entity-with-date'
+import { Property } from '@/decorator/customize'
+import { Address } from '@/me/entity/address.entity'
+import { Role } from '@/roles/entities/role.entity'
 import { Exclude } from 'class-transformer'
-import { EntityWithDate } from 'src/base/entity-with-date'
-import { Property } from 'src/decorator/customize'
-import { Address } from 'src/me/entity/address.entity'
-import { Role } from 'src/roles/entities/role.entity'
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm'
 
 export enum UserStatus {
@@ -11,13 +11,19 @@ export enum UserStatus {
   LOCKED = 'locked'
 }
 
+@Property({
+  ...entityWithDateProperties,
+  email: 'string',
+  name: 'string',
+  phone: 'string',
+  roleId: 'number',
+  status: 'string'
+})
 @Entity('users')
 export class User extends EntityWithDate {
-  @Property
   @Column({ unique: true })
   email: string
 
-  @Property
   @Column()
   name: string
 
@@ -25,23 +31,15 @@ export class User extends EntityWithDate {
   @Column()
   password: string
 
-  @Property
   @Column({ nullable: true, length: 15 })
   phone: string
 
-  @Property
-  @Column({
-    type: 'enum',
-    enum: UserStatus,
-    default: UserStatus.UNVERIFY
-  })
+  @Column({ type: 'enum', enum: UserStatus, default: UserStatus.UNVERIFY })
   status: UserStatus
 
-  @Property
   @Column({ nullable: true })
   avatar?: string
 
-  @Property
   @Column({ name: 'role_id', default: 1 })
   roleId: number
 

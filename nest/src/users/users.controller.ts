@@ -1,7 +1,7 @@
+import { ParamIdDto, QueryIdsDto } from '@/base/query-helper'
+import { ReponseMessage } from '@/decorator/customize'
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
-import { ParamIdDto } from 'src/base/query-helper'
-import { ReponseMessage } from 'src/decorator/customize'
 import { CreateUserDto } from './dto/create-user.dto'
 import { QueryUser } from './dto/query-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
@@ -40,5 +40,11 @@ export class UsersController {
   @Delete(':id')
   remove(@Param() { id }: ParamIdDto, @Query('softDelete') softDelete?: string) {
     return this.usersService.remove(id, softDelete === 'true')
+  }
+
+  @ReponseMessage('Xóa user thành công')
+  @Delete()
+  removeMany(@Query() { ids }: QueryIdsDto, @Query('softDelete') softDelete?: string) {
+    return this.usersService.removeMany(ids, softDelete === 'true')
   }
 }

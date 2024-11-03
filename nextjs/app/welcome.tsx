@@ -1,113 +1,36 @@
-'use client'
-import { AlertDescription } from '@/components/ui/alert'
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger
-} from '@/components/ui/alert-dialog'
-import { Button } from '@/components/ui/button'
+import { AspectRatio } from '@/components/ui/aspect-ratio'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import envConfig from '@/config'
-import useAccount from '@/hooks/use-account'
-import useLoading from '@/hooks/use-loading'
-import { handleErrorApi } from '@/lib/handle-request'
 import { imageSrc } from '@/lib/utils'
-import authenRequestApi from '@/services/authen/authen-request'
 import Image from 'next/image'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import ScrollAnimation from 'react-animate-on-scroll'
-import { FaGithub } from 'react-icons/fa'
-import { toast } from 'sonner'
 
 export default function Welcome() {
   return (
     <>
       {images.data.map((item, index) => (
-        <ScrollAnimation
+        <Card
           key={item.title}
-          delay={50}
-          animateIn={index % 2 === 1 ? 'wobble' : undefined}
-          initiallyVisible={true}
-          animatePreScroll
+          className='w-[360px] p-3 flex flex-col justify-between gap-3 hover:shadow-zinc-50 cursor-pointer'
         >
-          <Card className='w-[360px] p-3 flex flex-col justify-between gap-3 hover:shadow-zinc-50 cursor-pointer'>
-            <CardContent className='p-0'>
-              <Image
-                className='w-full h-[216px] object-contain rounded-xl px-5'
-                width={384}
-                height={216}
-                src={imageSrc(images.prefix + item.url + images.suffix)}
-                alt={item.title}
-              />
-            </CardContent>
-            <CardHeader className='p-0'>
-              <CardTitle className='font-bold text-xl'>{item.title}</CardTitle>
-              <CardDescription>{item.description}</CardDescription>
-            </CardHeader>
-          </Card>
-        </ScrollAnimation>
+          <CardContent className='p-0 px-2'>
+            <div className='w-[320px] overflow-hidden'>
+              <AspectRatio ratio={16 / 9}>
+                <Image
+                  className='object-cover rounded-xl '
+                  width={384}
+                  height={216}
+                  src={imageSrc(images.prefix + item.url + images.suffix)}
+                  alt={item.title}
+                />
+              </AspectRatio>
+            </div>
+          </CardContent>
+          <CardHeader className='p-0'>
+            <CardTitle className='font-bold text-xl'>{item.title}</CardTitle>
+            <CardDescription>{item.description}</CardDescription>
+          </CardHeader>
+        </Card>
       ))}
     </>
-  )
-}
-
-export const GetStated = () => {
-  const router = useRouter()
-  const setUser = useAccount((state) => state.setUser)
-  const { startLoading, finallyLoading } = useLoading()
-  const handleLogin = async () => {
-    startLoading()
-    try {
-      const email = envConfig.ADMIN_EMAIL
-      const password = envConfig.ADMIN_PASSWORD
-      const data = { email, password }
-      const res = await authenRequestApi.login(data)
-      setUser(res.data.user)
-      toast.success(res.message)
-      router.push('/dashboard/roles')
-    } catch (error) {
-      handleErrorApi({ error })
-    } finally {
-      finallyLoading()
-    }
-  }
-  return (
-    <div className='py-4 flex justify-center items-center gap-5'>
-      <Button size='lg' variant='outline' asChild>
-        <Link rel='noopener noreferrer' target='_blank' href='https://github.com/Langtienh/Ecommerce'>
-          <FaGithub className='mr-2' />
-          Source code
-        </Link>
-      </Button>
-      <AlertDialog>
-        <AlertDialogTrigger asChild>
-          <Button size='lg'>Get started</Button>
-        </AlertDialogTrigger>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Đăng ký người dùng mới</AlertDialogTitle>
-            <AlertDialogDescription>
-              Nhiều chức năng thú vị hơn với vai trò admin, chúng tôi cung cấp tài khoản admin demo sẵn, hoặc bạn có thể
-              đăng ký tài khoản mới(với email của bạn)
-            </AlertDialogDescription>
-            <AlertDescription>Tiếp tục với</AlertDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel asChild>
-              <Link href='/register'>Tài khoản mới</Link>
-            </AlertDialogCancel>
-            <AlertDialogAction onClick={handleLogin}>Admin account</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </div>
   )
 }
 

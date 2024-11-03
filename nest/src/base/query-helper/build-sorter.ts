@@ -2,7 +2,8 @@ import { FindOptionsOrder } from 'typeorm'
 import { queryHelperUtil } from './more'
 
 export const buidSorter = <T>(cls: new () => T, value?: string | string[]): FindOptionsOrder<T> => {
-  const fields = queryHelperUtil.getKey(cls)
+  const properties: Record<keyof T, string> = queryHelperUtil.getProperTies(cls)
+  const fields: (keyof T)[] = properties ? (Object.keys(properties) as (keyof T)[]) : []
   const result: FindOptionsOrder<T> = {}
   const arr = queryHelperUtil.toArray(value)
   arr.forEach((item) => {

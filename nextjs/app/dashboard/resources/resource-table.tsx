@@ -7,6 +7,7 @@ import {
   VisibilityState,
   flexRender,
   getCoreRowModel,
+  getFacetedRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
@@ -15,6 +16,7 @@ import {
 import * as React from 'react'
 
 import { SearchInput } from '@/components/search'
+import { ClientPagination } from '@/components/table-helpper/client-pagination'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -59,33 +61,25 @@ export default function ResourceTable({ data }: { data: Paginate<Resource> }) {
     }
   }
 
-  // chuyển trang
-  const onChangeNavagite = (page: number) => {
-    const params = new URLSearchParams(searchParams)
-    params.set('page', page.toString())
-    replace(`${patchName}?${params}`, { scroll: false })
-  }
-
-  const handleNextPage = () => onChangeNavagite(data.meta.page + 1)
-  const handlePrevPage = () => onChangeNavagite(data.meta.page - 1)
-
   const table = useReactTable({
     data: data.result,
     columns: resourceColumns,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
     state: {
       sorting,
       columnFilters,
       columnVisibility,
       rowSelection
-    }
+    },
+    enableRowSelection: true,
+    onRowSelectionChange: setRowSelection,
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    onColumnVisibilityChange: setColumnVisibility,
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFacetedRowModel: getFacetedRowModel()
   })
 
   return (
@@ -161,25 +155,7 @@ export default function ResourceTable({ data }: { data: Paginate<Resource> }) {
           </TableBody>
         </Table>
       </div>
-      <div className='flex items-center justify-end space-x-2 py-4'>
-        <div className='flex-1 text-sm text-muted-foreground'>
-          {table.getFilteredSelectedRowModel().rows.length} of {table.getFilteredRowModel().rows.length} row(s)
-          selected.
-        </div>
-        <div className='space-x-2'>
-          <Button variant='outline' size='sm' onClick={handlePrevPage} disabled={data.meta.page === 1}>
-            Previous
-          </Button>
-          <Button
-            variant='outline'
-            size='sm'
-            onClick={handleNextPage}
-            disabled={data.meta.page === data.meta.totalPage}
-          >
-            Next
-          </Button>
-        </div>
-      </div>
+      <ClientPagination table={table} />
     </div>
   )
 }

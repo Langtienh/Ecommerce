@@ -1,5 +1,5 @@
+import { PasswordDto } from '@/users/dto/create-user.dto'
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator'
-import { PasswordDto } from 'src/users/dto/create-user.dto'
 
 export class ResetPasswordDto extends PasswordDto {
   @IsString()

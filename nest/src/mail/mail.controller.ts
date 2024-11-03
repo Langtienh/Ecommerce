@@ -1,6 +1,6 @@
+import { Public, ReponseMessage } from '@/decorator/customize'
 import { Controller, Get } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
-import { Public, ReponseMessage } from 'src/decorator/customize'
 import { OTP_TYPE } from './constants'
 import { MailService } from './mail.service'
 

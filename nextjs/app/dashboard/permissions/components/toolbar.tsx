@@ -25,7 +25,7 @@ export default function TableToolbar({ table, handleMutateSelected, ids }: Table
       />
       <FieldFilter
         defaultSelected={PERMISSION_STATUS_VALUE.map((item) => item.toString())}
-        fieldName='status'
+        fieldName='isActive'
         title='Status'
         options={PERMISSION_STATUS_OPTIONS.map((item) => ({ ...item, value: item.value.toString() }))}
       />

@@ -5,7 +5,7 @@ import { buidSorter } from './build-sorter'
 import { queryHelperUtil } from './more'
 
 export class QueryBase {
-  [key: string]: string | string[]
+  [key: string]: string | string[] | Record<string, string | string[]>
 
   @IsOptional()
   search?: string
@@ -26,7 +26,6 @@ export const queryHelper = {
     const { limit, page, sort, search, ...filters } = query
     const _limit = +limit || 10
     const _page = +page || +page > 1 ? +page : 1
-    const order = buidSorter(cls, sort)
     return {
       limit: _limit,
       page: _page,

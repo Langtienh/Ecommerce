@@ -1,7 +1,7 @@
+import { Public, ReponseMessage } from '@/decorator/customize'
 import { Controller, Get, Query, Response } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
 import * as express from 'express'
-import { Public, ReponseMessage } from 'src/decorator/customize'
 import { OauthService } from './oauth.service'
 
 @ApiTags('oauth')

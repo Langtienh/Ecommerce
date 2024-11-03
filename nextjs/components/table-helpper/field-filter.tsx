@@ -39,7 +39,7 @@ function Wrapper<TData, TValue>({ title, fieldName, options, defaultSelected }: 
   const key = `${fieldName}[in]`
   const searchParams = useSearchParams()
   const _selectedValues = searchParams.getAll(key).length > 0 ? searchParams.getAll(key) : defaultSelected
-  const { replace, refresh } = useRouter()
+  const { replace } = useRouter()
   const patchName = usePathname()
   const handleClearFilter = () => {
     const params = new URLSearchParams(searchParams)
@@ -85,7 +85,7 @@ function Wrapper<TData, TValue>({ title, fieldName, options, defaultSelected }: 
                     .filter((option) => _selectedValues.includes(option.value))
                     .map((option) => (
                       <Badge variant='secondary' key={option.value} className='rounded-sm px-1 font-normal'>
-                        {option.value}
+                        {option.item}
                       </Badge>
                     ))
                 )}

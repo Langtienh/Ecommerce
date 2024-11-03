@@ -1,4 +1,4 @@
-import { UserStatus } from 'src/users/entities/user.entity'
+import { UserStatus } from '@/users/entities/user.entity'
 
 export interface AccessTokenPayload {
   id: number

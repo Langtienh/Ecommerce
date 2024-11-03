@@ -1,8 +1,8 @@
+import { queryHelper } from '@/base/query-helper'
+import { Role } from '@/roles/entities/role.entity'
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { compare, genSalt, hash } from 'bcrypt'
-import { queryHelper } from 'src/base/query-helper'
-import { Role } from 'src/roles/entities/role.entity'
 import { ILike, Repository } from 'typeorm'
 import { CreateUserDto } from './dto/create-user.dto'
 import { QueryUser } from './dto/query-user.dto'
@@ -99,7 +99,22 @@ export class UsersService {
     if (!isSoftDelete) {
       return this.userRepo.delete(id)
     }
-    return this.userRepo.softDelete(id)
+    try {
+      return this.userRepo.softDelete(id)
+    } catch {
+      throw new ConflictException('Không thể xóa user')
+    }
+  }
+
+  removeMany(ids: number[], isSoftDelete: boolean) {
+    if (!isSoftDelete) {
+      return this.userRepo.delete(ids)
+    }
+    try {
+      return this.userRepo.softDelete(ids)
+    } catch {
+      throw new ConflictException('Không thể xóa user')
+    }
   }
 
   async updatePassword(userId: number, password: string) {

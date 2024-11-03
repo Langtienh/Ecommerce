@@ -1,9 +1,7 @@
 import { Exclude } from 'class-transformer'
-import { Property } from 'src/decorator/customize'
 import { DeleteDateColumn, PrimaryGeneratedColumn } from 'typeorm'
 
 export class EntityWithSoftDelete {
-  @Property
   @PrimaryGeneratedColumn()
   id: number
 
@@ -12,4 +10,4 @@ export class EntityWithSoftDelete {
   deletedAt: Date
 }
 
-export const EntityWithSoftDeleteFields = ['id', 'deletedAt']
+export const entityWithSoftDeleteProperties = { deletedAt: 'Date', id: 'number' }

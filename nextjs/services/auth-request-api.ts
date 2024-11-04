@@ -1,4 +1,6 @@
+import http from '@/lib/http'
 import { z } from 'zod'
+import { cookiesService } from './core/cookie-services'
 
 export const passwordSchema = z
   .string()
@@ -95,3 +97,74 @@ export const ResetPasswordSchema = z
   })
 
 export type ResetPasswordBodyType = z.infer<typeof ResetPasswordSchema>
+
+const { SDeleteCookie, SGetCookie, getOptionWithAccessToken, setCookieWithToken, updateRefreshToken } = cookiesService
+const authenRequestApi = {
+  register: async (body: RegisterBodyType) => {
+    const res = await http.post<RegisterReponse>('/authentication/register', body)
+    await setCookieWithToken('verifyEmailToken', res.data.verifyEmailToken)
+    return res
+  },
+
+  login: async (body: LoginBodyType) => {
+    const res = await http.post<LoginReponse>('/authentication/login', body)
+    await updateRefreshToken(res.data)
+    return res
+  },
+
+  logout: async () => {
+    const accessTokenOption = await getOptionWithAccessToken()
+    const refreshToken = await SGetCookie('refreshToken')
+    await http.post('/authentication/logout', { refreshToken }, accessTokenOption)
+    await SDeleteCookie('accessToken')
+    await SDeleteCookie('refreshToken')
+  },
+
+  verifyEmail: async (body: VerifyEmailBodyType) => {
+    const res = await http.post<LoginReponse>('/authentication/verify-email', body)
+    await updateRefreshToken(res.data)
+    await SDeleteCookie('verifyEmailToken')
+    return res
+  },
+
+  resendVerifyEmail: async () => {
+    const accessTokenOption = await getOptionWithAccessToken()
+    const res = await http.get<{ verifyEmailToken: string }>('/authentication/resend-verify-email', {
+      ...accessTokenOption
+    })
+    await setCookieWithToken('verifyEmailToken', res.data.verifyEmailToken)
+    return res
+  },
+
+  restorePassword: async (body: RestorePasswordBodyType) => {
+    const res = await http.post<ForgotPasswordReponse>('/authentication/password/send', body)
+    await setCookieWithToken('forgotPasswordToken', res.data.token)
+    return res
+  },
+
+  verifyForgotPasswordOTP: async (body: VerifyForgotPasswordOTPBodyType, setCookie?: boolean) => {
+    const res = await http.post('/authentication/password/verify-otp', body)
+    if (res.statusCode === 201 && setCookie) {
+      await setCookieWithToken('forgotPasswordToken', body.forgotPasswordToken)
+      await setCookieWithToken('otp', body.forgotPasswordToken, body.otp)
+    }
+    return res
+  },
+
+  resendRestorePassword: async (email: string) => {
+    const res = await http.post<ForgotPasswordReponse>('/authentication/password/resend', { email })
+    await setCookieWithToken('forgotPasswordToken', res.data.token)
+    return res
+  },
+
+  resetPassword: async (body: ResetPasswordBodyType) => {
+    const res = await http.post<LoginReponse>('/authentication/password/reset', body)
+    if (res.statusCode === 201) {
+      await updateRefreshToken(res.data)
+      await SDeleteCookie('forgotPasswordToken')
+    }
+    return res
+  }
+}
+
+export default authenRequestApi

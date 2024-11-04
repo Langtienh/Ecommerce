@@ -62,7 +62,7 @@ export default function FormRole({ roles, user }: { roles: Role[]; user?: UserDe
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input autoComplete='name' placeholder='Nhập tên người dùng' {...field} />
+                <Input placeholder='Nhập tên người dùng' {...field} />
               </FormControl>
 
               <FormMessage />
@@ -75,7 +75,7 @@ export default function FormRole({ roles, user }: { roles: Role[]; user?: UserDe
           render={({ field }) => (
             <FormItem>
               <FormControl>
-                <Input autoComplete='email' type='email' placeholder='Nhập email' {...field} />
+                <Input type='email' placeholder='Nhập email' {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

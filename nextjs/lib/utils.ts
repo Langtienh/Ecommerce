@@ -29,12 +29,8 @@ export const imageSrc = (url: string) => {
   return `${envConfig.IMAGE_PREFIX_URL}/${url}`
 }
 
-export const convertSearchParamToString = (query: Record<string, string>) => {
-  const searchParams = new URLSearchParams()
-  Object.entries(query).forEach(([key, value]) => {
-    if (value) {
-      searchParams.append(key, value)
-    }
-  })
-  return searchParams.toString()
+// xóa dấu '/' ở đầu  nếu có
+export const formatUrl = (url: string) => {
+  if (url.startsWith('/')) return url.slice(1)
+  return url
 }

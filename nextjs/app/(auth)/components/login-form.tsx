@@ -7,8 +7,8 @@ import useAccount from '@/hooks/use-account'
 import useLoading from '@/hooks/use-loading'
 import { handleErrorApi } from '@/lib/handle-request'
 import { delayForm } from '@/lib/utils'
-import authenRequestApi from '@/services/authen/authen-request'
-import { LoginBodyType, LoginFormSchema } from '@/services/authen/schema'
+import { requestApi } from '@/services'
+import { LoginBodyType, LoginFormSchema } from '@/services/auth-request-api'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -43,7 +43,7 @@ const HandleWithSearchParam = () => {
   async function onSubmit(values: LoginBodyType) {
     startLoading()
     try {
-      const res = await authenRequestApi.login(values)
+      const res = await requestApi.auth.login(values)
       await delayForm()
       setUser(res.data.user)
       toast.success(res.message)

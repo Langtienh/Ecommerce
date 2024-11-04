@@ -19,7 +19,8 @@ export async function GET(request: Request) {
         ...COOKIES_OPTIONS,
         name: 'accessToken',
         value: accessToken,
-        expires: new Date(accessTokenPayload.exp * 1000)
+        // expires: new Date(accessTokenPayload.exp * 1000),
+        maxAge: 10
       })
       cookies().set({
         ...COOKIES_OPTIONS,

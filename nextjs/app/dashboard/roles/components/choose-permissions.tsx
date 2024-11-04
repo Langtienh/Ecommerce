@@ -78,7 +78,7 @@ export default function ChoosePermissions({
                                     }
                                     id={`group--${group.id}`}
                                   />
-                                  <Label htmlFor={`group--${group.id}`}>{`${group.name} group`}</Label>
+                                  <Label htmlFor={`group--${group.id}`}>{`Group: ${group.name}`}</Label>
                                 </li>
                               )}
                             </>

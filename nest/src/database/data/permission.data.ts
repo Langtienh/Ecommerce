@@ -8,112 +8,84 @@ export const permissionInitialized: {
   groupId: number
 }[] = [
   {
-    name: 'Đăng xuất',
-    apiPath: '/api/v1/authentication/logout',
-    method: HTTP_METHOD.POST,
-    isActive: true,
-    groupId: 12
-  },
-  {
-    name: 'Đổi mật khẩu',
-    apiPath: '/api/v1/authentication/password/change',
-    method: HTTP_METHOD.POST,
-    isActive: true,
-    groupId: 13
-  },
-  {
-    name: 'Xác minh email',
-    apiPath: '/api/v1/authentication/resend-verify-email',
-    method: HTTP_METHOD.GET,
-    isActive: true,
-    groupId: 13
-  },
-  {
-    name: 'Xóa nhiều nhóm',
-    apiPath: '/api/v1/authorization/groups',
-    method: HTTP_METHOD.DELETE,
-    isActive: true,
-    groupId: 3
-  },
-  {
-    name: 'Xem nhiều nhóm',
+    name: 'Xem thông tin nhiều group',
     apiPath: '/api/v1/authorization/groups',
     method: HTTP_METHOD.GET,
     isActive: true,
     groupId: 4
   },
   {
-    name: 'Thêm nhóm',
+    name: 'Thêm group',
     apiPath: '/api/v1/authorization/groups',
     method: HTTP_METHOD.POST,
     isActive: true,
     groupId: 1
   },
   {
-    name: 'Cập nhật nhóm',
+    name: 'Cập nhật group',
     apiPath: '/api/v1/authorization/groups/:id',
     method: HTTP_METHOD.PATCH,
     isActive: true,
     groupId: 2
   },
   {
-    name: 'Xem nhóm',
+    name: 'Xem thông tin group',
     apiPath: '/api/v1/authorization/groups/:id',
     method: HTTP_METHOD.GET,
     isActive: true,
     groupId: 4
   },
   {
-    name: 'Xóa nhóm',
+    name: 'Xóa group',
     apiPath: '/api/v1/authorization/groups/:id',
     method: HTTP_METHOD.DELETE,
     isActive: true,
     groupId: 3
   },
   {
-    name: 'Xem nhiều quyền',
+    name: 'Xem thông tin nhiều permission',
     apiPath: '/api/v1/authorization/permissions',
     method: HTTP_METHOD.GET,
     isActive: true,
     groupId: 4
   },
   {
-    name: 'Xóa nhiều quyền',
+    name: 'Xóa nhiều permission',
     apiPath: '/api/v1/authorization/permissions',
     method: HTTP_METHOD.DELETE,
     isActive: true,
     groupId: 3
   },
   {
-    name: 'Thêm quyền',
+    name: 'Thêm permission',
     apiPath: '/api/v1/authorization/permissions',
     method: HTTP_METHOD.POST,
     isActive: true,
     groupId: 1
   },
   {
-    name: 'Cập nhật quyền',
+    name: 'Cập nhật permission',
     apiPath: '/api/v1/authorization/permissions/:id',
     method: HTTP_METHOD.PATCH,
     isActive: true,
     groupId: 2
   },
   {
-    name: 'Xóa quyền',
+    name: 'Xóa permission',
     apiPath: '/api/v1/authorization/permissions/:id',
     method: HTTP_METHOD.DELETE,
     isActive: true,
     groupId: 3
   },
   {
-    name: 'Xem quyền',
+    name: 'Xem thông tin permission',
     apiPath: '/api/v1/authorization/permissions/:id',
     method: HTTP_METHOD.GET,
     isActive: true,
     groupId: 4
   },
   {
-    name: 'Xem nhiều tài nguyên',
+    name: 'Xem thông tin nhiều tài nguyên',
     apiPath: '/api/v1/authorization/resources',
     method: HTTP_METHOD.GET,
     isActive: true,
@@ -148,123 +120,81 @@ export const permissionInitialized: {
     groupId: 3
   },
   {
-    name: 'Xem tài nguyên',
+    name: 'Xem thông tin tài nguyên',
     apiPath: '/api/v1/authorization/resources/:id',
     method: HTTP_METHOD.GET,
     isActive: true,
     groupId: 4
   },
   {
-    name: 'Xem nhiều chi tiết tài nguyên',
+    name: 'Xem thông tin nhiều chi tiết tài nguyên',
     apiPath: '/api/v1/authorization/resources/:id/permissions',
     method: HTTP_METHOD.GET,
     isActive: true,
     groupId: 4
   },
   {
-    name: 'Xem nhiều vai trò',
+    name: 'Xóa nhiều role',
+    apiPath: '/api/v1/authorization/roles',
+    method: HTTP_METHOD.DELETE,
+    isActive: true,
+    groupId: 3
+  },
+  {
+    name: 'Xem thông tin nhiều role',
     apiPath: '/api/v1/authorization/roles',
     method: HTTP_METHOD.GET,
     isActive: true,
     groupId: 4
   },
   {
-    name: 'Thêm vai trò',
+    name: 'Thêm role',
     apiPath: '/api/v1/authorization/roles',
     method: HTTP_METHOD.POST,
     isActive: true,
     groupId: 1
   },
   {
-    name: 'Xóa vai trò',
+    name: 'Xóa role',
     apiPath: '/api/v1/authorization/roles/:id',
     method: HTTP_METHOD.DELETE,
     isActive: true,
     groupId: 3
   },
   {
-    name: 'Cập nhật vai trò',
+    name: 'Cập nhật role',
     apiPath: '/api/v1/authorization/roles/:id',
     method: HTTP_METHOD.PATCH,
     isActive: true,
     groupId: 2
   },
   {
-    name: 'Xem chi tiết vai trò',
+    name: 'Xem thông tin chi tiết role',
     apiPath: '/api/v1/authorization/roles/:id',
     method: HTTP_METHOD.GET,
     isActive: true,
     groupId: 4
   },
   {
-    name: 'Xem hồ sơ của tôi',
-    apiPath: '/api/v1/me',
-    method: HTTP_METHOD.GET,
-    isActive: true,
-    groupId: 9
-  },
-  {
-    name: 'Cập nhật hồ sơ của tôi',
-    apiPath: '/api/v1/me',
-    method: HTTP_METHOD.PATCH,
-    isActive: true,
-    groupId: 10
-  },
-  {
-    name: 'Xem địa chỉ của tôi',
-    apiPath: '/api/v1/me/address',
-    method: HTTP_METHOD.GET,
-    isActive: true,
-    groupId: 9
-  },
-  {
-    name: 'Thêm địa chỉ',
-    apiPath: '/api/v1/me/address',
-    method: HTTP_METHOD.POST,
-    isActive: true,
-    groupId: 10
-  },
-  {
-    name: 'Xem một địa chỉ',
-    apiPath: '/api/v1/me/address/:id',
-    method: HTTP_METHOD.GET,
-    isActive: true,
-    groupId: 9
-  },
-  {
-    name: 'Xóa địa chỉ',
-    apiPath: '/api/v1/me/address/:id',
-    method: HTTP_METHOD.DELETE,
-    isActive: true,
-    groupId: 10
-  },
-  {
-    name: 'Cập nhật địa chỉ của tôi',
-    apiPath: '/api/v1/me/address/:id',
-    method: HTTP_METHOD.PUT,
-    isActive: true,
-    groupId: 10
-  },
-  {
-    name: 'Xem nhiều địa chỉ',
-    apiPath: '/api/v1/users',
-    method: HTTP_METHOD.GET,
-    isActive: true,
-    groupId: 5
-  },
-  {
-    name: 'Thêm người dùng',
-    apiPath: '/api/v1/users',
-    method: HTTP_METHOD.POST,
-    isActive: true,
-    groupId: 6
-  },
-  {
-    name: 'Xem một người dùng',
+    name: 'Xem thông tin một người dùng',
     apiPath: '/api/v1/users/:id',
     method: HTTP_METHOD.GET,
     isActive: true,
     groupId: 5
+  },
+  {
+    name: 'Xem thông tin nhiều người dùng',
+    apiPath: '/api/v1/users',
+    method: HTTP_METHOD.GET,
+    isActive: true,
+    groupId: 5
+  },
+  {
+    name: 'Tạo mới một người dùng',
+    apiPath: '/api/v1/users',
+    method: HTTP_METHOD.POST,
+    isActive: true,
+    groupId: 8
   },
   {
     name: 'Cập nhật người dùng',
@@ -274,8 +204,15 @@ export const permissionInitialized: {
     groupId: 7
   },
   {
-    name: 'Xóa một người dùng (xóa mềm)',
+    name: 'Xóa một người dùng',
     apiPath: '/api/v1/users/:id',
+    method: HTTP_METHOD.DELETE,
+    isActive: true,
+    groupId: 8
+  },
+  {
+    name: 'Xóa nhiều người dùng',
+    apiPath: '/api/v1/users',
     method: HTTP_METHOD.DELETE,
     isActive: true,
     groupId: 8

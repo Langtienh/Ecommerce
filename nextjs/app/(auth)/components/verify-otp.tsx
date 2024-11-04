@@ -6,8 +6,8 @@ import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from '@/comp
 import useLoading from '@/hooks/use-loading'
 import { handleErrorApi } from '@/lib/handle-request'
 import { delayForm } from '@/lib/utils'
-import authenRequestApi from '@/services/authen/authen-request'
-import { VerifyForgotPasswordOTPBodyType, verifyForgotPasswordOTPSchema } from '@/services/authen/schema'
+import { requestApi } from '@/services'
+import { VerifyForgotPasswordOTPBodyType, verifyForgotPasswordOTPSchema } from '@/services/auth-request-api'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { FieldErrors, useForm } from 'react-hook-form'
@@ -40,7 +40,7 @@ export default function VerifyForgotPasswordOTPForm({
   const onSubmit = async (data: VerifyForgotPasswordOTPBodyType) => {
     startLoading()
     try {
-      const res = await authenRequestApi.verifyForgotPasswordOTP(data, true)
+      const res = await requestApi.auth.verifyForgotPasswordOTP(data, true)
       await delayForm()
       toast.success(res.message)
       router.push('/restore-password')
@@ -61,7 +61,7 @@ export default function VerifyForgotPasswordOTPForm({
   const handleResend = async () => {
     startLoading()
     try {
-      const res = await authenRequestApi.resendRestorePassword(email)
+      const res = await requestApi.auth.resendRestorePassword(email)
       form.setValue('forgotPasswordToken', res.data.token)
       toast.success(res.message)
     } catch (error) {

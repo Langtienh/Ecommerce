@@ -1,18 +1,18 @@
 export const groupInitialized = [
   {
-    name: 'Tạo quyền',
+    name: 'Tạo',
     resourceId: 3
   },
   {
-    name: 'Sửa quyền',
+    name: 'Sửa',
     resourceId: 3
   },
   {
-    name: 'Xóa quyền',
+    name: 'Xóa',
     resourceId: 3
   },
   {
-    name: 'Xem quyền',
+    name: 'Xem',
     resourceId: 3
   },
   {
@@ -30,25 +30,5 @@ export const groupInitialized = [
   {
     name: 'Xóa người dùng',
     resourceId: 1
-  },
-  {
-    name: 'Truy vấn tôi',
-    resourceId: 5
-  },
-  {
-    name: 'Cập nhật tôi',
-    resourceId: 5
-  },
-  {
-    name: 'Xóa tôi',
-    resourceId: 5
-  },
-  {
-    name: 'Xác thực',
-    resourceId: 2
-  },
-  {
-    name: 'Cập nhật xác thực',
-    resourceId: 2
   }
 ]

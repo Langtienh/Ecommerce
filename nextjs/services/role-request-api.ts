@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { CRUDWithAccsessToken } from './CRUD.class'
+import { CrudWithAuth } from './core/crud'
 import { Permission } from './permission-request-api'
 
 export interface Role {
@@ -23,9 +23,9 @@ export const UpdateRoleSchema = AddRoleSchema.partial()
 export type AddRoleType = z.infer<typeof AddRoleSchema>
 export type UpdateRoleType = z.infer<typeof UpdateRoleSchema>
 
-class RoleRequestApi extends CRUDWithAccsessToken<Role, RoleDetail, Role, AddRoleType, UpdateRoleType> {
+class RoleRequestApi extends CrudWithAuth<Role, RoleDetail, Role, AddRoleType, UpdateRoleType> {
   constructor() {
-    super('/authorization/roles')
+    super('/authorization/roles', { add: true, update: true, delete: true, deleteMany: true })
   }
 }
 const roleRequestApi = new RoleRequestApi()

@@ -1,5 +1,5 @@
 import { imageSrc } from '@/lib/utils'
-import authenRequestApi from '@/services/authen/authen-request'
+import { requestApi } from '@/services'
 import { cookies } from 'next/headers'
 import Image from 'next/image'
 import { redirect } from 'next/navigation'
@@ -8,9 +8,9 @@ import ResetPasswordForm from '../components/reset-password-form'
 export default async function Page() {
   const otp = cookies().get('otp')?.value
   const forgotPasswordToken = cookies().get('forgotPasswordToken')?.value
-  if (!otp || !forgotPasswordToken) redirect('/')
+  if (!otp || !forgotPasswordToken) redirect('/home')
   try {
-    await authenRequestApi.verifyForgotPasswordOTP({ forgotPasswordToken, otp })
+    await requestApi.auth.verifyForgotPasswordOTP({ forgotPasswordToken, otp })
     return (
       <>
         <div className='mt-5 mb-10 flex flex-col justify-center space-y-2 items-center'>
@@ -21,6 +21,6 @@ export default async function Page() {
       </>
     )
   } catch {
-    redirect('/')
+    redirect('/home')
   }
 }

@@ -6,8 +6,8 @@ import { Input } from '@/components/ui/input'
 import useAccount from '@/hooks/use-account'
 import useLoading from '@/hooks/use-loading'
 import { handleErrorApi } from '@/lib/handle-request'
-import authenRequestApi from '@/services/authen/authen-request'
-import { ResetPasswordBodyType, ResetPasswordSchema } from '@/services/authen/schema'
+import { requestApi } from '@/services'
+import { ResetPasswordBodyType, ResetPasswordSchema } from '@/services/auth-request-api'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
@@ -37,7 +37,7 @@ export default function ResetPasswordForm({ forgotPasswordToken, otp }: ResetPas
   async function onSubmit(values: ResetPasswordBodyType) {
     startLoading()
     try {
-      const res = await authenRequestApi.resetPassword(values)
+      const res = await requestApi.auth.resetPassword(values)
       setUser(res.data.user)
       toast.success(res.message)
       router.push('/smember')

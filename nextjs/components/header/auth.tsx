@@ -5,7 +5,7 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/h
 import useAccount from '@/hooks/use-account'
 import useLoading from '@/hooks/use-loading'
 import { cn, getFirstLetterUppercase } from '@/lib/utils'
-import authenRequestApi from '@/services/authen/authen-request'
+import { requestApi } from '@/services'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { FaShopify, FaUser } from 'react-icons/fa'
@@ -24,7 +24,7 @@ export default function Auth({ className }: AuthProps) {
   const handleLogout = async () => {
     startLoading()
     try {
-      await authenRequestApi.logout()
+      await requestApi.auth.logout()
       toast.success('Đăng xuất thành công')
     } finally {
       removeUser()

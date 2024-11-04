@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { CRUDWithAccsessToken } from './CRUD.class'
+import { CrudWithAuth } from './core/crud'
 import { Permission } from './permission-request-api'
 import { Resource } from './resource-request-api'
 
@@ -24,9 +24,9 @@ export type AddGroupType = z.infer<typeof AddGroupSchema>
 export const UpdateGroupSchema = AddGroupSchema.partial()
 export type UpdateGroupType = z.infer<typeof UpdateGroupSchema>
 
-class GroupRequestApi extends CRUDWithAccsessToken<Group, Group, Group, AddGroupType, UpdateGroupType> {
+class GroupRequestApi extends CrudWithAuth<Group, Group, Group, AddGroupType, UpdateGroupType> {
   constructor() {
-    super('authorization/groups')
+    super('authorization/groups', { add: true, update: true, delete: true, deleteMany: true })
   }
 }
 const groupRequestApi = new GroupRequestApi()

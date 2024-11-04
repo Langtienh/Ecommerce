@@ -36,8 +36,8 @@ export default function FormRole({ role, resources }: { role?: RoleDetail; resou
     try {
       let res = undefined
       if (role) {
-        res = await requestApi.role.update(role.id, values)
-      } else res = await requestApi.role.add(values)
+        res = await requestApi.role.update(role.id, { ...values, permissionIds })
+      } else res = await requestApi.role.add({ ...values, permissionIds })
       await delayForm()
       toast.success(res.message)
       router.push('/dashboard/roles')

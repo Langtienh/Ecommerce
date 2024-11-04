@@ -2,7 +2,7 @@
 import useAccount from '@/hooks/use-account'
 import useLoading from '@/hooks/use-loading'
 import { cn } from '@/lib/utils'
-import authenRequestApi from '@/services/authen/authen-request'
+import { requestApi } from '@/services'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { FaGift, FaShopify, FaUser } from 'react-icons/fa'
@@ -24,7 +24,7 @@ export default function SmemberNav() {
   const handleLogout = async () => {
     startLoading()
     try {
-      await authenRequestApi.logout()
+      await requestApi.auth.logout()
       toast.success('Đăng xuất thành công')
     } finally {
       removeUser()

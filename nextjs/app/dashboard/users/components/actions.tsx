@@ -11,7 +11,8 @@ import {
 } from '@/components/ui/dropdown-menu'
 import useLoading from '@/hooks/use-loading'
 import { handleErrorApi } from '@/lib/handle-request'
-import userRequestApi, { User } from '@/services/user-request-api'
+import { requestApi } from '@/services'
+import { User } from '@/services/user-request-api'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
@@ -22,7 +23,7 @@ export default function Actions({ user }: { user: User }) {
   const handleDelete = async (id: number, softDelete?: boolean) => {
     startLoading()
     try {
-      const res = softDelete ? await userRequestApi.delete(id) : await userRequestApi.softDelete(id)
+      const res = softDelete ? await requestApi.user.delete(id) : await requestApi.user.softDelete(id)
       toast.success(res.message)
       router.refresh()
     } catch (error) {

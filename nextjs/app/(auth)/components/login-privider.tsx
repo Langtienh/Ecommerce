@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button'
 import { handleErrorApi } from '@/lib/handle-request'
 import http from '@/lib/http'
 import { imageSrc } from '@/lib/utils'
-import { serverSetCookies } from '@/services/cookies/auth-cookie'
+import { cookiesService } from '@/services/core/cookie-services'
 import Image from 'next/image'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Suspense } from 'react'
@@ -35,7 +35,7 @@ const Wrapper = () => {
     try {
       const res = await http.get<{ redirectUri: string }>(`/oauth/${provider}`)
       const url: string = res.data.redirectUri
-      await serverSetCookies('redirectUri', redirectUri)
+      await cookiesService.SSetCookie2('redirectUri', redirectUri)
       router.push(url)
     } catch (error) {
       handleErrorApi({ error })

@@ -16,7 +16,7 @@ import envConfig from '@/config'
 import useAccount from '@/hooks/use-account'
 import useLoading from '@/hooks/use-loading'
 import { handleErrorApi } from '@/lib/handle-request'
-import authenRequestApi from '@/services/authen/authen-request'
+import { requestApi } from '@/services'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { FaGithub } from 'react-icons/fa'
@@ -32,7 +32,7 @@ export default function GetStated() {
       const email = envConfig.ADMIN_EMAIL
       const password = envConfig.ADMIN_PASSWORD
       const data = { email, password }
-      const res = await authenRequestApi.login(data)
+      const res = await requestApi.auth.login(data)
       setUser(res.data.user)
       toast.success(res.message)
       router.push('/dashboard/roles')

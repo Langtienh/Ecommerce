@@ -2,7 +2,7 @@
 
 import useAccount from '@/hooks/use-account'
 import { requestApi } from '@/services'
-import { isLogin } from '@/services/cookies/auth-cookie'
+import { cookiesService } from '@/services/core/cookie-services'
 import { useEffect } from 'react'
 
 export default function AuthTrigger() {
@@ -11,7 +11,7 @@ export default function AuthTrigger() {
   useEffect(() => {
     const trigger = async () => {
       if (user) return
-      const isAuth = await isLogin()
+      const isAuth = await cookiesService.SHasCookie('refreshToken')
       if (isAuth) {
         const res = await requestApi.me.getMe()
         setUser(res.data)

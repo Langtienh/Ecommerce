@@ -7,8 +7,8 @@ import useAccount from '@/hooks/use-account'
 import useLoading from '@/hooks/use-loading'
 import { handleErrorApi } from '@/lib/handle-request'
 import { delayForm } from '@/lib/utils'
-import authenRequestApi from '@/services/authen/authen-request'
-import { VerifyEmailBodyType, verifyEmailSchema } from '@/services/authen/schema'
+import { requestApi } from '@/services'
+import { VerifyEmailBodyType, verifyEmailSchema } from '@/services/auth-request-api'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { FieldErrors, useForm } from 'react-hook-form'
@@ -34,7 +34,7 @@ export default function VerifyEmailForm({ email, verifyEmailToken }: VerifyEmail
   const onSubmit = async (data: VerifyEmailBodyType) => {
     startLoading()
     try {
-      const res = await authenRequestApi.verifyEmail(data)
+      const res = await requestApi.auth.verifyEmail(data)
       setUser(res.data.user)
       await delayForm()
       toast.success(res.message)
@@ -56,7 +56,7 @@ export default function VerifyEmailForm({ email, verifyEmailToken }: VerifyEmail
   const handleResend = async () => {
     startLoading()
     try {
-      const res = await authenRequestApi.resendVerifyEmail()
+      const res = await requestApi.auth.resendVerifyEmail()
       form.setValue('verifyEmailToken', res.data.verifyEmailToken)
       toast.success(res.message)
     } catch (error) {

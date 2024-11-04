@@ -38,7 +38,7 @@ export class UsersController {
 
   @ReponseMessage('Xóa user thành công')
   @Delete(':id')
-  remove(@Param() { id }: ParamIdDto, @Query('softDelete') softDelete?: string) {
+  remove(@Param() { id }: ParamIdDto, @Query('softDelete') softDelete?: string, @Query() a?: string) {
     return this.usersService.remove(id, softDelete === 'true')
   }
 

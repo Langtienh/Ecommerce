@@ -89,10 +89,22 @@ export class RolesService {
   }
 
   async getRolePermissions(id: number) {
-    return this.roleRepo.find({
+    const res = await this.roleRepo.find({
       relations: ['permissions'],
       where: { id: id > 0 ? id : undefined },
-      order: { id: 'ASC' }
+      order: { id: 'ASC' },
+      select: {
+        id: true,
+        permissions: {
+          id: true
+        }
+      }
     })
+    const format = res.map((role) => ({
+      id: role.id,
+      permissionIds: role.permissions.map((p) => p.id).sort((a, b) => a - b)
+    }))
+
+    return format
   }
 }

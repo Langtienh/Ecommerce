@@ -1,3 +1,4 @@
+import authenRequestApi from './auth-request-api'
 import groupRequestApi from './group-request-api'
 import meRequestApi from './me-request-api'
 import permissionRequestApi from './permission-request-api'
@@ -11,5 +12,6 @@ export const requestApi = {
   permission: permissionRequestApi,
   resource: resourceRequestApi,
   group: groupRequestApi,
-  me: meRequestApi
+  me: meRequestApi,
+  auth: authenRequestApi
 }

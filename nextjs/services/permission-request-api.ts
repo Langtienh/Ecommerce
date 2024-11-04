@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { CRUDWithAccsessToken } from './CRUD.class'
+import { CrudWithAuth } from './core/crud'
 import { Group } from './group-request-api'
 
 export enum HTTP_METHOD {
@@ -37,7 +37,7 @@ export const UpdatePermissionSchema = AddPermissionSchema.partial()
 export type AddPermissionType = z.infer<typeof AddPermissionSchema>
 export type UpdatePermissionType = z.infer<typeof UpdatePermissionSchema>
 
-class PermissionRequestApi extends CRUDWithAccsessToken<
+class PermissionRequestApi extends CrudWithAuth<
   PermissionWittGroup,
   PermissionWittGroup,
   Permission,
@@ -45,7 +45,7 @@ class PermissionRequestApi extends CRUDWithAccsessToken<
   UpdatePermissionType
 > {
   constructor() {
-    super('authorization/permissions')
+    super('authorization/permissions', { add: true, update: true, delete: true, deleteMany: true })
   }
 }
 const permissionRequestApi = new PermissionRequestApi()

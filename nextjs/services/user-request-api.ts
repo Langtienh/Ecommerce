@@ -1,8 +1,7 @@
 import { z } from 'zod'
-import { CRUDWithAccsessToken } from './CRUD.class'
+import { CrudWithAuth } from './core/crud'
 
-import http from '@/lib/http'
-import { emailSchema, nameSchema, phoneSchema } from './authen/schema'
+import { emailSchema, nameSchema, phoneSchema } from './auth-request-api'
 import { Role } from './role-request-api'
 
 export enum UserStatus {
@@ -53,14 +52,12 @@ export const UpdateUserSchema = AddUserSchema.partial()
 export type AddUserType = z.infer<typeof AddUserSchema>
 export type UpdateUserType = z.infer<typeof UpdateUserSchema>
 
-class UserRequestApi extends CRUDWithAccsessToken<UserDetail, UserDetail, UserDetail, AddUserType, UpdateUserType> {
+class UserRequestApi extends CrudWithAuth<UserDetail, UserDetail, UserDetail, AddUserType, UpdateUserType> {
   constructor() {
-    super('/users')
+    super('/users', { add: true, update: true, delete: true, deleteMany: true })
   }
   softDelete = async (id: number) => {
-    const option = await this.getOptionWithAccessToken()
-    const res = await http.delete(`/users/${id}?softDelete=true`, option)
-    return res
+    return this.delete(id, 'softDelete=true')
   }
 }
 const userRequestApi = new UserRequestApi()

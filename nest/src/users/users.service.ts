@@ -96,25 +96,25 @@ export class UsersService {
   }
 
   remove(id: number, isSoftDelete: boolean) {
-    if (!isSoftDelete) {
-      return this.userRepo.delete(id)
-    }
     try {
-      return this.userRepo.softDelete(id)
+      if (!isSoftDelete) {
+        return this.userRepo.delete(id)
+      }
     } catch {
       throw new ConflictException('Không thể xóa user')
     }
+    return this.userRepo.softDelete(id)
   }
 
   removeMany(ids: number[], isSoftDelete: boolean) {
-    if (!isSoftDelete) {
-      return this.userRepo.delete(ids)
-    }
     try {
-      return this.userRepo.softDelete(ids)
+      if (!isSoftDelete) {
+        return this.userRepo.delete(ids)
+      }
     } catch {
       throw new ConflictException('Không thể xóa user')
     }
+    return this.userRepo.softDelete(ids)
   }
 
   async updatePassword(userId: number, password: string) {

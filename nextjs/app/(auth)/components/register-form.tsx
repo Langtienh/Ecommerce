@@ -7,8 +7,8 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormMessage } 
 import { Input } from '@/components/ui/input'
 import useLoading from '@/hooks/use-loading'
 import { handleErrorApi } from '@/lib/handle-request'
-import authenRequestApi from '@/services/authen/authen-request'
-import { RegisterBodyType, RegisterFormSchema } from '@/services/authen/schema'
+import { requestApi } from '@/services'
+import { RegisterBodyType, RegisterFormSchema } from '@/services/auth-request-api'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Link from 'next/link'
 import { useState } from 'react'
@@ -38,7 +38,7 @@ export default function RegisterForm() {
   async function onSubmit(values: RegisterBodyType) {
     startLoading()
     try {
-      const res = await authenRequestApi.register(values)
+      const res = await requestApi.auth.register(values)
       setEmail(values.email)
       setName(values.name)
       setOpen(true)

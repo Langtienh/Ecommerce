@@ -3,6 +3,7 @@ import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { TypeOrmModule } from '@nestjs/typeorm'
+import { UserModule } from './users/user.module'
 
 @Module({
   imports: [
@@ -27,7 +28,8 @@ import { TypeOrmModule } from '@nestjs/typeorm'
         ssl: configService.get('DB_SSL') === 'true'
       }),
       inject: [ConfigService]
-    })
+    }),
+    UserModule
   ],
   controllers: [AppController],
   providers: [AppService]

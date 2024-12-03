@@ -1,4 +1,5 @@
 import { EntityWithDate, EntityWithDateFields } from '@/lib/entity-base/entity-with-date'
+import { TypeAccessConvert } from '@/lib/utils'
 import { Exclude } from 'class-transformer'
 import { Column, Entity } from 'typeorm'
 // import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm'
@@ -47,9 +48,9 @@ export class User extends EntityWithDate {
 // giới hạn các field có thể query
 export const UserFields = {
   ...EntityWithDateFields,
-  email: 'string',
-  name: 'string',
-  phone: 'string',
-  roleId: 'number',
-  status: 'string'
+  email: TypeAccessConvert.STRING,
+  name: TypeAccessConvert.STRING,
+  phone: TypeAccessConvert.STRING,
+  roleId: TypeAccessConvert.NUMBER,
+  status: TypeAccessConvert.STRING
 }

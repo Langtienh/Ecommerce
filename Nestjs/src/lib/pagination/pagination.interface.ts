@@ -3,14 +3,14 @@ export interface PaginationQuery {
   limit: number
 }
 
-export interface PaginationResponse {
+export interface PaginationResponse<T> {
   meta: {
     page: number
     limit: number
     totalPage: number
     totalItem: number
   }
-  result: Record<string, any>[]
+  result: T[]
 }
 
 export class Pagination {

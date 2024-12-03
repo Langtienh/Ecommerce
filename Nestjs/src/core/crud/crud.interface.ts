@@ -6,7 +6,7 @@ export interface ICrudServices {
   update(id: number, data: Record<string, any>): Promise<any>
   delete(id: number): Promise<void>
   deleteMany(ids: number[]): Promise<void>
-  findMany(query: QueryBase): Promise<PaginationResponse>
+  findMany(query: QueryBase): Promise<PaginationResponse<any>>
   findOne(id: number): Promise<any>
 }
 

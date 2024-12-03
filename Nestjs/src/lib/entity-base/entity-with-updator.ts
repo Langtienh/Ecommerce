@@ -1,6 +1,7 @@
 import { User } from '@/users/entities/user.entity'
 import { Column, JoinColumn, ManyToOne } from 'typeorm'
 import { EntityWithDate, EntityWithDateFields } from './entity-with-date'
+import { TypeAccessConvert } from '../utils'
 
 export class EntityWithUpdator extends EntityWithDate {
   @ManyToOne(() => User)
@@ -20,6 +21,6 @@ export class EntityWithUpdator extends EntityWithDate {
 
 export const EntityWithUpdatorProperties = {
   ...EntityWithDateFields,
-  creatorId: 'number',
-  updaterId: 'number'
+  creatorId: TypeAccessConvert.NUMBER,
+  updaterId: TypeAccessConvert.NUMBER
 }

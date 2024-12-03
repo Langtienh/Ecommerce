@@ -1,6 +1,8 @@
 import { Transform } from 'class-transformer'
 import { IsInt, IsOptional } from 'class-validator'
 
+export type TFilter = Record<string, string | string[] | Record<string, string | string[]>>
+
 export class ParamIdDto {
   @IsInt()
   @Transform(({ value }) => parseInt(value, 10))
@@ -28,5 +30,5 @@ export class QueryBase extends PaginationQuery {
   sort?: string
 
   @IsOptional()
-  filter?: Record<string, string> | Record<string, Record<string, string | string[]>>
+  filter?: TFilter
 }

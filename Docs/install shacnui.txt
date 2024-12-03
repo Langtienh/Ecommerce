@@ -1,0 +1,1 @@
+npx shadcn@latest add accordion alert-dialog alert aspect-ratio avatar badge breadcrumb button calendar card checkbox chart carousel command table dialog dropdown-menu form hover-card input input-otp label pagination popover progress radio-group resizable scroll-area select separator sheet skeleton sonner switch table tabs textarea toast tooltip

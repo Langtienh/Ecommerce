@@ -1,7 +1,8 @@
 import { EntityWithDate, EntityWithDateFields } from '@/lib/entity-base/entity-with-date'
 import { TypeAccessConvert } from '@/lib/utils'
+import { Role } from '@/roles/entities/role.entity'
 import { Exclude } from 'class-transformer'
-import { Column, Entity } from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm'
 // import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm'
 
 export enum UserStatus {
@@ -41,9 +42,9 @@ export class User extends EntityWithDate {
   // @OneToMany(() => Address, (address) => address.user)
   // addresses: Address[]
 
-  // @ManyToOne(() => Role)
-  // @JoinColumn({ name: 'role_id' })
-  // role: Role
+  @ManyToOne(() => Role)
+  @JoinColumn({ name: 'role_id' })
+  role: Role
 }
 // giới hạn các field có thể query
 export const UserFields = {

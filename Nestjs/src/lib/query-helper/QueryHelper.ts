@@ -6,23 +6,33 @@ import { Sorter } from './Sorter'
 
 export class QueryHelper {
   static buildQuery(fieldAccess: Record<string, TypeAccessConvert>, query: QueryBase) {
-    const limit = +query.limit
+    const limit = +query.limit || 10
+    const take = limit > 0 ? limit : undefined
+    const page = +query.page || 1
+    const skip = limit > 0 ? (page - 1) * limit : undefined
+    const sort = query.sort
+    const order = sort ? Sorter.build(fieldAccess, query.sort) : undefined
+    const search = query.search || ''
+    const filter = query.filter
+    const where = filter ? Filter.build(fieldAccess, query.filter) : undefined
     return {
-      search: query.search || '',
-      take: limit > 0 ? +query.limit : undefined,
-      skip: limit > 0 ? (+query.page - 1) * limit : undefined,
-      sort: Sorter.build(fieldAccess, query.sort),
-      where: Filter.build(fieldAccess, query.filter)
+      search,
+      take,
+      skip,
+      order,
+      where
     }
   }
 
   static buildReponse<T>(data: T[], totalItem: number, query: QueryBase): PaginationResponse<T> {
-    const limit = +query.limit
+    const limit = +query.limit || 10
+    const page = +query.page || 1
+    const totalPage = Math.ceil(totalItem / limit)
     return {
       meta: {
-        page: +query.page,
+        page,
         limit,
-        totalPage: limit > 0 ? Math.ceil(totalItem / +query.limit) : 1,
+        totalPage,
         totalItem
       },
       result: data

@@ -6,8 +6,9 @@ import { PaginationResponse } from '@/lib/pagination/pagination.interface'
 import { QueryBase } from '@/lib/query-helper/query.interface'
 import { InjectRepository } from '@nestjs/typeorm'
 import { In, Repository } from 'typeorm'
-import { User } from './entities/user.entity'
+import { User, UserFields } from './entities/user.entity'
 import { compare, genSalt, hash } from 'bcrypt'
+import { QueryHelper } from '@/lib/query-helper/QueryHelper'
 
 @Injectable()
 export class UserService implements ICrudServices {
@@ -33,17 +34,15 @@ export class UserService implements ICrudServices {
     await this.userRepository.delete({ id: In(ids) })
   }
 
-  async findMany(query: QueryBase): Promise<PaginationResponse> {
-    // todo: builder query
-    return {
-      meta: {
-        page: 1,
-        limit: 10,
-        totalPage: 1,
-        totalItem: 1
-      },
-      result: []
-    }
+  async findMany(query: QueryBase): Promise<PaginationResponse<User>> {
+    const { skip, sort, take, where } = QueryHelper.buildQuery(UserFields, query)
+    const [result, totalItem] = await this.userRepository.findAndCount({
+      where,
+      order: sort,
+      skip,
+      take
+    })
+    return QueryHelper.buildReponse(result, totalItem, query)
   }
 
   async findOne(id: number): Promise<any> {

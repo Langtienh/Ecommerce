@@ -1,5 +1,5 @@
 import { PaginationResponse } from '@/lib/pagination/pagination.interface'
-import { ParamIdDto, QueryBase, QueryIdsDto } from '@/lib/query-helper/query.interface'
+import { ParamIdDto, QueryBase, QueryIdsDto } from '@/lib/query-helper'
 
 export interface ICrudServices {
   create(data: Record<string, any>): Promise<any>

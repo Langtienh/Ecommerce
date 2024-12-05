@@ -1,20 +1,19 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common'
-import { UserService } from './user.service'
-import { CreateUserDto } from './dto/create-user.dto'
-import { UpdateUserDto } from './dto/update-user.dto'
-import { ICrudController } from '@/core/crud/crud.interface'
 import { ReponseMessage } from '@/decorator/customize'
-import { ParamIdDto, QueryIdsDto } from '@/lib/query-helper/query.interface'
-import { PaginationQuery } from '@/lib/query-helper/query.interface'
+import { PaginationQuery, ParamIdDto, QueryIdsDto } from '@/lib/query-helper'
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common'
+import { IUsersController } from './abstract'
+import { CreateUserDto, UpdateUserDto } from './dto'
+import { UserService } from './user.service'
 
 @Controller('users')
-export class UserController implements ICrudController {
+export class UserController implements IUsersController {
   constructor(private readonly userService: UserService) {}
 
   @ReponseMessage('Tạo mới user thành công')
   @Post()
   create(@Body() data: CreateUserDto): Promise<any> {
-    return this.userService.create(data)
+    const { email, name, password, avatar, phone, roleId, status } = data
+    return this.userService.create({ email, name, password, avatar, phone, roleId, status })
   }
 
   @ReponseMessage('Xóa user thành công')
@@ -44,6 +43,7 @@ export class UserController implements ICrudController {
   @ReponseMessage('Cập nhật user thành công')
   @Patch(':id')
   update(@Param() { id }: ParamIdDto, @Body() data: UpdateUserDto): Promise<any> {
-    return this.userService.update(id, data)
+    const { avatar, name, phone, status } = data
+    return this.userService.update(id, { avatar, name, phone, status })
   }
 }

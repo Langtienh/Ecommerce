@@ -1,25 +1,32 @@
-import { Injectable } from '@nestjs/common'
-import { CreateUserDto } from './dto/create-user.dto'
-import { UpdateUserDto } from './dto/update-user.dto'
-import { ICrudServices } from '@/core/crud/crud.interface'
 import { PaginationResponse } from '@/lib/pagination/pagination.interface'
-import { QueryBase } from '@/lib/query-helper/query.interface'
+import { QueryBase, QueryHelper } from '@/lib/query-helper'
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { In, Repository } from 'typeorm'
-import { User, UserFields } from './entities/user.entity'
 import { compare, genSalt, hash } from 'bcrypt'
-import { QueryHelper } from '@/lib/query-helper/QueryHelper'
+import { In, Repository } from 'typeorm'
+import { IUsersService } from './abstract'
+import { CreateUserDto, UpdateUserOption } from './dto/create-user.dto'
+import { User, UserFields } from './entities/user.entity'
 
 @Injectable()
-export class UserService implements ICrudServices {
+export class UserService implements IUsersService {
   constructor(@InjectRepository(User) private userRepository: Repository<User>) {}
 
+  async checkExistUserByEmail(email: string): Promise<boolean> {
+    if (!email) return false
+    return this.userRepository.existsBy({ email })
+  }
+
   async create(data: CreateUserDto): Promise<any> {
+    const isExist = await this.checkExistUserByEmail(data.email)
+    if (isExist) throw new ConflictException('Email đã tồn tại')
+    const hashPassword = await this.hashPassword(data.password)
+    Object.assign(data, { password: hashPassword })
     const user = await this.userRepository.create(data)
     return this.userRepository.save(user)
   }
 
-  async update(id: number, data: UpdateUserDto): Promise<any> {
+  async update(id: number, data: UpdateUserOption): Promise<any> {
     const user = await this.findOne(id)
     Object.assign(user, data)
     return this.userRepository.save(user)
@@ -35,19 +42,20 @@ export class UserService implements ICrudServices {
   }
 
   async findMany(query: QueryBase): Promise<PaginationResponse<User>> {
-    const { skip, sort, take, where } = QueryHelper.buildQuery(UserFields, query)
+    const { skip, order, take, where } = QueryHelper.buildQuery(UserFields, query)
     const [result, totalItem] = await this.userRepository.findAndCount({
       where,
-      order: sort,
+      order,
       skip,
-      take
+      take,
+      withDeleted: true
     })
     return QueryHelper.buildReponse(result, totalItem, query)
   }
 
   async findOne(id: number): Promise<any> {
-    const user = await this.userRepository.findOne({ where: { id } })
-    if (!user) throw new Error('Không tìm thấy user')
+    const user = await this.userRepository.findOne({ where: { id }, withDeleted: true })
+    if (!user) throw new NotFoundException('Không tìm thấy user')
     return user
   }
 

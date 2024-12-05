@@ -1,7 +1,7 @@
 import { EUpdator, EUpdatorFields } from '@/lib/entity-base'
 import { TypeAccessConvert } from '@/lib/utils'
-import { Role } from '@/roles/entities/role.entity'
-import { Column, Entity, ManyToMany } from 'typeorm'
+import { Resource } from '@/resource/entities/resource.entity'
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm'
 
 export enum HTTP_METHOD {
   GET = 'GET',
@@ -19,7 +19,7 @@ export enum PERMISSION_GROUP {
   SOFT_DELETE = 'Soft delete'
 }
 
-@Entity()
+@Entity({ name: 'permissions' })
 export class Permission extends EUpdator {
   @Column()
   name: string
@@ -36,8 +36,12 @@ export class Permission extends EUpdator {
   @Column({ name: 'is_active', default: true })
   isActive: boolean
 
-  @ManyToMany(() => Role, (role) => role.permissions)
-  roles: Role[]
+  @Column({ name: 'resource_id' })
+  resourceId: number
+
+  @ManyToOne(() => Resource)
+  @JoinColumn({ name: 'resource_id' })
+  resource: Resource
 }
 
 export const permissionFields = {

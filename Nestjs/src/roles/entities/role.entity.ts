@@ -3,7 +3,7 @@ import { TypeAccessConvert } from '@/lib/utils'
 import { Permission } from '@/permission/entities/permission.entity'
 import { Column, Entity, JoinTable, ManyToMany } from 'typeorm'
 
-@Entity()
+@Entity({ name: 'roles' })
 export class Role extends EUpdator {
   @Column({ unique: true })
   name: string
@@ -14,7 +14,7 @@ export class Role extends EUpdator {
   @Column()
   description: string
 
-  @ManyToMany(() => Permission, (permission) => permission.roles, {
+  @ManyToMany(() => Permission, {
     cascade: true,
     onDelete: 'CASCADE'
   })

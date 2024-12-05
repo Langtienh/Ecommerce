@@ -1,9 +1,9 @@
-import { EntityWithUpdator, EntityWithUpdatorFields } from '@/lib/entity-base/entity-with-updator'
+import { EUpdator, EUpdatorFields } from '@/lib/entity-base'
 import { TypeAccessConvert } from '@/lib/utils'
 import { Column, Entity } from 'typeorm'
 
 @Entity()
-export class Resource extends EntityWithUpdator {
+export class Resource extends EUpdator {
   @Column({ unique: true })
   name: string
 
@@ -12,7 +12,7 @@ export class Resource extends EntityWithUpdator {
 }
 
 export const resourceFields = {
-  ...EntityWithUpdatorFields,
+  ...EUpdatorFields,
   name: TypeAccessConvert.STRING,
   description: TypeAccessConvert.STRING
 }

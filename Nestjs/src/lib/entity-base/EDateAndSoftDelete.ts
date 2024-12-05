@@ -1,8 +1,8 @@
 import { CreateDateColumn, UpdateDateColumn } from 'typeorm'
-import { EntityWithSoftDelete, EntityWithSoftDeleteFields } from './entity-with-soft-delete'
 import { TypeAccessConvert } from '../utils'
+import { ESoftDelete, ESoftDeleteFields } from './ESoftDelete'
 
-export class EntityWithDate extends EntityWithSoftDelete {
+export class EDateAndSoftDelete extends ESoftDelete {
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date
 
@@ -10,8 +10,8 @@ export class EntityWithDate extends EntityWithSoftDelete {
   updatedAt: Date
 }
 
-export const EntityWithDateFields = {
-  ...EntityWithSoftDeleteFields,
+export const EDateAndSoftDeleteFields = {
+  ...ESoftDeleteFields,
   createdAt: TypeAccessConvert.DATE,
   updatedAt: TypeAccessConvert.DATE
 }

@@ -1,4 +1,4 @@
-import { EntityWithUpdator, EntityWithUpdatorFields } from '@/lib/entity-base/entity-with-updator'
+import { EUpdator, EUpdatorFields } from '@/lib/entity-base'
 import { TypeAccessConvert } from '@/lib/utils'
 import { Role } from '@/roles/entities/role.entity'
 import { Column, Entity, ManyToMany } from 'typeorm'
@@ -20,7 +20,7 @@ export enum PERMISSION_GROUP {
 }
 
 @Entity()
-export class Permission extends EntityWithUpdator {
+export class Permission extends EUpdator {
   @Column()
   name: string
 
@@ -41,7 +41,7 @@ export class Permission extends EntityWithUpdator {
 }
 
 export const permissionFields = {
-  ...EntityWithUpdatorFields,
+  ...EUpdatorFields,
   name: TypeAccessConvert.STRING,
   apiPath: TypeAccessConvert.STRING,
   group: TypeAccessConvert.STRING,

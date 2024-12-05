@@ -1,7 +1,7 @@
 import { DeleteDateColumn, PrimaryGeneratedColumn } from 'typeorm'
 import { TypeAccessConvert } from '../utils'
 
-export class EntityWithSoftDelete {
+export class ESoftDelete {
   @PrimaryGeneratedColumn()
   id: number
 
@@ -9,7 +9,7 @@ export class EntityWithSoftDelete {
   deletedAt: Date
 }
 
-export const EntityWithSoftDeleteFields = {
+export const ESoftDeleteFields = {
   deletedAt: TypeAccessConvert.DATE,
   id: TypeAccessConvert.NUMBER
 }

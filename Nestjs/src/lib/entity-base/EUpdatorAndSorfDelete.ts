@@ -1,17 +1,18 @@
 import { User } from '@/users/entities/user.entity'
 import { Column, JoinColumn, ManyToOne } from 'typeorm'
 import { TypeAccessConvert } from '../utils'
-import { EntityWithDate, EntityWithDateFields } from './entity-with-date'
+import { EDateAndSoftDelete, EDateAndSoftDeleteFields } from './EDateAndSoftDelete'
 
-export class EntityWithUpdator extends EntityWithDate {
+export class EUpdatorAndSorfDelete extends EDateAndSoftDelete {
   @ManyToOne(() => User)
   @JoinColumn({ name: 'updater_id' })
   updater: User
 
-  @Column({ name: 'updater_id', default: 2 })
+  // todo: xem xét cách lưu creator và updater
+  @Column({ name: 'updater_id', nullable: true })
   updaterId: number
 
-  @Column({ name: 'creator_id', default: 2 })
+  @Column({ name: 'creator_id', nullable: true })
   creatorId: number
 
   @ManyToOne(() => User)
@@ -19,8 +20,8 @@ export class EntityWithUpdator extends EntityWithDate {
   creator: User
 }
 
-export const EntityWithUpdatorFields = {
-  ...EntityWithDateFields,
+export const EUpdatorAndSorfDeleteFields = {
+  ...EDateAndSoftDeleteFields,
   creatorId: TypeAccessConvert.NUMBER,
   updaterId: TypeAccessConvert.NUMBER
 }

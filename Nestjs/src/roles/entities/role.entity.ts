@@ -1,14 +1,14 @@
-import { EntityWithUpdator, EntityWithUpdatorFields } from '@/lib/entity-base/entity-with-updator'
+import { EUpdator, EUpdatorFields } from '@/lib/entity-base'
 import { TypeAccessConvert } from '@/lib/utils'
 import { Permission } from '@/permission/entities/permission.entity'
 import { Column, Entity, JoinTable, ManyToMany } from 'typeorm'
 
 @Entity()
-export class Role extends EntityWithUpdator {
+export class Role extends EUpdator {
   @Column({ unique: true })
   name: string
 
-  @Column()
+  @Column({ name: 'role_level' })
   roleLevel: number
 
   @Column()
@@ -27,7 +27,7 @@ export class Role extends EntityWithUpdator {
 }
 
 export const roleFields = {
-  ...EntityWithUpdatorFields,
+  ...EUpdatorFields,
   name: TypeAccessConvert.STRING,
   roleLevel: TypeAccessConvert.NUMBER,
   description: TypeAccessConvert.STRING

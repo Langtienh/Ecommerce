@@ -1,4 +1,4 @@
-import { EntityWithDate, EntityWithDateFields } from '@/lib/entity-base/entity-with-date'
+import { EDateAndSoftDelete, EDateAndSoftDeleteFields } from '@/lib/entity-base'
 import { TypeAccessConvert } from '@/lib/utils'
 import { Role } from '@/roles/entities/role.entity'
 import { Exclude } from 'class-transformer'
@@ -12,7 +12,7 @@ export enum UserStatus {
 }
 
 @Entity('users')
-export class User extends EntityWithDate {
+export class User extends EDateAndSoftDelete {
   @Column({ unique: true, length: 255 })
   email: string
 
@@ -35,10 +35,6 @@ export class User extends EntityWithDate {
   @Column({ name: 'role_id', default: 1 })
   roleId: number
 
-  @Exclude()
-  @Column({ name: 'refresh_token', length: 255, nullable: true })
-  refreshToken: string
-
   // @OneToMany(() => Address, (address) => address.user)
   // addresses: Address[]
 
@@ -48,7 +44,7 @@ export class User extends EntityWithDate {
 }
 // giới hạn các field có thể query
 export const UserFields = {
-  ...EntityWithDateFields,
+  ...EDateAndSoftDeleteFields,
   email: TypeAccessConvert.STRING,
   name: TypeAccessConvert.STRING,
   phone: TypeAccessConvert.STRING,

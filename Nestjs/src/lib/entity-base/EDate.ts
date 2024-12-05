@@ -13,6 +13,7 @@ export class EDate {
 }
 
 export const EDateFields = {
+  id: TypeAccessConvert.NUMBER,
   createdAt: TypeAccessConvert.DATE,
   updatedAt: TypeAccessConvert.DATE
 }

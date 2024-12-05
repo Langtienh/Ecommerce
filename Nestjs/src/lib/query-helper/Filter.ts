@@ -9,8 +9,8 @@ import {
   MoreThanOrEqual,
   Not
 } from 'typeorm'
-import { TFilter } from './query.interface'
 import { convertValue, toArray, TypeAccessConvert } from '../utils'
+import { TFilter } from './query.interface'
 
 // các toán tử được phép filter
 enum FilerOperator {
@@ -32,10 +32,11 @@ export class Filter {
     filter: TFilter
   ): FindOptionsWhere<T> {
     const where: FindOptionsWhere<T> = {}
+    const fieldAccessKeys = Object.keys(fieldAccess)
     for (const [field, condition] of Object.entries(filter)) {
       // todo: type có chính xác hay không??
       const type = fieldAccess[field]
-      if (typeof condition === 'object' && condition !== null) {
+      if (fieldAccessKeys.includes(field) && typeof condition === 'object' && condition !== null) {
         for (const [conditionKey, value] of Object.entries(condition)) {
           const operator = conditionKey.toLowerCase()
           // array of values
@@ -85,7 +86,7 @@ export class Filter {
             }
           }
         }
-      } else {
+      } else if (fieldAccessKeys.includes(field)) {
         where[field] = convertValue(type, condition as string)
       }
     }

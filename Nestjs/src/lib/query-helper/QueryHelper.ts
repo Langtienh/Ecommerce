@@ -11,7 +11,7 @@ export class QueryHelper {
     const page = +query.page || 1
     const skip = limit > 0 ? (page - 1) * limit : undefined
     const sort = query.sort
-    const order = sort ? Sorter.build(fieldAccess, query.sort) : undefined
+    const order = sort ? Sorter.build(fieldAccess, sort) : undefined
     const search = query.search || ''
     const filter = query.filter
     const where = filter ? Filter.build(fieldAccess, query.filter) : undefined

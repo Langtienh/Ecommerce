@@ -47,6 +47,11 @@ export class UserService implements IUsersService {
     await this.userRepository.delete({ id })
   }
 
+  async softDelete(id: number) {
+    await this.findOne(id)
+    await this.userRepository.softDelete({ id })
+  }
+
   async deleteMany(ids: number[]) {
     await this.userRepository.delete({ id: In(ids) })
   }

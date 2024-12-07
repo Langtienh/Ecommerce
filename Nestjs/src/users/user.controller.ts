@@ -16,6 +16,12 @@ export class UserController implements IUsersController {
     return this.userService.create({ email, name, password, avatar, phone, roleId, status })
   }
 
+  @ReponseMessage('Xóa mềm user thành công')
+  @Delete('soft-delete/:id')
+  softDelete(@Param() { id }: ParamIdDto): Promise<any> {
+    return this.userService.softDelete(id)
+  }
+
   @ReponseMessage('Xóa user thành công')
   @Delete(':id')
   delete(@Param() { id }: ParamIdDto): Promise<any> {

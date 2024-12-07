@@ -51,5 +51,5 @@ export const permissionFields = {
   group: TypeAccessConvert.STRING,
   method: TypeAccessConvert.STRING,
   isActive: TypeAccessConvert.BOOLEAN,
-  groupId: TypeAccessConvert.NUMBER
+  resourceId: TypeAccessConvert.NUMBER
 }

@@ -1,7 +1,15 @@
 import { PaginationResponse } from '@/lib/pagination/pagination.interface'
 import { QueryBase, QueryHelper } from '@/lib/query-helper'
 import { PermissionService } from '@/permission/permission.service'
-import { ConflictException, Injectable, Logger, NotFoundException } from '@nestjs/common'
+import { UserService } from '@/users/user.service'
+import {
+  ConflictException,
+  forwardRef,
+  Inject,
+  Injectable,
+  Logger,
+  NotFoundException
+} from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { In, Repository } from 'typeorm'
 import { IRolesService } from './abstract'
@@ -14,7 +22,9 @@ export class RolesService implements IRolesService {
   private readonly logger = new Logger(RolesService.name)
   constructor(
     @InjectRepository(Role) private readonly roleRepository: Repository<Role>,
-    private readonly permissionService: PermissionService
+    @Inject(forwardRef(() => PermissionService))
+    private readonly permissionService: PermissionService,
+    private readonly userSercice: UserService
   ) {}
   async checkExistRoleByName(name?: string): Promise<boolean> {
     if (!name) return false
@@ -74,11 +84,19 @@ export class RolesService implements IRolesService {
   }
 
   async delete(id: number) {
-    await this.findOne(id)
+    const role = await this.findOne(id)
+    const userPaginate = await this.userSercice.findMany({ filter: { roleId: ` ${id}` } })
+    if (userPaginate.meta.totalItem > 0)
+      throw new ConflictException(`Không thể xóa, role ${role.name} đang được sử dụng`)
     await this.roleRepository.delete({ id })
   }
 
   async deleteMany(ids: number[]) {
+    const userPaginate = await this.userSercice.findMany({
+      filter: { roleId: { in: ids.toString() } }
+    })
+    if (userPaginate.meta.totalItem > 0)
+      throw new ConflictException('Không thể xóa, role đang được sử dụng')
     await this.roleRepository.delete({ id: In(ids) })
   }
 
@@ -94,8 +112,18 @@ export class RolesService implements IRolesService {
   }
 
   async findOne(id: number) {
-    const role = await this.roleRepository.findOne({ where: { id } })
+    const role = await this.roleRepository.findOne({
+      where: { id },
+      relations: { permissions: true }
+    })
     if (!role) throw new NotFoundException('Role not found')
     return role
+  }
+
+  async existsByPermissionIds(permissionIds: number[]) {
+    const count = await this.roleRepository.count({
+      where: { permissions: { id: In(permissionIds) } }
+    })
+    return count > 0
   }
 }

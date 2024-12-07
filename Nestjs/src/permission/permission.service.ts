@@ -1,7 +1,15 @@
 import { ICrudServices } from '@/core/crud'
 import { PaginationResponse } from '@/lib/pagination/pagination.interface'
 import { QueryBase, QueryHelper } from '@/lib/query-helper'
-import { Injectable, Logger, NotFoundException } from '@nestjs/common'
+import { RolesService } from '@/roles/roles.service'
+import {
+  ConflictException,
+  forwardRef,
+  Inject,
+  Injectable,
+  Logger,
+  NotFoundException
+} from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { In, Repository } from 'typeorm'
 import { CreatePermissionDto } from './dto/create-permission.dto'
@@ -12,7 +20,8 @@ import { Permission, permissionFields } from './entities/permission.entity'
 export class PermissionService implements ICrudServices {
   private readonly logger = new Logger(PermissionService.name)
   constructor(
-    @InjectRepository(Permission) private readonly permissionRepository: Repository<Permission>
+    @InjectRepository(Permission) private readonly permissionRepository: Repository<Permission>,
+    @Inject(forwardRef(() => RolesService)) private readonly roleService: RolesService
   ) {}
   async create(data: CreatePermissionDto) {
     return this.permissionRepository.save(data)
@@ -39,11 +48,17 @@ export class PermissionService implements ICrudServices {
   }
 
   async delete(id: number) {
-    await this.findOne(id)
+    const permission = await this.findOne(id)
+    const isExistsByPermissionIds = await this.roleService.existsByPermissionIds([id])
+    if (isExistsByPermissionIds)
+      throw new ConflictException(`Permission ${permission.name} đang được sử dụng`)
     await this.permissionRepository.delete({ id })
   }
 
   async deleteMany(ids: number[]) {
+    const isExistsByPermissionIds = await this.roleService.existsByPermissionIds(ids)
+    if (isExistsByPermissionIds)
+      throw new ConflictException('Có một vài permission đang được sử dụng')
     await this.permissionRepository.delete({ id: In(ids) })
   }
 

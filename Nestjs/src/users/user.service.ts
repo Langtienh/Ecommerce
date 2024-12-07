@@ -43,8 +43,12 @@ export class UserService implements IUsersService {
   }
 
   async delete(id: number) {
-    await this.findOne(id)
-    await this.userRepository.delete({ id })
+    try {
+      await this.findOne(id)
+      await this.userRepository.delete({ id })
+    } catch {
+      throw new ConflictException('Không thể xóa user')
+    }
   }
 
   async softDelete(id: number) {
@@ -53,7 +57,14 @@ export class UserService implements IUsersService {
   }
 
   async deleteMany(ids: number[]) {
-    await this.userRepository.delete({ id: In(ids) })
+    try {
+      const countUser = await this.userRepository.countBy({ id: In(ids) })
+      if (countUser !== ids.length)
+        throw new NotFoundException('Một vài user đã bị xóa hoặc không tìm thấy')
+      await this.userRepository.delete({ id: In(ids) })
+    } catch {
+      throw new ConflictException('Không thể xóa user')
+    }
   }
 
   async findMany(query: QueryBase): Promise<PaginationResponse<User>> {

@@ -7,6 +7,7 @@ import { ResourceService } from './resource.service'
 @Module({
   imports: [TypeOrmModule.forFeature([Resource])],
   controllers: [ResourceController],
-  providers: [ResourceService]
+  providers: [ResourceService],
+  exports: [ResourceService]
 })
 export class ResourceModule {}

@@ -12,11 +12,11 @@ export enum HTTP_METHOD {
 }
 
 export enum PERMISSION_GROUP {
-  VIEW_ALL = 'View all',
+  VIEW = 'View',
   CREATE = 'Create',
-  m = 'Update',
+  Update = 'Update',
   DELETE = 'Delete',
-  SOFT_DELETE = 'Soft delete'
+  SOFT_DELETE = 'Soft_Delete'
 }
 
 @Entity({ name: 'permissions' })

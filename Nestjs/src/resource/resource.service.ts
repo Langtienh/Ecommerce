@@ -1,7 +1,7 @@
 import { ICrudServices } from '@/core/crud'
 import { PaginationResponse } from '@/lib/pagination/pagination.interface'
 import { QueryBase, QueryHelper } from '@/lib/query-helper'
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common'
+import { ConflictException, Injectable, Logger, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { In, Repository } from 'typeorm'
 import { CreateResourceDto } from './dto/create-resource.dto'
@@ -10,6 +10,7 @@ import { Resource, resourceFields } from './entities/resource.entity'
 
 @Injectable()
 export class ResourceService implements ICrudServices {
+  private readonly logger = new Logger(ResourceService.name)
   constructor(
     @InjectRepository(Resource) private readonly resourceRepository: Repository<Resource>
   ) {}
@@ -24,6 +25,19 @@ export class ResourceService implements ICrudServices {
     if (isExist) throw new ConflictException('Tên resource đã tồn tại')
     const resource = await this.resourceRepository.create(data)
     return this.resourceRepository.save(resource)
+  }
+
+  async createMany(data: CreateResourceDto[]): Promise<any> {
+    return this.resourceRepository.save(data)
+  }
+
+  async initializeData(data: CreateResourceDto[]) {
+    const count = await this.resourceRepository.count()
+    if (count > 0) return
+    await this.resourceRepository.save(
+      data.map((resource) => ({ ...resource, creatorId: 2, updaterId: 2 }))
+    )
+    this.logger.log('Resources Initialized')
   }
 
   async update(id: number, data: UpdateReourceDto): Promise<any> {

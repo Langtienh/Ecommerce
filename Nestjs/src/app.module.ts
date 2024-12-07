@@ -7,6 +7,7 @@ import { UserModule } from './users/user.module'
 import { RolesModule } from './roles/roles.module'
 import { ResourceModule } from './resource/resource.module'
 import { PermissionModule } from './permission/permission.module'
+import { SheedsModule } from './sheeds/sheeds.module'
 
 @Module({
   imports: [
@@ -35,7 +36,8 @@ import { PermissionModule } from './permission/permission.module'
     UserModule,
     RolesModule,
     ResourceModule,
-    PermissionModule
+    PermissionModule,
+    SheedsModule
   ],
   controllers: [AppController],
   providers: [AppService]

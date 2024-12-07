@@ -3,7 +3,7 @@ import { QueryBase, QueryHelper } from '@/lib/query-helper'
 import { ConflictException, Injectable, Logger, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { compare, genSalt, hash } from 'bcrypt'
-import { In, Repository } from 'typeorm'
+import { FindManyOptions, FindOptionsWhere, In, Repository } from 'typeorm'
 import { IUsersService } from './abstract'
 import { CreateUserDto, UpdateUserOption } from './dto/create-user.dto'
 import { User, UserFields } from './entities/user.entity'
@@ -12,6 +12,23 @@ import { User, UserFields } from './entities/user.entity'
 export class UserService implements IUsersService {
   private readonly logger = new Logger(UserService.name)
   constructor(@InjectRepository(User) private userRepository: Repository<User>) {}
+
+  find(options?: FindManyOptions<User>) {
+    return this.userRepository.find(options)
+  }
+
+  count(where?: FindOptionsWhere<User> | FindOptionsWhere<User>[]) {
+    if (!where) return this.userRepository.count()
+    return this.userRepository.countBy(where)
+  }
+
+  findAndCount(options?: FindManyOptions<User>) {
+    return this.userRepository.findAndCount(options)
+  }
+
+  async existsBy(options: FindManyOptions<User>) {
+    return this.userRepository.count(options)
+  }
 
   async checkExistUserByEmail(email: string): Promise<boolean> {
     if (!email) return false
@@ -28,8 +45,8 @@ export class UserService implements IUsersService {
   }
 
   async initializeData(data: CreateUserDto[]) {
-    const count = await this.userRepository.count()
-    if (count) return
+    const isExist = await this.userRepository.exists()
+    if (isExist) return
     if (data.length === 0) return
     const hashPassword = await this.hashPassword(data[0].password)
     await this.userRepository.save(data.map((user) => ({ ...user, password: hashPassword })))

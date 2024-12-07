@@ -34,8 +34,8 @@ export class ResourceService implements ICrudServices {
   }
 
   async initializeData(data: CreateResourceDto[]) {
-    const count = await this.resourceRepository.count()
-    if (count > 0) return
+    const isExist = await this.resourceRepository.exists()
+    if (isExist) return
     await this.resourceRepository.save(
       data.map((resource) => ({ ...resource, creatorId: 2, updaterId: 2 }))
     )
@@ -52,10 +52,7 @@ export class ResourceService implements ICrudServices {
 
   async delete(id: number) {
     const resource = await this.findOne(id)
-    const permissionPaginate = await this.permissionService.findMany({
-      filter: { resourceId: { eq: `${id}` } }
-    })
-    const countPermission = permissionPaginate.meta.totalItem
+    const countPermission = await this.permissionService.count({ resourceId: id })
     if (countPermission > 0)
       throw new ConflictException(
         `Không thể xóa, ${resource.name} resource đang được ${countPermission} permission sử dụng`
@@ -66,10 +63,7 @@ export class ResourceService implements ICrudServices {
   async deleteMany(ids: number[]) {
     const resourcesCount = await this.resourceRepository.countBy({ id: In(ids) })
     if (resourcesCount !== ids.length) throw new NotFoundException('Một số resource không tồn tại')
-    const permissionPaginate = await this.permissionService.findMany({
-      filter: { resourceId: { in: ids.toString() } }
-    })
-    const countPermission = permissionPaginate.meta.totalItem
+    const countPermission = await this.permissionService.count({ resourceId: In(ids) })
     if (countPermission > 0)
       throw new ConflictException(
         `Không thể xóa, các resource đã chọn đang được ${countPermission} permission sử dụng`

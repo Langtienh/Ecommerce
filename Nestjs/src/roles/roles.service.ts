@@ -11,7 +11,7 @@ import {
   NotFoundException
 } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { In, Repository } from 'typeorm'
+import { FindOptionsWhere, In, Repository } from 'typeorm'
 import { IRolesService } from './abstract'
 import { CreateRoleDto, UpdateRoleDto } from './dto'
 import { Role, roleFields } from './entities/role.entity'
@@ -26,6 +26,24 @@ export class RolesService implements IRolesService {
     private readonly permissionService: PermissionService,
     private readonly userSercice: UserService
   ) {}
+
+  find(where: FindOptionsWhere<Role> | FindOptionsWhere<Role>[]) {
+    return this.roleRepository.findBy(where)
+  }
+
+  count(where?: FindOptionsWhere<Role> | FindOptionsWhere<Role>[]) {
+    if (!where) return this.roleRepository.count()
+    return this.roleRepository.countBy(where)
+  }
+
+  findAndCount(where: FindOptionsWhere<Role> | FindOptionsWhere<Role>[]) {
+    return this.roleRepository.findAndCountBy(where)
+  }
+
+  async existsBy(where: FindOptionsWhere<Role> | FindOptionsWhere<Role>[]) {
+    return this.roleRepository.existsBy(where)
+  }
+
   async checkExistRoleByName(name?: string): Promise<boolean> {
     if (!name) return false
     return this.roleRepository.existsBy({ name })
@@ -34,17 +52,27 @@ export class RolesService implements IRolesService {
   async create(data: CreateRoleDto) {
     const isExist = await this.checkExistRoleByName(data.name)
     if (isExist) throw new ConflictException('Tên role đã tồn tại')
-    const permissionPaginate = await this.permissionService.findMany({
-      filter: { id: { in: data.permissionIds.toString() } }
+    const permissions = await this.permissionService.find({
+      where: { id: In(data.permissionIds) }
     })
     const role = this.roleRepository.create(data)
-    role.permissions = permissionPaginate.result
+    role.permissions = permissions
+    return this.roleRepository.save(role)
+  }
+
+  async update(id: number, data: UpdateRoleDto) {
+    const isExist = await this.checkExistRoleByName(data.name)
+    if (isExist) throw new ConflictException('Tên role đã tồn tại')
+    const role = await this.findOne(id)
+    const permissions = await this.permissionService.find({ where: { id: In(data.permissionIds) } })
+    Object.assign(role, data)
+    role.permissions = permissions
     return this.roleRepository.save(role)
   }
 
   async initializeData(data: CreateRoleDto[]) {
-    const count = await this.roleRepository.count()
-    if (count > 0) return
+    const isExistRole = await this.roleRepository.exists()
+    if (isExistRole) return
     await this.roleRepository.save(
       data.map((role) => ({
         ...role,
@@ -60,10 +88,8 @@ export class RolesService implements IRolesService {
     if (countRolePermisions > 0) return
     const addRolePermission = async (roleId: number, permissionIds: number[]) => {
       const role = await this.findOne(roleId)
-      const permissionPaginate = await this.permissionService.findMany({
-        filter: { id: { in: permissionIds.toString() } }
-      })
-      role.permissions = permissionPaginate.result
+      const permissions = await this.permissionService.find({ where: { id: In(permissionIds) } })
+      role.permissions = permissions
       return this.roleRepository.save(role)
     }
     await Promise.all(data.map((item) => addRolePermission(item.roleId, item.permissionIds)))
@@ -71,32 +97,17 @@ export class RolesService implements IRolesService {
     return true
   }
 
-  async update(id: number, data: UpdateRoleDto) {
-    const isExist = await this.checkExistRoleByName(data.name)
-    if (isExist) throw new ConflictException('Tên role đã tồn tại')
-    const role = await this.findOne(id)
-    const permissionPaginate = await this.permissionService.findMany({
-      filter: { id: { in: data.permissionIds.toString() } }
-    })
-    Object.assign(role, data)
-    role.permissions = permissionPaginate.result
-    return this.roleRepository.save(role)
-  }
-
   async delete(id: number) {
     const role = await this.findOne(id)
-    const userPaginate = await this.userSercice.findMany({ filter: { roleId: ` ${id}` } })
-    if (userPaginate.meta.totalItem > 0)
+    const totalUser = await this.userSercice.count({ roleId: id })
+    if (totalUser > 0)
       throw new ConflictException(`Không thể xóa, role ${role.name} đang được sử dụng`)
     await this.roleRepository.delete({ id })
   }
 
   async deleteMany(ids: number[]) {
-    const userPaginate = await this.userSercice.findMany({
-      filter: { roleId: { in: ids.toString() } }
-    })
-    if (userPaginate.meta.totalItem > 0)
-      throw new ConflictException('Không thể xóa, role đang được sử dụng')
+    const totalUser = await this.userSercice.count({ roleId: In(ids) })
+    if (totalUser > 0) throw new ConflictException('Không thể xóa, role đang được sử dụng')
     await this.roleRepository.delete({ id: In(ids) })
   }
 
@@ -118,12 +129,5 @@ export class RolesService implements IRolesService {
     })
     if (!role) throw new NotFoundException('Role not found')
     return role
-  }
-
-  async existsByPermissionIds(permissionIds: number[]) {
-    const count = await this.roleRepository.count({
-      where: { permissions: { id: In(permissionIds) } }
-    })
-    return count > 0
   }
 }

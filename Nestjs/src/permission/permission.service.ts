@@ -11,7 +11,7 @@ import {
   NotFoundException
 } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { In, Repository } from 'typeorm'
+import { FindManyOptions, FindOptionsWhere, In, Repository } from 'typeorm'
 import { CreatePermissionDto } from './dto/create-permission.dto'
 import { UpdateReourceDto } from './dto/update-permission.dto'
 import { Permission, permissionFields } from './entities/permission.entity'
@@ -23,13 +23,31 @@ export class PermissionService implements ICrudServices {
     @InjectRepository(Permission) private readonly permissionRepository: Repository<Permission>,
     @Inject(forwardRef(() => RolesService)) private readonly roleService: RolesService
   ) {}
+
+  find(options?: FindManyOptions<Permission>) {
+    return this.permissionRepository.find(options)
+  }
+
+  count(where?: FindOptionsWhere<Permission> | FindOptionsWhere<Permission>[]) {
+    if (!where) return this.permissionRepository.count()
+    return this.permissionRepository.countBy(where)
+  }
+
+  findAndCount(options?: FindManyOptions<Permission>) {
+    return this.permissionRepository.findAndCount(options)
+  }
+
+  async existsBy(options: FindManyOptions<Permission>) {
+    return this.permissionRepository.count(options)
+  }
+
   async create(data: CreatePermissionDto) {
     return this.permissionRepository.save(data)
   }
 
   async initializeData(data: CreatePermissionDto[]) {
-    const count = await this.permissionRepository.count()
-    if (count > 0) return
+    const isExist = await this.permissionRepository.exists()
+    if (isExist) return
     await this.permissionRepository.save(
       data.map((permission) => ({
         ...permission,
@@ -49,14 +67,16 @@ export class PermissionService implements ICrudServices {
 
   async delete(id: number) {
     const permission = await this.findOne(id)
-    const isExistsByPermissionIds = await this.roleService.existsByPermissionIds([id])
+    const isExistsByPermissionIds = await this.roleService.existsBy({ permissions: { id } })
     if (isExistsByPermissionIds)
       throw new ConflictException(`Permission ${permission.name} đang được sử dụng`)
     await this.permissionRepository.delete({ id })
   }
 
   async deleteMany(ids: number[]) {
-    const isExistsByPermissionIds = await this.roleService.existsByPermissionIds(ids)
+    const isExistsByPermissionIds = await this.roleService.existsBy({
+      permissions: { id: In(ids) }
+    })
     if (isExistsByPermissionIds)
       throw new ConflictException('Có một vài permission đang được sử dụng')
     await this.permissionRepository.delete({ id: In(ids) })

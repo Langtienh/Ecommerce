@@ -112,7 +112,10 @@ export class RolesService implements IRolesService {
   }
 
   async findMany(query: QueryBase): Promise<PaginationResponse<Role>> {
-    const { skip, order, take, where } = QueryHelper.buildQuery(roleFields, query)
+    const { skip, order, take, where } = QueryHelper.buildQuery<Role>(roleFields, query, [
+      'name',
+      'description'
+    ])
     const [result, totalItem] = await this.roleRepository.findAndCount({
       where,
       order,

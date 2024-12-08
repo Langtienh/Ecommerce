@@ -1,3 +1,4 @@
+import { FindOptionsWhere, ILike } from 'typeorm'
 import { PaginationResponse } from '../pagination/pagination.interface'
 import { TypeAccessConvert } from '../utils'
 import { Filter } from './Filter'
@@ -5,16 +6,24 @@ import { QueryBase } from './query.interface'
 import { Sorter } from './Sorter'
 
 export class QueryHelper {
-  static buildQuery(fieldAccess: Record<string, TypeAccessConvert>, query: QueryBase) {
+  static buildQuery<T>(
+    fieldAccess: Record<string, TypeAccessConvert>,
+    query: QueryBase,
+    searchField?: (keyof T)[]
+  ) {
     const limit = +query.limit || 10
     const take = limit > 0 ? limit : undefined
     const page = +query.page || 1
     const skip = limit > 0 ? (page - 1) * limit : undefined
     const sort = query.sort
-    const order = sort ? Sorter.build(fieldAccess, sort) : undefined
+    const order = sort ? Sorter.build<T>(fieldAccess, sort) : undefined
     const search = query.search || ''
     const filter = query.filter
-    const where = filter ? Filter.build(fieldAccess, query.filter) : undefined
+    const whereDefault = filter ? Filter.build<T>(fieldAccess, query.filter) : undefined
+    const where =
+      searchField && whereDefault
+        ? this.buildSearch<T>(searchField, search, whereDefault)
+        : whereDefault
     return {
       search,
       take,
@@ -37,5 +46,17 @@ export class QueryHelper {
       },
       result: data
     }
+  }
+
+  private static buildSearch = <T>(
+    searchField: (keyof T)[],
+    search: string,
+    where?: FindOptionsWhere<T>
+  ): FindOptionsWhere<T>[] => {
+    const result: FindOptionsWhere<T>[] = []
+    for (const field of searchField) {
+      result.push({ ...where, [field]: ILike(`%${search}%`) })
+    }
+    return result
   }
 }

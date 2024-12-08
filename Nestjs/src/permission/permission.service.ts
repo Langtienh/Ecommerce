@@ -83,7 +83,11 @@ export class PermissionService implements ICrudServices {
   }
 
   async findMany(query: QueryBase): Promise<PaginationResponse<Permission>> {
-    const { skip, order, take, where } = QueryHelper.buildQuery(permissionFields, query)
+    const { skip, order, take, where } = QueryHelper.buildQuery<Permission>(
+      permissionFields,
+      query,
+      ['name', 'apiPath', 'group', 'method']
+    )
     const [result, totalItem] = await this.permissionRepository.findAndCount({
       where,
       order,

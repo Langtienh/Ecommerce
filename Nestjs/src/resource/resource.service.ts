@@ -72,7 +72,10 @@ export class ResourceService implements ICrudServices {
   }
 
   async findMany(query: QueryBase): Promise<PaginationResponse<Resource>> {
-    const { skip, order, take, where } = QueryHelper.buildQuery(resourceFields, query)
+    const { skip, order, take, where } = QueryHelper.buildQuery<Resource>(resourceFields, query, [
+      'name',
+      'description'
+    ])
     const [result, totalItem] = await this.resourceRepository.findAndCount({
       where,
       order,

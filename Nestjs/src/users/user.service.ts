@@ -85,7 +85,11 @@ export class UserService implements IUsersService {
   }
 
   async findMany(query: QueryBase): Promise<PaginationResponse<User>> {
-    const { skip, order, take, where } = QueryHelper.buildQuery(UserFields, query)
+    const { skip, order, take, where } = QueryHelper.buildQuery<User>(UserFields, query, [
+      'name',
+      'email',
+      'phone'
+    ])
     const [result, totalItem] = await this.userRepository.findAndCount({
       where,
       order,

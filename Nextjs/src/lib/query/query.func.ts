@@ -1,4 +1,4 @@
-import { SearchParams, SearchPramsFormart } from './types'
+import { SearchParams, SearchPramsFormart } from './query.type'
 
 export const formatSearchParams = (searchParams: SearchParams): SearchPramsFormart => {
   const searchParamsFormart: SearchPramsFormart = {}

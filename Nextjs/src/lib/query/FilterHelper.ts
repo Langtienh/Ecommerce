@@ -1,5 +1,5 @@
-import { Filter, SearchParams } from './types'
-import { formatSearchParams } from './utils'
+import { formatSearchParams } from './query.func'
+import { Filter, SearchParams } from './query.type'
 
 class FilterHelper {
   stringify = (record: Record<string, Record<string, string | string[]>>) => {

@@ -1,5 +1,5 @@
-import { SearchParams, Sort, SortType } from './types'
-import { formatSearchParams } from './utils'
+import { formatSearchParams } from './query.func'
+import { SearchParams, Sort, SortType } from './query.type'
 
 class SortHelper {
   stringify = (sortObject: Sort) => {

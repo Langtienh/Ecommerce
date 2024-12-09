@@ -20,10 +20,9 @@ export class QueryHelper {
     const search = query.search || ''
     const filter = query.filter
     const whereDefault = filter ? Filter.build<T>(fieldAccess, query.filter) : undefined
-    const where =
-      searchField && whereDefault
-        ? this.buildSearch<T>(searchField, search, whereDefault)
-        : whereDefault
+    const where = searchField
+      ? this.buildSearch<T>(searchField, search, whereDefault)
+      : whereDefault
     return {
       search,
       take,

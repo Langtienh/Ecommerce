@@ -39,7 +39,7 @@
 //       take,
 //       withDeleted: true
 //     })
-//     return QueryHelper.buildReponse(result, totalItem, query)
+//     return QueryHelper.buildResponse(result, totalItem, query)
 //   }
 
 //   async findOne(id: number): Promise<any> {

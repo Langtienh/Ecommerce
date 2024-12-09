@@ -8,7 +8,7 @@ export const AccessToken = createParamDecorator((data: unknown, ctx: ExecutionCo
   return request.user
 })
 
-export const RESPONSE_MESSAGE = 'reponse_message'
-export const ReponseMessage = (message: string) => {
+export const RESPONSE_MESSAGE = 'Response_message'
+export const ResponseMessage = (message: string) => {
   return SetMetadata(RESPONSE_MESSAGE, message)
 }

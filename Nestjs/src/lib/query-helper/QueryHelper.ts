@@ -33,7 +33,7 @@ export class QueryHelper {
     }
   }
 
-  static buildReponse<T>(data: T[], totalItem: number, query: QueryBase): PaginationResponse<T> {
+  static buildResponse<T>(data: T[], totalItem: number, query: QueryBase): PaginationResponse<T> {
     const limit = +query.limit || 10
     const page = +query.page || 1
     const totalPage = limit > 0 ? Math.ceil(totalItem / limit) : 1

@@ -122,7 +122,7 @@ export class RolesService implements IRolesService {
       skip,
       take
     })
-    return QueryHelper.buildReponse(result, totalItem, query)
+    return QueryHelper.buildResponse(result, totalItem, query)
   }
 
   async findOne(id: number) {

@@ -82,7 +82,7 @@ export class ResourceService implements ICrudServices {
       skip,
       take
     })
-    return QueryHelper.buildReponse(result, totalItem, query)
+    return QueryHelper.buildResponse(result, totalItem, query)
   }
 
   async findOne(id: number) {

@@ -41,7 +41,7 @@ function Main<TData, TValue>({
   options,
   defaultSelected
 }: ColumnFilterProps<TData, TValue>) {
-  const key = `${fieldName}[in]`
+  const key = `filter[${fieldName}][in]`
   const searchParams = useSearchParams()
   const perviousSelectedValues = searchParams.get(key)?.split(',')
   const currenSelectedValues = perviousSelectedValues ?? defaultSelected

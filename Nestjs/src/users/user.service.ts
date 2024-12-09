@@ -95,7 +95,8 @@ export class UserService implements IUsersService {
       order,
       skip,
       take,
-      withDeleted: true
+      withDeleted: true,
+      relations: { role: true }
     })
     return QueryHelper.buildResponse(result, totalItem, query)
   }

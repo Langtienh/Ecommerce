@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { Permission } from './permission'
+import { Permission } from '../permission'
 
 export interface Role {
   id: number

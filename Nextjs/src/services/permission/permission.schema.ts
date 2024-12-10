@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { User } from '../user'
 
 export enum HTTP_METHOD {
   GET = 'GET',
@@ -17,6 +18,11 @@ export interface Permission {
   groupId: number
   method: HTTP_METHOD
   isActive: boolean
+}
+
+export interface PermissionDetail extends Permission {
+  creator: User
+  updater: User
 }
 
 export const AddPermissionSchema = z.object({

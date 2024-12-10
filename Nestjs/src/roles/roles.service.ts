@@ -120,7 +120,8 @@ export class RolesService implements IRolesService {
       where,
       order,
       skip,
-      take
+      take,
+      relations: { updater: true, creator: true }
     })
     return QueryHelper.buildResponse(result, totalItem, query)
   }

@@ -1,8 +1,13 @@
 import { Crud } from '@/lib/crud'
-import { AddPermissionType, Permission, UpdatePermissionType } from './permission.schema'
+import {
+  AddPermissionType,
+  Permission,
+  PermissionDetail,
+  UpdatePermissionType
+} from './permission.schema'
 
 export class PermissionRequest extends Crud<
-  Permission,
+  PermissionDetail,
   Permission,
   Permission,
   AddPermissionType,

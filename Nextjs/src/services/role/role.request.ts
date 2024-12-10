@@ -1,5 +1,11 @@
 import { Crud } from '@/lib/crud'
-import { AddRoleType, Role, RoleDetail, UpdateRoleType } from './role.schema'
+import { AddRoleType, RoleDetail, RolePermissions, UpdateRoleType } from './role.schema'
 
-export class RoleRequest extends Crud<Role, RoleDetail, Role, AddRoleType, UpdateRoleType> {}
+export class RoleRequest extends Crud<
+  RoleDetail,
+  RolePermissions,
+  RolePermissions,
+  AddRoleType,
+  UpdateRoleType
+> {}
 export const roleRequest = new RoleRequest('roles')

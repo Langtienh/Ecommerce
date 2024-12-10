@@ -1,5 +1,6 @@
 import { z } from 'zod'
 import { Permission } from '../permission'
+import { User } from '../user'
 
 export interface Role {
   id: number
@@ -10,6 +11,11 @@ export interface Role {
 }
 
 export interface RoleDetail extends Role {
+  creator: User
+  updater: User
+}
+
+export interface RolePermissions extends Role {
   permissions: Permission[]
 }
 

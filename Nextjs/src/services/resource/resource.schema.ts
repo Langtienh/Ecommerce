@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { User } from '../user'
 
 export interface Resource {
   id: number
@@ -8,6 +9,11 @@ export interface Resource {
   updatedAt: string
   creatorId: number
   updaterId: number
+}
+
+export interface ResourceDetail extends Resource {
+  creator: User
+  updater: User
 }
 
 export const AddResourceSchema = z.object({

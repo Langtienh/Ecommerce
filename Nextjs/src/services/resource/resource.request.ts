@@ -1,8 +1,8 @@
 import { Crud } from '@/lib/crud'
-import { AddResourceType, Resource, UpdateResourceType } from './resource.schema'
+import { AddResourceType, Resource, ResourceDetail, UpdateResourceType } from './resource.schema'
 
 class ResourceRequest extends Crud<
-  Resource,
+  ResourceDetail,
   Resource,
   Resource,
   AddResourceType,

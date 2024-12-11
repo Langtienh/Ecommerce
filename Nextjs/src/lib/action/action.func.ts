@@ -4,6 +4,7 @@ import envConfig from '@/config/envConfig'
 import { delay } from '@/lib/utils'
 import { revalidatePath, revalidateTag } from 'next/cache'
 import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
 
 export const serverRevalidateTag = async (tag: string | string[]) => {
   if (Array.isArray(tag)) for (const t of tag) revalidatePath(t)
@@ -13,6 +14,10 @@ export const serverRevalidateTag = async (tag: string | string[]) => {
 export const serverRevalidatePath = async (path: string | string[]) => {
   if (Array.isArray(path)) for (const p of path) revalidatePath(p)
   else revalidatePath(path)
+}
+
+export const SeverRedirect = async (path: string) => {
+  redirect(path)
 }
 
 // phục vụ sử dụng gọi cookies bằng server action

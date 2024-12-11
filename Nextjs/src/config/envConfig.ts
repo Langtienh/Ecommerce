@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 const configSchema = z.object({
   NEXT_PUBLIC_API_URL: z.string(),
-  DELAY_FORM: z.number(),
+  DELAY_ACTION: z.number(),
   DELAY_FETCH: z.number(),
   DELAY_COOKIE: z.number(),
   IMAGE_PREFIX_URL: z.string(),
@@ -12,7 +12,7 @@ const configSchema = z.object({
 
 const configProject = configSchema.safeParse({
   NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
-  DELAY_FORM: Number(process.env.NEXT_PUBLIC_DELAY_FORM),
+  DELAY_ACTION: Number(process.env.NEXT_PUBLIC_DELAY_ACTION),
   DELAY_FETCH: Number(process.env.NEXT_PUBLIC_DELAY_FETCH),
   DELAY_COOKIE: Number(process.env.NEXT_PUBLIC_DELAY_COOKIE) || 10,
   IMAGE_PREFIX_URL: process.env.NEXT_PUBLIC_IMAGE_PREFIX_URL,

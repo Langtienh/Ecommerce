@@ -10,8 +10,8 @@ export function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
-export function delayForm() {
-  return delay(envConfig.DELAY_FORM)
+export function delayAction() {
+  return delay(envConfig.DELAY_ACTION)
 }
 
 export function delayFetch() {

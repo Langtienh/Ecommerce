@@ -3,22 +3,12 @@
 import useLoading from '@/hooks/use-loading'
 import { imageSrc } from '@/lib/utils'
 import Image from 'next/image'
-import { usePathname } from 'next/navigation'
-import { useCallback, useEffect } from 'react'
 import { ThreeDots } from 'react-loader-spinner'
 import { Dialog, DialogOverlay } from '../ui/dialog'
 import './style.css'
 
 export function OverlayLoading() {
   const isLoading = useLoading((state) => state.isLoading)
-  const finallyLoading = useLoading((state) => state.finallyLoading)
-  const path = usePathname()
-  const _finallyLoading = useCallback(() => {
-    finallyLoading()
-  }, [finallyLoading])
-  useEffect(() => {
-    if (path) _finallyLoading()
-  }, [path, _finallyLoading])
   if (isLoading)
     return (
       <Dialog defaultOpen>

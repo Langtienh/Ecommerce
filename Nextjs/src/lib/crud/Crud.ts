@@ -1,4 +1,5 @@
 import { NoBody, http } from '@/lib/http'
+import { delayAction, delayFetch } from '../utils'
 
 // const { getOptionWithAccessToken } = cookieServices
 export class Crud<GetMany, GetOne, AddUpdateResponse, AddBody, UpdateBody> {
@@ -8,6 +9,7 @@ export class Crud<GetMany, GetOne, AddUpdateResponse, AddBody, UpdateBody> {
   }
 
   async findMany(searchParams: Record<string, string | string[]>, option?: NoBody) {
+    await delayFetch()
     const query = Object.entries(searchParams).reduce((prev, [key, value]) => {
       return `${prev}&${key}=${value}`
     }, `${this.prefix}?`)
@@ -21,22 +23,26 @@ export class Crud<GetMany, GetOne, AddUpdateResponse, AddBody, UpdateBody> {
   }
 
   async create(data: AddBody, option?: NoBody) {
+    await delayAction()
     const res = await http.post<AddUpdateResponse>(this.prefix, data, option)
     return res
   }
 
   async update(id: number, data: UpdateBody, option?: NoBody) {
+    await delayAction()
     const res = await http.patch<AddUpdateResponse>(`${this.prefix}/${id}`, data, option)
     return res
   }
 
   async delete(id: number, option?: NoBody) {
+    await delayAction()
     const res = await http.delete(`${this.prefix}/${id}`, option)
     return res
   }
 
   async deleteMany(ids: number[], option?: NoBody) {
-    const url = `${this.prefix}?${ids}`
+    await delayAction()
+    const url = `${this.prefix}?ids=${ids}`
     const res = await http.delete(url, option)
     return res
   }

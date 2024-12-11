@@ -13,7 +13,6 @@ import {
 import envConfig from '@/config/envConfig'
 import useLoading from '@/hooks/use-loading'
 import { handleErrorApi } from '@/lib/handle-request'
-import { delayForm } from '@/lib/utils'
 import { Role } from '@/services/role'
 import {
   AddUserSchema,
@@ -56,7 +55,6 @@ export default function FormRole({ roles, user }: { roles: Role[]; user?: UserDe
         }
         res = await userRequest.create(values)
       }
-      await delayForm()
       toast.success(res.message)
       router.push('/dashboard/users')
     } catch (error) {

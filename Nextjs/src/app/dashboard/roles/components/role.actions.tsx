@@ -10,21 +10,20 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import useLoading from '@/hooks/use-loading'
+import { serverRevalidatePathAndRedirect } from '@/lib/action'
 import { handleErrorApi } from '@/lib/handle-request'
 import { Role, roleRequest } from '@/services/role'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 
 export default function Actions({ role }: { role: Role }) {
   const { startLoading, finallyLoading } = useLoading()
-  const router = useRouter()
   const handleDelete = async (id: number) => {
     startLoading()
     try {
       const res = await roleRequest.delete(id)
       toast.success(res.message)
-      router.refresh()
+      await serverRevalidatePathAndRedirect('/dashboard/roles', 'sort=-updatedAt')
     } catch (error) {
       handleErrorApi({ error })
     } finally {

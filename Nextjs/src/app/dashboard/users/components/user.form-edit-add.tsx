@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/select'
 import envConfig from '@/config/envConfig'
 import useLoading from '@/hooks/use-loading'
+import { serverRevalidatePath, serverRevalidatePathAndRedirect } from '@/lib/action'
 import { handleErrorApi } from '@/lib/handle-request'
 import { Role } from '@/services/role'
 import {
@@ -23,7 +24,6 @@ import {
   UserStatus
 } from '@/services/user'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
@@ -40,7 +40,6 @@ export default function FormRole({ roles, user }: { roles: Role[]; user?: UserDe
     }
   })
   // 2. handle loading, store global state
-  const router = useRouter()
   const { isLoading, startLoading, finallyLoading } = useLoading()
   // 3. Define a submit handler.
   async function onSubmit(values: AddUserType) {
@@ -49,6 +48,7 @@ export default function FormRole({ roles, user }: { roles: Role[]; user?: UserDe
       let res = undefined
       if (user) {
         res = await userRequest.update(user.id, values)
+        await serverRevalidatePath(`/dashboard/users/${user.id}/edit`)
       } else {
         if (!values.password && !user) {
           values.password = envConfig.ADMIN_PASSWORD
@@ -56,7 +56,7 @@ export default function FormRole({ roles, user }: { roles: Role[]; user?: UserDe
         res = await userRequest.create(values)
       }
       toast.success(res.message)
-      router.push('/dashboard/users')
+      await serverRevalidatePathAndRedirect('/dashboard/users', 'sort=-updatedAt')
     } catch (error) {
       handleErrorApi({ error, setError: form.setError })
     } finally {

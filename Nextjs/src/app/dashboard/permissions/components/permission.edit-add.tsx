@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
 import useLoading from '@/hooks/use-loading'
-import { serverRevalidatePath, SeverRedirect } from '@/lib/action'
+import { serverRevalidatePath, serverRevalidatePathAndRedirect } from '@/lib/action'
 import { handleErrorApi } from '@/lib/handle-request'
 import {
   AddPermissionSchema,
@@ -63,10 +63,10 @@ export default function FormPemission({
       let res = undefined
       if (permission) {
         res = await permissionRequest.update(permission.id, values)
+        await serverRevalidatePath(`/dashboard/permisions/${res.data.id}/edit`)
       } else res = await permissionRequest.create(values)
       toast.success(res.message)
-      await serverRevalidatePath('/api/permissions')
-      await SeverRedirect('/dashboard/permissions?sort=-updatedAt')
+      await serverRevalidatePathAndRedirect('/dashboard/permisions', 'sort=-updatedAt')
     } catch (error) {
       handleErrorApi({ error, setError: form.setError })
     } finally {

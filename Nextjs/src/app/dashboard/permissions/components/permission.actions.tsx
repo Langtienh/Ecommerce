@@ -10,21 +10,20 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import useLoading from '@/hooks/use-loading'
+import { serverRevalidatePathAndRedirect } from '@/lib/action'
 import { handleErrorApi } from '@/lib/handle-request'
 import { PermissionDetail, permissionRequest } from '@/services/permission'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 
 export default function Actions({ permission }: { permission: PermissionDetail }) {
   const { startLoading, finallyLoading } = useLoading()
-  const router = useRouter()
   const handleDelete = async (id: number) => {
     startLoading()
     try {
       const res = await permissionRequest.delete(id)
+      await serverRevalidatePathAndRedirect('/dashboard/permisions', 'sort=-updatedAt')
       toast.success(res.message)
-      router.refresh()
     } catch (error) {
       handleErrorApi({ error })
     } finally {
@@ -37,8 +36,8 @@ export default function Actions({ permission }: { permission: PermissionDetail }
       const res = await permissionRequest.update(permission.id, {
         isActive: !permission.isActive
       })
+      await serverRevalidatePathAndRedirect('/dashboard/permisions', 'sort=-updatedAt')
       toast.success(res.message)
-      router.refresh()
     } catch (error) {
       handleErrorApi({ error })
     } finally {

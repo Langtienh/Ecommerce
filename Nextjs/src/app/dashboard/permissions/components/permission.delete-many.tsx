@@ -1,8 +1,8 @@
 import { Button } from '@/components/ui/button'
 import useLoading from '@/hooks/use-loading'
+import { serverRevalidatePathAndRedirect } from '@/lib/action'
 import { handleErrorApi } from '@/lib/handle-request'
 import { permissionRequest } from '@/services/permission'
-import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 
 export default function DeleteManyButton({
@@ -13,7 +13,6 @@ export default function DeleteManyButton({
   handleMutateSelected: () => void
 }) {
   const { finallyLoading, startLoading } = useLoading()
-  const router = useRouter()
   const handleDeleteMany = async () => {
     startLoading()
     try {
@@ -23,7 +22,7 @@ export default function DeleteManyButton({
       handleErrorApi({ error })
     } finally {
       handleMutateSelected()
-      router.refresh()
+      await serverRevalidatePathAndRedirect('/dashboard/permisions', 'sort=-updatedAt')
       finallyLoading()
     }
   }

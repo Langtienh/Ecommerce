@@ -4,12 +4,11 @@ import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import useLoading from '@/hooks/use-loading'
-import { SeverRedirect } from '@/lib/action'
+import { serverRevalidatePath, serverRevalidatePathAndRedirect } from '@/lib/action'
 import { handleErrorApi } from '@/lib/handle-request'
 import { delayAction } from '@/lib/utils'
 import { AddResourceSchema, AddResourceType, Resource, resourceRequest } from '@/services/resource'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 export default function FormEditResource({ resource }: { resource?: Resource }) {
@@ -22,7 +21,6 @@ export default function FormEditResource({ resource }: { resource?: Resource }) 
     }
   })
   // 2. handle loading, store global state
-  const router = useRouter()
   const { isLoading, startLoading, finallyLoading } = useLoading()
   // 3. Define a submit handler.
   async function onSubmit(values: AddResourceType) {
@@ -31,10 +29,11 @@ export default function FormEditResource({ resource }: { resource?: Resource }) 
       let res = undefined
       if (resource) {
         res = await resourceRequest.update(resource.id, values)
+        await serverRevalidatePath(`/dashboard/resources/${res.data.id}/edit`)
       } else res = await resourceRequest.create(values)
       await delayAction()
       toast.success(res.message)
-      await SeverRedirect('/dashboard/resources?sort=-id')
+      await serverRevalidatePathAndRedirect('/dashboard/resources', 'sort=-updatedAt')
     } catch (error) {
       handleErrorApi({ error, setError: form.setError })
     } finally {

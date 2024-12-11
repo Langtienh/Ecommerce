@@ -10,21 +10,20 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import useLoading from '@/hooks/use-loading'
+import { serverRevalidatePathAndRedirect } from '@/lib/action'
 import { handleErrorApi } from '@/lib/handle-request'
 import { User, userRequest } from '@/services/user'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 
 export default function Actions({ user }: { user: User }) {
   const { startLoading, finallyLoading } = useLoading()
-  const router = useRouter()
   const handleDelete = async (id: number, softDelete?: boolean) => {
     startLoading()
     try {
-      const res = softDelete ? await userRequest.delete(id) : await userRequest.softDelete(id)
+      const res = softDelete ? await userRequest.softDelete(id) : await userRequest.delete(id)
       toast.success(res.message)
-      router.refresh()
+      await serverRevalidatePathAndRedirect('/dashboard/users', 'sort=-updatedAt')
     } catch (error) {
       handleErrorApi({ error })
     } finally {

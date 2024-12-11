@@ -7,12 +7,12 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import useLoading from '@/hooks/use-loading'
+import { serverRevalidatePathAndRedirect } from '@/lib/action'
 import { handleErrorApi } from '@/lib/handle-request'
 import { ResourceDetail, resourceRequest } from '@/services/resource'
 import { ChevronDownIcon } from '@radix-ui/react-icons'
 import { Table } from '@tanstack/react-table'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 
 interface TableControlProps {
@@ -24,17 +24,16 @@ interface TableControlProps {
 export const ResourceToolbar = ({ handleMutateSelected, ids, table }: TableControlProps) => {
   const { finallyLoading, startLoading } = useLoading()
   // xóa nhiều
-  const router = useRouter()
   const handleDeleteMany = async () => {
     startLoading()
     try {
       const res = await resourceRequest.deleteMany(ids)
       toast.success(res.message)
+      await serverRevalidatePathAndRedirect('/dashboard/resources', 'sort=-updatedAt')
       handleMutateSelected()
     } catch (error) {
       handleErrorApi({ error })
     } finally {
-      router.refresh()
       finallyLoading()
     }
   }

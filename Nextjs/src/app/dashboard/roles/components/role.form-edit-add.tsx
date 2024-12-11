@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import useLoading from '@/hooks/use-loading'
-import { serverRevalidatePathAndRedirect } from '@/lib/action'
+import { serverRevalidatePath, serverRevalidatePathAndRedirect } from '@/lib/action'
 import { handleErrorApi } from '@/lib/handle-request'
 import { PermissionDetail } from '@/services/permission'
 import { AddRoleSchema, AddRoleType, RolePermissions, roleRequest } from '@/services/role'
@@ -43,9 +43,10 @@ export default function FormRole({
       let res = undefined
       if (role) {
         res = await roleRequest.update(role.id, { ...values, permissionIds })
+        await serverRevalidatePath(`/dashboard/roles/${role.id}/edit`)
       } else res = await roleRequest.create({ ...values, permissionIds })
       toast.success(res.message)
-      serverRevalidatePathAndRedirect('/dashboard/roles', 'sort=-updatedAt')
+      await serverRevalidatePathAndRedirect('/dashboard/roles', 'sort=-updatedAt')
     } catch (error) {
       handleErrorApi({ error, setError: form.setError })
     } finally {

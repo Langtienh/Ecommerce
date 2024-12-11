@@ -13,8 +13,7 @@ import {
 } from '@tanstack/react-table'
 import * as React from 'react'
 
-import { TablePagination } from '@/components/table-helpper'
-import { getSelectedRow } from '@/components/table-helpper/utils'
+import { TablePagination, getSelectedRow } from '@/components/table-helpper'
 import {
   Table,
   TableBody,

@@ -1,6 +1,6 @@
 import { Modal } from '@/components/modal'
 import { roleRequest } from '@/services/role'
-import FormRole from '../../components/form-edit-add'
+import FormRole from '../../components/user.form-edit-add'
 
 export default async function CreatePage() {
   const res = await roleRequest.findMany({ limit: '-1' })

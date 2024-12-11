@@ -25,8 +25,8 @@ import {
 } from '@/components/ui/table'
 import { Role } from '@/services/role'
 import { UserDetail } from '@/services/user'
-import { columns } from './column'
-import TableToolbar from './toolbar'
+import { columns } from './user.column'
+import TableToolbar from './user.toolbar'
 
 interface UserTableProps {
   data: Paginate<UserDetail>

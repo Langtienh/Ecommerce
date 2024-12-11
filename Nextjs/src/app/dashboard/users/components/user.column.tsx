@@ -4,7 +4,7 @@ import { ColumnHeaderServerSort } from '@/components/table-helpper'
 import { Checkbox } from '@/components/ui/checkbox'
 import { formatTimestamp } from '@/lib/format'
 import { UserDetail } from '@/services/user'
-import Actions from './actions'
+import Actions from './user.actions'
 
 export const columns: ColumnDef<UserDetail>[] = [
   {

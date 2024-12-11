@@ -5,7 +5,7 @@ import { Role } from '@/services/role'
 import { USER_STATUS_VALUES, UserDetail } from '@/services/user'
 import { Table } from '@tanstack/react-table'
 import Link from 'next/link'
-import DeleteManyButton from './delete-many'
+import DeleteManyButton from './user.delete-many'
 
 interface TableControlProps {
   table: Table<UserDetail>

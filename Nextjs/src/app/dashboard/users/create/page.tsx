@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { roleRequest } from '@/services/role'
-import FormRole from '../components/form-edit-add'
+import FormRole from '../components/user.form-edit-add'
 
 export default async function EditResource() {
   const res = await roleRequest.findMany({ limit: '-1' })

@@ -2,7 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { roleRequest } from '@/services/role'
 import { userRequest } from '@/services/user'
 import { notFound } from 'next/navigation'
-import FormRole from '../../components/form-edit-add'
+import FormRole from '../../components/user.form-edit-add'
 
 export default async function Editpermission({
   params: { id }

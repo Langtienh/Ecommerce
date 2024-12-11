@@ -86,20 +86,23 @@ export class PermissionService implements ICrudServices {
     const { skip, order, take, where } = QueryHelper.buildQuery<Permission>(
       permissionFields,
       query,
-      ['name', 'apiPath', 'group', 'method']
+      ['name', 'apiPath']
     )
     const [result, totalItem] = await this.permissionRepository.findAndCount({
       where,
       order,
       skip,
       take,
-      relations: { updater: true, creator: true }
+      relations: { updater: true, creator: true, resource: true }
     })
     return QueryHelper.buildResponse(result, totalItem, query)
   }
 
   async findOne(id: number) {
-    const permission = await this.permissionRepository.findOne({ where: { id } })
+    const permission = await this.permissionRepository.findOne({
+      where: { id },
+      relations: { resource: true }
+    })
     if (!permission) throw new NotFoundException('Không tìm thấy permission')
     return permission
   }

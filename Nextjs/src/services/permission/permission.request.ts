@@ -8,7 +8,7 @@ import {
 
 export class PermissionRequest extends Crud<
   PermissionDetail,
-  Permission,
+  PermissionDetail,
   Permission,
   AddPermissionType,
   UpdatePermissionType

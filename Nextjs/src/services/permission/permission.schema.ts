@@ -27,12 +27,17 @@ export interface Permission {
   group: PERMISSION_GROUP
   method: HTTP_METHOD
   isActive: boolean
+  resourceId: number
 }
 
 export interface PermissionDetail extends Permission {
   creator: User
   updater: User
   resource: Resource
+}
+
+export interface PermissionFormatResource extends PermissionDetail {
+  resourceIdName: string
 }
 
 export const AddPermissionSchema = z.object({

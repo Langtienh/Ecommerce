@@ -16,8 +16,13 @@ export const serverRevalidatePath = async (path: string | string[]) => {
   else revalidatePath(path)
 }
 
-export const SeverRedirect = async (path: string) => {
+export const severRedirect = async (path: string) => {
   redirect(path)
+}
+
+export const serverRevalidatePathAndRedirect = async (path: string, query?: string) => {
+  revalidatePath(path)
+  redirect(`${path}${query ? `?${query}` : ''}`)
 }
 
 // phục vụ sử dụng gọi cookies bằng server action

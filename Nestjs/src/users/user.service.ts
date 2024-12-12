@@ -13,28 +13,7 @@ export class UserService implements IUsersService {
   private readonly logger = new Logger(UserService.name)
   constructor(@InjectRepository(User) private userRepository: Repository<User>) {}
 
-  find(options?: FindManyOptions<User>) {
-    return this.userRepository.find(options)
-  }
-
-  count(where?: FindOptionsWhere<User> | FindOptionsWhere<User>[]) {
-    if (!where) return this.userRepository.count()
-    return this.userRepository.countBy(where)
-  }
-
-  findAndCount(options?: FindManyOptions<User>) {
-    return this.userRepository.findAndCount(options)
-  }
-
-  async existsBy(options: FindManyOptions<User>) {
-    return this.userRepository.count(options)
-  }
-
-  async checkExistUserByEmail(email: string): Promise<boolean> {
-    if (!email) return false
-    return this.userRepository.existsBy({ email })
-  }
-
+  // User CRUD operations
   async create(data: CreateUserDto) {
     const isExist = await this.checkExistUserByEmail(data.email)
     if (isExist) throw new ConflictException('Email đã tồn tại')
@@ -42,15 +21,6 @@ export class UserService implements IUsersService {
     Object.assign(data, { password: hashPassword })
     const user = await this.userRepository.create(data)
     return this.userRepository.save(user)
-  }
-
-  async initializeData(data: CreateUserDto[]) {
-    const isExist = await this.userRepository.exists()
-    if (isExist) return
-    if (data.length === 0) return
-    const hashPassword = await this.hashPassword(data[0].password)
-    await this.userRepository.save(data.map((user) => ({ ...user, password: hashPassword })))
-    this.logger.log('Users Initialized')
   }
 
   async update(id: number, data: UpdateUserOption) {
@@ -84,6 +54,26 @@ export class UserService implements IUsersService {
     }
   }
 
+  // User retrieval operations
+  find(options?: FindManyOptions<User>) {
+    return this.userRepository.find(options)
+  }
+
+  count(where?: FindOptionsWhere<User> | FindOptionsWhere<User>[]) {
+    if (!where) return this.userRepository.count()
+    return this.userRepository.countBy(where)
+  }
+
+  findAndCount(options?: FindManyOptions<User>) {
+    return this.userRepository.findAndCount(options)
+  }
+
+  async findOne(id: number) {
+    const user = await this.userRepository.findOne({ where: { id }, withDeleted: true })
+    if (!user) throw new NotFoundException('Không tìm thấy user')
+    return user
+  }
+
   async findMany(query: QueryBase): Promise<PaginationResponse<User>> {
     const { skip, order, take, where } = QueryHelper.buildQuery<User>(UserFields, query, [
       'name',
@@ -101,13 +91,27 @@ export class UserService implements IUsersService {
     return QueryHelper.buildResponse(result, totalItem, query)
   }
 
-  async findOne(id: number) {
-    const user = await this.userRepository.findOne({ where: { id }, withDeleted: true })
-    if (!user) throw new NotFoundException('Không tìm thấy user')
-    return user
+  // User existence checks
+  async existsBy(options: FindManyOptions<User>) {
+    return this.userRepository.count(options)
   }
 
-  // bcrypt
+  async checkExistUserByEmail(email: string): Promise<boolean> {
+    if (!email) return false
+    return this.userRepository.existsBy({ email })
+  }
+
+  // User initialization
+  async initializeData(data: CreateUserDto[]) {
+    const isExist = await this.userRepository.exists()
+    if (isExist) return
+    if (data.length === 0) return
+    const hashPassword = await this.hashPassword(data[0].password)
+    await this.userRepository.save(data.map((user) => ({ ...user, password: hashPassword })))
+    this.logger.log('Users Initialized')
+  }
+
+  // Password handling
   async hashPassword(password: string): Promise<string> {
     const saltRounds = 10
     const salt = await genSalt(saltRounds)

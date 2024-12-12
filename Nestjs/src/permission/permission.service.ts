@@ -24,62 +24,22 @@ export class PermissionService implements ICrudServices {
     @Inject(forwardRef(() => RolesService)) private readonly roleService: RolesService
   ) {}
 
+  // Find methods
   find(options?: FindManyOptions<Permission>) {
     return this.permissionRepository.find(options)
-  }
-
-  count(where?: FindOptionsWhere<Permission> | FindOptionsWhere<Permission>[]) {
-    if (!where) return this.permissionRepository.count()
-    return this.permissionRepository.countBy(where)
   }
 
   findAndCount(options?: FindManyOptions<Permission>) {
     return this.permissionRepository.findAndCount(options)
   }
 
-  async existsBy(options: FindManyOptions<Permission>) {
-    return this.permissionRepository.count(options)
-  }
-
-  async create(data: CreatePermissionDto) {
-    return this.permissionRepository.save(data)
-  }
-
-  async initializeData(data: CreatePermissionDto[]) {
-    const isExist = await this.permissionRepository.exists()
-    if (isExist) return
-    await this.permissionRepository.save(
-      data.map((permission) => ({
-        ...permission,
-        creatorId: 2,
-        updaterId: 2,
-        name: `${permission.name}:${permission.group}`
-      }))
-    )
-    this.logger.log('Permissions Initialized')
-  }
-
-  async update(id: number, data: UpdateReourceDto) {
-    const permission = await this.findOne(id)
-    Object.assign(permission, data)
-    return this.permissionRepository.save(permission)
-  }
-
-  async delete(id: number) {
-    const permission = await this.findOne(id)
-    const isExistsByPermissionIds = await this.roleService.existsBy({ permissions: { id } })
-    if (isExistsByPermissionIds)
-      throw new ConflictException(`Permission ${permission.name} đang được sử dụng`)
-    await this.permissionRepository.delete({ id })
-  }
-
-  async deleteMany(ids: number[]) {
-    const isExistsByPermissionIds = await this.roleService.existsBy({
-      permissions: { id: In(ids) }
+  async findOne(id: number) {
+    const permission = await this.permissionRepository.findOne({
+      where: { id },
+      relations: { resource: true }
     })
-    if (isExistsByPermissionIds)
-      throw new ConflictException('Có một vài permission đang được sử dụng')
-    await this.permissionRepository.delete({ id: In(ids) })
+    if (!permission) throw new NotFoundException('Không tìm thấy permission')
+    return permission
   }
 
   async findMany(query: QueryBase): Promise<PaginationResponse<Permission>> {
@@ -98,12 +58,57 @@ export class PermissionService implements ICrudServices {
     return QueryHelper.buildResponse(result, totalItem, query)
   }
 
-  async findOne(id: number) {
-    const permission = await this.permissionRepository.findOne({
-      where: { id },
-      relations: { resource: true }
+  // Count methods
+  count(where?: FindOptionsWhere<Permission> | FindOptionsWhere<Permission>[]) {
+    if (!where) return this.permissionRepository.count()
+    return this.permissionRepository.countBy(where)
+  }
+
+  async existsBy(options: FindManyOptions<Permission>) {
+    return this.permissionRepository.count(options)
+  }
+
+  // Create methods
+  async create(data: CreatePermissionDto) {
+    return this.permissionRepository.save(data)
+  }
+
+  async initializeData(data: CreatePermissionDto[]) {
+    const isExist = await this.permissionRepository.exists()
+    if (isExist) return
+    await this.permissionRepository.save(
+      data.map((permission) => ({
+        ...permission,
+        creatorId: 2,
+        updaterId: 2,
+        name: `${permission.name}:${permission.group}`
+      }))
+    )
+    this.logger.log('Permissions Initialized')
+  }
+
+  // Update methods
+  async update(id: number, data: UpdateReourceDto) {
+    const permission = await this.findOne(id)
+    Object.assign(permission, data)
+    return this.permissionRepository.save(permission)
+  }
+
+  // Delete methods
+  async delete(id: number) {
+    const permission = await this.findOne(id)
+    const isExistsByPermissionIds = await this.roleService.existsBy({ permissions: { id } })
+    if (isExistsByPermissionIds)
+      throw new ConflictException(`Permission ${permission.name} đang được sử dụng`)
+    await this.permissionRepository.delete({ id })
+  }
+
+  async deleteMany(ids: number[]) {
+    const isExistsByPermissionIds = await this.roleService.existsBy({
+      permissions: { id: In(ids) }
     })
-    if (!permission) throw new NotFoundException('Không tìm thấy permission')
-    return permission
+    if (isExistsByPermissionIds)
+      throw new ConflictException('Có một vài permission đang được sử dụng')
+    await this.permissionRepository.delete({ id: In(ids) })
   }
 }

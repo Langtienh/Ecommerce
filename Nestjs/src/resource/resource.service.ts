@@ -17,20 +17,18 @@ export class ResourceService implements ICrudServices {
     @InjectRepository(Resource) private readonly resourceRepository: Repository<Resource>
   ) {}
 
+  // Existence Checks
   async checkExistName(name?: string): Promise<boolean> {
     if (!name) return false
     return this.resourceRepository.existsBy({ name })
   }
 
+  // Creation
   async create(data: CreateResourceDto) {
     const isExist = await this.checkExistName(data.name)
     if (isExist) throw new ConflictException('Tên resource đã tồn tại')
     const resource = await this.resourceRepository.create(data)
     return this.resourceRepository.save(resource)
-  }
-
-  async createMany(data: CreateResourceDto[]) {
-    return this.resourceRepository.save(data)
   }
 
   async initializeData(data: CreateResourceDto[]) {
@@ -42,14 +40,17 @@ export class ResourceService implements ICrudServices {
     this.logger.log('Resources Initialized')
   }
 
+  // Updates
   async update(id: number, data: UpdateReourceDto) {
-    const isExist = await this.checkExistName(data.name)
-    if (isExist) throw new ConflictException('Tên resource đã tồn tại')
     const resource = await this.findOne(id)
+    const isExist = await this.checkExistName(data.name)
+    if (isExist && data?.name !== resource.name)
+      throw new ConflictException('Tên resource đã tồn tại')
     Object.assign(resource, data)
     return this.resourceRepository.save(resource)
   }
 
+  // Deletions
   async delete(id: number) {
     const resource = await this.findOne(id)
     const countPermission = await this.permissionService.count({ resourceId: id })
@@ -71,6 +72,7 @@ export class ResourceService implements ICrudServices {
     await this.resourceRepository.delete({ id: In(ids) })
   }
 
+  // Retrievals
   async findMany(query: QueryBase): Promise<PaginationResponse<Resource>> {
     const { skip, order, take, where } = QueryHelper.buildQuery<Resource>(resourceFields, query, [
       'name',

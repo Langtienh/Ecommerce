@@ -24,6 +24,7 @@ export default async function EditPage({
         className='max-w-[800px]'
         title={`${role.name} role`}
         description={`Chỉnh sửa ${role.name} role`}
+        parentPath='/dashboard/roles'
       >
         <FormRole permissions={permissions} role={role} />
       </Modal>

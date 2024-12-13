@@ -19,7 +19,12 @@ export default async function EditPage({
     const user = userResponse.data
     const roles = rolesReponse.data.result
     return (
-      <Modal className='max-w-[800px]' title={`USER00${user.id}`} description={user.name}>
+      <Modal
+        parentPath='/dashboard/users'
+        className='max-w-[800px]'
+        title={`USER00${user.id}`}
+        description={user.name}
+      >
         <FormRole roles={roles} user={user} />
       </Modal>
     )

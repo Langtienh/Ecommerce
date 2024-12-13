@@ -6,7 +6,7 @@ export default async function CreatePage() {
   const res = await resourceRequest.findMany({ limit: '-1' })
   const resources = res.data.result
   return (
-    <Modal title='Thêm mới permission'>
+    <Modal parentPath='/dashboard/permissions' title='Thêm mới permission'>
       <FormPemission resources={resources} />
     </Modal>
   )

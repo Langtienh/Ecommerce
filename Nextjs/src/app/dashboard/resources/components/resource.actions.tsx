@@ -47,9 +47,6 @@ export default function Actions({ resource }: { resource: ResourceDetail }) {
         <DropdownMenuItem asChild>
           <Link href={`/dashboard/resources/${resource.id}/edit`}>Edit resource</Link>
         </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link href={`/dashboard/resources/${resource.id}/groups`}>Groups of resource</Link>
-        </DropdownMenuItem>
         <DropdownMenuItem onClick={() => handleDelete(resource.id)}>
           Delete resource
         </DropdownMenuItem>

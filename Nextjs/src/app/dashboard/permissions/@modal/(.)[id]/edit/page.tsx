@@ -12,6 +12,7 @@ export default async function EditPage({ params: { id } }: { params: { id: strin
     const resources = res2.data.result
     return (
       <Modal
+        parentPath='/dashboard/permissions'
         title={`${permission.name} permission`}
         description={`Chỉnh sửa ${permission.name} permission`}
       >

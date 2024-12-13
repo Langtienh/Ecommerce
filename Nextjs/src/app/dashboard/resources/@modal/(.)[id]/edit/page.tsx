@@ -11,6 +11,7 @@ export default async function EditPage({ params: { id } }: { params: { id: strin
       <Modal
         title={`${resource.name} resource`}
         description={`Chỉnh sửa ${resource.name} resource`}
+        parentPath='/dashboard/resources'
       >
         <FormEditResource resource={resource} />
       </Modal>

@@ -49,3 +49,13 @@ export class CreateUserDto {
 }
 
 export class UpdateUserOption extends PartialType(CreateUserDto) {}
+
+export class PasswordDto {
+  @Matches(/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&#]{6,}$/, {
+    message: 'Mật khẩu phải chứa ít nhất 1 chữ hoa, 1 số và 1 ký tự đặc biệt và dài ít nhất 6 ký tự'
+  })
+  @MaxLength(63)
+  @IsString()
+  @IsNotEmpty()
+  password: string
+}

@@ -47,10 +47,15 @@ export class JwtServiceCustom {
     }
   }
 
-  generateAccessRefreshToken(payload: AccessTokenPayload) {
-    return Promise.all([
-      this.generateAccsessToken(payload),
-      this.generateJwtToken(payload, TOKEN_TYPE.REFRESH)
-    ])
+  async generateAccessRefreshToken(payload: AccessTokenPayload) {
+    const accessToken = this.generateAccsessToken(payload)
+    const refreshToken = await this.generateJwtToken(payload, TOKEN_TYPE.REFRESH)
+    return { accessToken, refreshToken }
+  }
+
+  async delete(token: string) {
+    const tokenData = await this.tokenRepository.findOneBy({ token })
+    if (!tokenData) throw new UnauthorizedException('Invalid token')
+    return this.tokenRepository.delete({ token })
   }
 }

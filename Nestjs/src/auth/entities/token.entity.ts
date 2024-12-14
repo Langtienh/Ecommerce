@@ -13,11 +13,11 @@ export class Token {
   @PrimaryGeneratedColumn()
   id: number
 
-  @Column({ length: 255 })
+  @Column()
   token: string
 
   @Column({ name: 'token_type', type: 'enum', enum: TOKEN_TYPE })
-  tokenType: TOKEN_TYPE
+  type: TOKEN_TYPE
 
   @Column({ name: 'user_id' })
   userId: number

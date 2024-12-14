@@ -1,3 +1,4 @@
+import { MailModule } from '@/mail/mail.module'
 import { RolesModule } from '@/roles/roles.module'
 import { UserModule } from '@/users/user.module'
 import { Module } from '@nestjs/common'
@@ -15,6 +16,7 @@ import { JwtStrategy } from './jwt/jwt.strategy'
   imports: [
     UserModule,
     RolesModule,
+    MailModule,
     TypeOrmModule.forFeature([Token, Otp]),
     JwtModule.registerAsync({
       imports: [ConfigModule],

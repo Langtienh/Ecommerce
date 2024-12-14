@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { JwtService } from '@nestjs/jwt'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
+import { FindOptionsWhere, Repository } from 'typeorm'
 import { Token, TOKEN_TYPE } from '../entities'
 import { CONFIG_TOKEN } from './jwt.config'
 import { AccessTokenPayload, TokenData, TokenPayload } from './jwt.interface'
@@ -22,8 +22,7 @@ export class JwtServiceCustom {
       secret: this.configService.get(CONFIG_TOKEN[tokenType].secret),
       expiresIn: this.configService.get(CONFIG_TOKEN[tokenType].expiresIn)
     })
-    await this.tokenRepository.save({ token, userId: id, type: tokenType })
-    return token
+    return await this.tokenRepository.save({ token, userId: id, type: tokenType })
   }
 
   generateAccsessToken(payload: AccessTokenPayload) {
@@ -50,12 +49,16 @@ export class JwtServiceCustom {
   async generateAccessRefreshToken(payload: AccessTokenPayload) {
     const accessToken = this.generateAccsessToken(payload)
     const refreshToken = await this.generateJwtToken(payload, TOKEN_TYPE.REFRESH)
-    return { accessToken, refreshToken }
+    return { accessToken, refreshToken: refreshToken.token }
   }
 
-  async delete(token: string) {
-    const tokenData = await this.tokenRepository.findOneBy({ token })
+  async deleteBy(where: FindOptionsWhere<Token>) {
+    const tokenData = await this.tokenRepository.findOneBy(where)
     if (!tokenData) throw new UnauthorizedException('Invalid token')
-    return this.tokenRepository.delete({ token })
+    await this.tokenRepository.delete(where)
+  }
+
+  findOneBy(where: FindOptionsWhere<Token>) {
+    return this.tokenRepository.findOneBy(where)
   }
 }

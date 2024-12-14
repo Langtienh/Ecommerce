@@ -17,7 +17,7 @@ const {
   updateRefreshToken
 } = cookieServices
 
-class AuthenRequest {
+class AuthRequest {
   async register(body: RegisterBodyType) {
     const res = await http.post<RegisterResponse>('/auth/register', body)
     await updateRefreshToken(res.data)
@@ -57,7 +57,7 @@ class AuthenRequest {
 
   async restorePassword(body: RestorePasswordBodyType) {
     const res = await http.post<ForgotPasswordResponse>('/auth/password/send', body)
-    await setCookieWithToken('forgotPasswordToken', res.data.token)
+    await setCookieWithToken('forgotPasswordToken', res.data.forgotPasswordToken)
     return res
   }
 
@@ -80,4 +80,4 @@ class AuthenRequest {
   }
 }
 
-export const authenRequest = new AuthenRequest()
+export const authRequest = new AuthRequest()

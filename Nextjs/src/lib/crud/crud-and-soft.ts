@@ -1,5 +1,5 @@
 import { http, NoBody } from '../http'
-import { CrudWithPaginate } from './CrudWithPaginate'
+import { CrudWithPaginate } from './crud-with-paginate'
 
 export class CrudAndSoft<
   GetMany,

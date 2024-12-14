@@ -9,5 +9,5 @@ interface RegisterResponse extends LoginResponse {
 }
 
 interface ForgotPasswordResponse {
-  token: string
+  forgotPasswordToken: string
 }

@@ -1,10 +1,44 @@
-import { EUpdator, EUpdatorFields } from '@/lib/entity-base'
+import { EUpdatorFields } from '@/lib/entity-base'
 import { TypeAccessConvert } from '@/lib/utils'
 import { Permission } from '@/permission/entities/permission.entity'
-import { Column, Entity, JoinTable, ManyToMany } from 'typeorm'
+import { User } from '@/users/entities/user.entity'
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn
+} from 'typeorm'
 
 @Entity({ name: 'roles' })
-export class Role extends EUpdator {
+export class Role {
+  @PrimaryGeneratedColumn()
+  id: number
+
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date
+
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'updater_id' })
+  updater: User
+
+  // todo: xem xét cách lưu creator và updater
+  @Column({ name: 'updater_id', nullable: true })
+  updaterId: number
+
+  @Column({ name: 'creator_id', nullable: true })
+  creatorId: number
+
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'creator_id' })
+  creator: User
+
   @Column({ unique: true })
   name: string
 

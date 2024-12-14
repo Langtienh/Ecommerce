@@ -9,10 +9,10 @@ export class EUpdator extends EDate {
   updater: User
 
   // todo: xem xét cách lưu creator và updater
-  @Column({ name: 'updater_id', nullable: true })
+  @Column({ name: 'updater_id', default: 2 })
   updaterId: number
 
-  @Column({ name: 'creator_id', nullable: true })
+  @Column({ name: 'creator_id', default: 2 })
   creatorId: number
 
   @ManyToOne(() => User)

@@ -1,7 +1,8 @@
+import { ClassSerializerInterceptor, VersioningType } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
 import { NestFactory, Reflector } from '@nestjs/core'
 import { AppModule } from './app.module'
-import { ConfigService } from '@nestjs/config'
-import { ClassSerializerInterceptor, VersioningType } from '@nestjs/common'
+import { JwtAuthGuard } from './auth/jwt/jwt-auth.guard'
 import { TransformsInterceptor } from './core/tranforms.interceptor'
 import { CustomValidationPipe } from './core/validation'
 
@@ -24,7 +25,7 @@ async function bootstrap() {
   app.useGlobalInterceptors(new ClassSerializerInterceptor(reflector))
 
   // Sử dụng JwtAuthGuard để xác thực người dùng
-  // app.useGlobalGuards(new JwtAuthGuard(reflector))
+  app.useGlobalGuards(new JwtAuthGuard(reflector))
 
   // enable cors
   // origin: Fe domain, example: 'http://localhost:3000',

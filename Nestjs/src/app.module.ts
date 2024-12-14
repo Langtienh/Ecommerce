@@ -1,13 +1,14 @@
 import { Module } from '@nestjs/common'
-import { AppController } from './app.controller'
-import { AppService } from './app.service'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { TypeOrmModule } from '@nestjs/typeorm'
-import { UserModule } from './users/user.module'
-import { RolesModule } from './roles/roles.module'
-import { ResourceModule } from './resource/resource.module'
+import { AppController } from './app.controller'
+import { AppService } from './app.service'
+import { AuthModule } from './auth/auth.module'
 import { PermissionModule } from './permission/permission.module'
+import { ResourceModule } from './resource/resource.module'
+import { RolesModule } from './roles/roles.module'
 import { SheedsModule } from './sheeds/sheeds.module'
+import { UserModule } from './users/user.module'
 
 @Module({
   imports: [
@@ -37,7 +38,8 @@ import { SheedsModule } from './sheeds/sheeds.module'
     RolesModule,
     ResourceModule,
     PermissionModule,
-    SheedsModule
+    SheedsModule,
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService]

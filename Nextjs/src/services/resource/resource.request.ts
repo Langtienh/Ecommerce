@@ -1,7 +1,7 @@
-import { Crud } from '@/lib/crud'
+import { CrudWithPaginate } from '@/lib/crud'
 import { AddResourceType, Resource, ResourceDetail, UpdateResourceType } from './resource.schema'
 
-class ResourceRequest extends Crud<
+class ResourceRequest extends CrudWithPaginate<
   ResourceDetail,
   Resource,
   Resource,

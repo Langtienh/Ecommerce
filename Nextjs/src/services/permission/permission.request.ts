@@ -1,4 +1,4 @@
-import { Crud } from '@/lib/crud'
+import { CrudWithPaginate } from '@/lib/crud'
 import {
   AddPermissionType,
   Permission,
@@ -6,7 +6,7 @@ import {
   UpdatePermissionType
 } from './permission.schema'
 
-export class PermissionRequest extends Crud<
+export class PermissionRequest extends CrudWithPaginate<
   PermissionDetail,
   PermissionDetail,
   Permission,

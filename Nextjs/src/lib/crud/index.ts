@@ -1,3 +1,5 @@
-export * from './Crud'
+export * from './crud-and-soft'
+export * from './crud-no-paginate'
+export * from './crud-with-paginate'
 export * from './crud.type'
-export * from './CrudAndSoft'
+export * from './curd.base'

@@ -1,20 +1,10 @@
 import { NoBody, http } from '@/lib/http'
-import { delayAction, delayFetch } from '../utils'
+import { delayAction } from '../utils'
 
-// const { getOptionWithAccessToken } = cookieServices
 export class Crud<GetMany, GetOne, AddUpdateResponse, AddBody, UpdateBody> {
   protected prefix: string
   constructor(prefix: string) {
     this.prefix = prefix
-  }
-
-  async findMany(searchParams: Record<string, string | string[]>, option?: NoBody) {
-    await delayFetch()
-    const query = Object.entries(searchParams).reduce((prev, [key, value]) => {
-      return `${prev}&${key}=${value}`
-    }, `${this.prefix}?`)
-    const res = await http.get<Paginate<GetMany>>(query, option)
-    return res
   }
 
   async findOne(id: number, option?: NoBody) {

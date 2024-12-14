@@ -5,6 +5,7 @@ import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { AuthModule } from './auth/auth.module'
 import { MailModule } from './mail/mail.module'
+import { MeModule } from './me/me.module'
 import { OauthModule } from './oauth/oauth.module'
 import { PermissionModule } from './permission/permission.module'
 import { ResourceModule } from './resource/resource.module'
@@ -43,7 +44,8 @@ import { UserModule } from './users/user.module'
     SheedsModule,
     AuthModule,
     MailModule,
-    OauthModule
+    OauthModule,
+    MeModule
   ],
   controllers: [AppController],
   providers: [AppService]

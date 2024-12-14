@@ -4,12 +4,13 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { AuthModule } from './auth/auth.module'
+import { MailModule } from './mail/mail.module'
+import { OauthModule } from './oauth/oauth.module'
 import { PermissionModule } from './permission/permission.module'
 import { ResourceModule } from './resource/resource.module'
 import { RolesModule } from './roles/roles.module'
 import { SheedsModule } from './sheeds/sheeds.module'
 import { UserModule } from './users/user.module'
-import { MailModule } from './mail/mail.module'
 
 @Module({
   imports: [
@@ -41,7 +42,8 @@ import { MailModule } from './mail/mail.module'
     PermissionModule,
     SheedsModule,
     AuthModule,
-    MailModule
+    MailModule,
+    OauthModule
   ],
   controllers: [AppController],
   providers: [AppService]

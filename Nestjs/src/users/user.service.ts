@@ -59,6 +59,10 @@ export class UserService implements IUsersService {
     return this.userRepository.find(options)
   }
 
+  findOneBy(where: FindOptionsWhere<User>) {
+    return this.userRepository.findOneBy(where)
+  }
+
   count(where?: FindOptionsWhere<User> | FindOptionsWhere<User>[]) {
     if (!where) return this.userRepository.count()
     return this.userRepository.countBy(where)
@@ -120,5 +124,21 @@ export class UserService implements IUsersService {
 
   comparePassword(password: string, hashedPassword: string) {
     return compare(password, hashedPassword)
+  }
+
+  async resetPassword(id: number, newPassword: string) {
+    const user = await this.findOne(id)
+    user.password = await this.hashPassword(newPassword)
+    return this.userRepository.save(user)
+  }
+
+  async changePassword(id: number, oldPassword: string, newPassword: string) {
+    const user = await this.findOne(id)
+    const isPasswordMatch = await this.comparePassword(oldPassword, user.password)
+    if (!isPasswordMatch) throw new ConflictException('Mật khẩu cũ không đúng')
+    if (oldPassword === newPassword)
+      throw new ConflictException('Mật khẩu mới không được trùng với mật khẩu cũ')
+    user.password = await this.hashPassword(newPassword)
+    return this.userRepository.save(user)
   }
 }

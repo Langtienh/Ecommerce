@@ -2,7 +2,7 @@
 
 import useAccount from '@/hooks/use-account'
 import { ServerHasCookie } from '@/lib/action'
-import { meRequest } from '@/services/me/me.request'
+import { meRequest } from '@/services/me'
 import { useCallback, useEffect } from 'react'
 
 export function AuthTrigger() {

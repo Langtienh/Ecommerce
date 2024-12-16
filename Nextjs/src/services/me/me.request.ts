@@ -1,4 +1,4 @@
-import { cookieServices } from '@/lib/action'
+import { getOptionWithAccessToken } from '@/lib/action'
 import { http } from '@/lib/http'
 import { User } from '../user'
 import { AddressRequest } from './address.request'
@@ -10,13 +10,13 @@ export class MeRequest {
     this.address = new AddressRequest()
   }
   async get() {
-    const option = await cookieServices.getOptionWithAccessToken()
+    const option = await getOptionWithAccessToken()
     const res = await http.get<User>('/me', option)
     return res
   }
 
   async update(data: UpdateMeBodyType) {
-    const option = await cookieServices.getOptionWithAccessToken()
+    const option = await getOptionWithAccessToken()
     const res = await http.patch<User>('/me', data, option)
     return res
   }

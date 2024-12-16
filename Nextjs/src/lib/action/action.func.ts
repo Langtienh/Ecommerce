@@ -16,7 +16,7 @@ export const serverRevalidatePath = async (path: string | string[]) => {
   else revalidatePath(path)
 }
 
-export const severRedirect = async (path: string) => {
+export const serverRedirect = async (path: string) => {
   redirect(path)
 }
 

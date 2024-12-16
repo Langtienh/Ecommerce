@@ -4,7 +4,7 @@ import './globals.css'
 
 import { OverlayLoading } from '@/components/loading'
 import { RedirectLoginModal } from '@/components/request-login-modal'
-// import AuthTrigger from '@/components/trigger/auth-trigger'
+import { AuthTrigger } from '@/components/trigger'
 import { Toaster } from '@/components/ui/sonner'
 import { Roboto } from 'next/font/google'
 
@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang='en' suppressHydrationWarning>
       <body className={`${roboto.className} antialiased`}>
-        {/* <AuthTrigger /> */}
+        <AuthTrigger />
         {children}
         <OverlayLoading />
         <RedirectLoginModal />

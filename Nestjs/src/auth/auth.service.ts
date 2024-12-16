@@ -185,6 +185,7 @@ export class AuthService {
     const otpRow = await this.otpRepository.findOneBy({ tokenId: tokenRow.id, otp })
     if (!otpRow) throw new UnauthorizedException('Otp không đúng')
     const user = await this.userService.resetPassword(data.id, password)
+    await this.otpRepository.delete({ tokenId: tokenRow.id })
     await this.jwtServiceCustom.deleteBy({
       userId: data.id,
       type: TOKEN_TYPE.FORGOT_PASSWORD

@@ -54,7 +54,6 @@ export default function FormRole({
     }
   }
   const onCheckedChange = (addPermissionIds: number[], isChecked: boolean) => {
-    console.log('addPermissionIds', addPermissionIds)
     if (isChecked) {
       setPermissionIds([
         ...permissionIds.filter((id) => !addPermissionIds.includes(id)),

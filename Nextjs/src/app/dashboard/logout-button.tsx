@@ -2,6 +2,7 @@
 import { Button } from '@/components/ui/button'
 import useAccount from '@/hooks/use-account'
 import useLoading from '@/hooks/use-loading'
+import { authRequest } from '@/services/auth'
 import { useRouter } from 'next/navigation'
 import { FiLogOut } from 'react-icons/fi'
 import { toast } from 'sonner'
@@ -13,7 +14,7 @@ export default function LogoutButton() {
   const handleLogout = async () => {
     startLoading()
     try {
-      // await authenRequest.logout()
+      await authRequest.logout()
       toast.success('Đăng xuất thành công')
     } finally {
       removeUser()

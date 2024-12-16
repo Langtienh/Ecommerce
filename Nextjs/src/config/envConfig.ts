@@ -21,7 +21,6 @@ const configProject = configSchema.safeParse({
 })
 
 if (configProject.error) {
-  console.log(configProject.error)
   throw new Error('Một vài biến môi trường không hợp lệ!')
 }
 
